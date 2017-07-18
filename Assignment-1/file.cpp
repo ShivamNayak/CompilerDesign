@@ -16,4 +16,15 @@ for (int i = 0; i <= 10; i++)
 		hello;
 	}
 	abcd_1243 = 1234;
+	c = c ^ 1;
+	for (int i = 0; i < 20; ++i)
+	{
+		a = a - 1;
+		b = b * 2;
+		c = c % 45;
+		if (f == 8)
+		{
+			/* code */
+		}
+	}
 }

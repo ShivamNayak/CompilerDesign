@@ -34,3 +34,4 @@
 #define OR_TOK 403
 #define EQ2_TOK 404
 #define NOTEQ_TOK 405
+#define SEMICOLON_TOK 406

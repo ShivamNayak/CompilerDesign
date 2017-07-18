@@ -47,17 +47,12 @@ int main(int argc, char const *argv[])
 	while(!feof(fp)){
 		yylex(fp,token_code,yytext);
 	}
-	cout<<"\n\t\t\tLEXIMS CODE\t\t\t"<<endl;
-	for (int i = 0; i < tok_index; ++i)
-	{
-		cout<<token_code[i]<<" ";
-	}
-	remove_duplicate(token_code);
+	//remove_duplicate(token_code);
 	cout<<"\n\t\t\tTOKEN IDs\t\t\t"<<endl;
 	cout<<endl;
-	for (int i = 0; i <= tok_index; ++i)
+	for (int i = 0; i <= tok_index && token_code[i] != 0; ++i)
 	{
-		cout<<i<<" - ";
+		cout<<token_code[i]<<" - ";
 		switch(token_code[i]){
 			case FOR_TOK:
 				cout<<"FOR_TOK"<<endl;
@@ -146,12 +141,14 @@ int main(int argc, char const *argv[])
 			case SEMICOLON_TOK:
 				cout<<"SEMICOLON_TOK"<<endl;
 				break;
+			case COLON_TOK:
+				cout<<"COLON_TOK"<<endl;
+				break;
 			default:
 				cout<<"NOT FOUND"<<endl;
 				break;
 		}
 	}
-	
 	cout<<endl;
 	return 0;
 }
@@ -175,7 +172,8 @@ string* parse(FILE* fp){
 	char x;
 	while(!feof(fp)){
 		if(c != '(' && c !=')' && c != '>' && c != '<' && c != '=' && c != '-' && c != '+' && c != '*' &&  c != '/' 
-			&& c != '%' && c != '{' && c != '}' && c != '|' && c != '&' && c != '^' && c != '!' && c != ' ' && c != '\t' && c != ';' && c != ','){
+			&& c != '%' && c != '{' && c != '}' && c != '|' && c != '&' && c != '^' && c != '!' 
+			&& c != ' ' && c != '\t' && c != ';' && c != ',' && c != ':'){
 				str += c;
 		}
 		else{
@@ -279,6 +277,9 @@ string* parse(FILE* fp){
 						if(x == '='){		//>=
 							res[string_index++] = "+=";
 						}
+						else if(x == '+'){
+							res[string_index++] = "++";
+						}
 						else{
 							res[string_index++] = "+";
 							fseek(fp,-1,SEEK_CUR);
@@ -289,6 +290,9 @@ string* parse(FILE* fp){
 						x = getc(fp);
 						if(x == '='){		//>=
 							res[string_index++] = "-=";
+						}
+						else if(x == '-'){
+							res[string_index++] = "--";
 						}
 						else if((x-'0') >= 0 || (x-'0') <= 9){
 							res[string_index++] = string()+'-'+x;
@@ -340,10 +344,12 @@ string* parse(FILE* fp){
 }
 void yylex(FILE *fp,unsigned int * token_code,char* yytext){
 	parsed_word = parse(fp);
+	/*
 	for (int i = 0; i <= string_index; ++i)
 	{
 		cout<<i<<" --> "<<parsed_word[i]<<"\tLength = "<<parsed_word[i].length()<<endl;
 	}
+	*/
 	
 	for (int i = 0; i < string_index; ++i){
 		int len = parsed_word[i].length();
@@ -405,6 +411,9 @@ void yylex(FILE *fp,unsigned int * token_code,char* yytext){
 					case ';':
 						token_code[tok_index++] = SEMICOLON_TOK;
 						break;
+					case ':':
+						token_code[tok_index++] = COLON_TOK;
+						break;
 					default:
 						token_code[tok_index++] = ID_TOK;
 						break;
@@ -450,44 +459,46 @@ void yylex(FILE *fp,unsigned int * token_code,char* yytext){
 					token_code[tok_index++] = AND_TOK;
 				}
 				else if(parsed_word[i] == "&="){
-					token_code[tok_index++] = ID_TOK;
 					token_code[tok_index++] = EQ_TOK;
-					token_code[tok_index++] = AND_TOK;
+					token_code[tok_index++] = BITAND_TOK;
 				}
 				else if(parsed_word[i] == "|="){
-					token_code[tok_index++] = ID_TOK;
 					token_code[tok_index++] = EQ_TOK;
-					token_code[tok_index++] = OR_TOK;
+					token_code[tok_index++] = BITOR_TOK;
 				}
 				else if(parsed_word[i] == "^="){
-					token_code[tok_index++] = ID_TOK;
 					token_code[tok_index++] = EQ_TOK;
 					token_code[tok_index++] = XOR_TOK;
 				}
 				else if(parsed_word[i] == "+="){
-					token_code[tok_index++] = ID_TOK;
 					token_code[tok_index++] = EQ_TOK;
 					token_code[tok_index++] = ADDITION_TOK;
 				}
 				else if(parsed_word[i] == "-="){
-					token_code[tok_index++] = ID_TOK;
 					token_code[tok_index++] = EQ_TOK;
 					token_code[tok_index++] = MINUS_TOK;
 				}
 				else if(parsed_word[i] == "*="){
-					token_code[tok_index++] = ID_TOK;
 					token_code[tok_index++] = EQ_TOK;
 					token_code[tok_index++] = MULTI_TOK;
 				}
 				else if(parsed_word[i] == "/="){
-					token_code[tok_index++] = ID_TOK;
 					token_code[tok_index++] = EQ_TOK;
 					token_code[tok_index++] = DIVISION_TOK;
 				}
 				else if(parsed_word[i] == "%="){
-					token_code[tok_index++] = ID_TOK;
 					token_code[tok_index++] = EQ_TOK;
 					token_code[tok_index++] = MOD_TOK;
+				}
+				else if(parsed_word[i] == "++"){
+					token_code[tok_index++] = EQ_TOK;
+					token_code[tok_index++] = INTCONST;
+					token_code[tok_index++] = ADDITION_TOK;
+				}
+				else if(parsed_word[i] == "--"){
+					token_code[tok_index++] = EQ_TOK;
+					token_code[tok_index++] = INTCONST;
+					token_code[tok_index++] = MINUS_TOK;
 				}
 				else if(parsed_word[i][0] == '-'){
 					token_code[tok_index++] = INTCONST;

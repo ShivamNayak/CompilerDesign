@@ -15,6 +15,7 @@
 #define BITAND_TOK '&'
 #define XOR_TOK '^'
 #define NOT_TOK '!'
+#define COLON_TOK ':'
 
 
 /*reserved words*/

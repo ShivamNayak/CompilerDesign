@@ -1,4 +1,4 @@
-#include <bits/stdc++.h>
+text#include <bits/stdc++.h>
 #include "tok.h"
 #include <stdlib.h>
 #include <string>
@@ -27,6 +27,7 @@ static inline std::string &trim(std::string &s) {
 void yylex(FILE *fp,unsigned int *token_code,char* yytext);
 string* parse(FILE* fp);
 void remove_duplicate(unsigned int* token_code);
+bool intconst(string s);
 unsigned int tok_index,yytext_index,string_index;
 string *parsed_word = NULL;
 int main(int argc, char const *argv[])
@@ -47,6 +48,12 @@ int main(int argc, char const *argv[])
 	while(!feof(fp)){
 		yylex(fp,token_code,yytext);
 	}
+	/*
+	for (int i = 0; i <= string_index; ++i)
+	{
+		cout<<parsed_word[i]<<endl;
+	}
+	*/
 	//remove_duplicate(token_code);
 	cout<<"\n\t\t\tTOKEN IDs\t\t\t"<<endl;
 	cout<<endl;
@@ -144,6 +151,33 @@ int main(int argc, char const *argv[])
 			case COLON_TOK:
 				cout<<"COLON_TOK"<<endl;
 				break;
+			case RIGHTSHIFT_TOK:
+				cout<<"RIGHTSHIFT_TOK"<<endl;
+				break;
+			case LEFTSHIFT_TOK:
+				cout<<"LEFTSHIFT_TOK"<<endl;
+				break;
+			case SPACE_TOK:
+				cout<<"SPACE_TOK"<<endl;
+				break;
+			case TYPE_TOK:
+				cout<<"TYPE_TOK"<<endl;
+				break;
+			case INCLUDE_TOK:
+				cout<<"INCLUDE_TOK"<<endl;
+				break;
+			case DEFINE_TOK:
+				cout<<"DEFINE_TOK"<<endl;
+				break;
+			case CONST_TOK:
+				cout<<"CONST_TOK"<<endl;
+				break;
+			case RETURN_TOK:
+				cout<<"RETURN_TOK"<<endl;
+				break;
+			case WHILE_TOK:
+				cout<<"WHILE_TOK"<<endl;
+				break;
 			default:
 				cout<<"NOT FOUND"<<endl;
 				break;
@@ -173,7 +207,7 @@ string* parse(FILE* fp){
 	while(!feof(fp)){
 		if(c != '(' && c !=')' && c != '>' && c != '<' && c != '=' && c != '-' && c != '+' && c != '*' &&  c != '/' 
 			&& c != '%' && c != '{' && c != '}' && c != '|' && c != '&' && c != '^' && c != '!' 
-			&& c != ' ' && c != '\t' && c != ';' && c != ',' && c != ':'){
+			&& c != ' ' && c != '\t' && c != ';' && c != ',' && c != ':' && c != '\n'){
 				str += c;
 		}
 		else{
@@ -191,7 +225,10 @@ string* parse(FILE* fp){
 					case '>':
 						temp_pointer = fp;
 						x = getc(fp);
-						if(x == '='){		//>=
+						if(x == '>'){
+							res[string_index++] = ">>";
+						}
+						else if(x == '='){		//>=
 							res[string_index++] = ">=";
 						}
 						else{
@@ -202,7 +239,10 @@ string* parse(FILE* fp){
 					case '<':
 						temp_pointer = fp;
 						x = getc(fp);
-						if(x == '='){		//>=
+						if(x == '<'){
+							res[string_index++] = "<<";
+						}
+						else if(x == '='){		//>=
 							res[string_index++] = "<=";
 						}
 						else{
@@ -335,6 +375,9 @@ string* parse(FILE* fp){
 							fseek(fp,-1,SEEK_CUR);
 						}
 						break;
+					case ' ':
+						res[string_index++] = " ";
+						break;
 				}
 			}
 		}
@@ -414,6 +457,11 @@ void yylex(FILE *fp,unsigned int * token_code,char* yytext){
 					case ':':
 						token_code[tok_index++] = COLON_TOK;
 						break;
+					case ' ':
+						token_code[tok_index++] = SPACE_TOK;
+						break;
+					case '\n':
+						break;
 					default:
 						token_code[tok_index++] = ID_TOK;
 						break;
@@ -425,6 +473,10 @@ void yylex(FILE *fp,unsigned int * token_code,char* yytext){
 			if(parsed_word[i] == "for"){
 				token_code[tok_index++] = FOR_TOK;
 				yytext = strncat(yytext,(const char*)"for",3);
+			}
+			else if(parsed_word[i] == "while"){
+				token_code[tok_index++] = WHILE_TOK;
+				yytext = strncat(yytext,(const char*)parsed_word[i].c_str(),parsed_word[i].length());
 			}
 			else if(parsed_word[i] == "if"){
 				token_code[tok_index++] = IF_TOK;
@@ -442,12 +494,38 @@ void yylex(FILE *fp,unsigned int * token_code,char* yytext){
 				token_code[tok_index++] = CASE_TOK;
 				yytext = strncat(yytext,(const char*)"case",4);
 			}
+			else if(parsed_word[i] == "#include"){
+				token_code[tok_index++] = INCLUDE_TOK;
+				yytext = strncat(yytext,(const char*)"#include",parsed_word[i].length());
+			}
+			else if(parsed_word[i] == "#define"){
+				token_code[tok_index++] = DEFINE_TOK;
+				yytext = strncat(yytext,(const char*)"#define",parsed_word[i].length());
+			}
+			else if(parsed_word[i] == "int" || parsed_word[i] == "float" || parsed_word[i] == "double" || parsed_word[i] == "char"){
+				token_code[tok_index++] = TYPE_TOK;
+				yytext = strncat(yytext,(const char*)parsed_word[i].c_str(),parsed_word[i].length());
+			}
+			else if(parsed_word[i] == "const"){
+				token_code[tok_index++] = CONST_TOK;
+				yytext = strncat(yytext,(const char*)parsed_word[i].c_str(),parsed_word[i].length());
+			}
+			else if(parsed_word[i] == "return"){
+				token_code[tok_index++] = RETURN_TOK;
+				yytext = strncat(yytext,(const char*)parsed_word[i].c_str(),parsed_word[i].length());
+			}
 			else{	// identifiers multiple letters or double letters operators
 				if(parsed_word[i] == "=="){
 					token_code[tok_index++] = EQ2_TOK;
 				}
 				else if(parsed_word[i] == ">="){
 					token_code[tok_index++] = GTEQ_TOK;
+				}
+				else if(parsed_word[i] == ">>"){
+					token_code[tok_index++] = RIGHTSHIFT_TOK;
+				}
+				else if(parsed_word[i] == "<<"){
+					token_code[tok_index++] = LEFTSHIFT_TOK;
 				}
 				else if(parsed_word[i] == "<="){
 					token_code[tok_index++] = LSEQ_TOK;
@@ -471,43 +549,69 @@ void yylex(FILE *fp,unsigned int * token_code,char* yytext){
 					token_code[tok_index++] = XOR_TOK;
 				}
 				else if(parsed_word[i] == "+="){
+					token_code[tok_index++] = ID_TOK;
 					token_code[tok_index++] = EQ_TOK;
 					token_code[tok_index++] = ADDITION_TOK;
 				}
 				else if(parsed_word[i] == "-="){
+					token_code[tok_index++] = ID_TOK;
 					token_code[tok_index++] = EQ_TOK;
 					token_code[tok_index++] = MINUS_TOK;
 				}
 				else if(parsed_word[i] == "*="){
+					token_code[tok_index++] = ID_TOK;
 					token_code[tok_index++] = EQ_TOK;
 					token_code[tok_index++] = MULTI_TOK;
 				}
 				else if(parsed_word[i] == "/="){
+					token_code[tok_index++] = ID_TOK;
 					token_code[tok_index++] = EQ_TOK;
 					token_code[tok_index++] = DIVISION_TOK;
 				}
 				else if(parsed_word[i] == "%="){
+					token_code[tok_index++] = ID_TOK;
 					token_code[tok_index++] = EQ_TOK;
 					token_code[tok_index++] = MOD_TOK;
 				}
 				else if(parsed_word[i] == "++"){
+					token_code[tok_index++] = SPACE_TOK;
 					token_code[tok_index++] = EQ_TOK;
-					token_code[tok_index++] = INTCONST;
+					token_code[tok_index++] = ID_TOK;
 					token_code[tok_index++] = ADDITION_TOK;
+					token_code[tok_index++] = INTCONST;
 				}
 				else if(parsed_word[i] == "--"){
+					token_code[tok_index++] = SPACE_TOK;
 					token_code[tok_index++] = EQ_TOK;
-					token_code[tok_index++] = INTCONST;
+					token_code[tok_index++] = ID_TOK;
 					token_code[tok_index++] = MINUS_TOK;
+					token_code[tok_index++] = INTCONST;
 				}
 				else if(parsed_word[i][0] == '-'){
 					token_code[tok_index++] = INTCONST;
 				}
 				else{
-					token_code[tok_index++] = ID_TOK;
+					if(intconst(parsed_word[i])){
+						token_code[tok_index++] = INTCONST;
+					}
+					else{
+						if((parsed_word[i][0]-'0') >= 0 && (parsed_word[i][0]-'0') <= 9){
+							cout<<" identifiers can not be started with integers  Lol => "<<parsed_word[i]<<endl;
+							exit(1);
+						}
+						token_code[tok_index++] = ID_TOK;
+					}
 				}
 				yytext = strncat(yytext,(const char*)parsed_word[i].c_str(),len);
 			}
 		}
 	}
+}
+bool intconst(string s){
+	for(int i=0;i<s.length();i++){
+		if ((s[i]-'0') < 0 || (s[i]-'0') > 9){
+			return false;
+		}
+	}
+	return true;
 }

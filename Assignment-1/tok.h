@@ -36,3 +36,12 @@
 #define EQ2_TOK 404
 #define NOTEQ_TOK 405
 #define SEMICOLON_TOK 406
+#define RIGHTSHIFT_TOK 407
+#define LEFTSHIFT_TOK 408
+#define SPACE_TOK 409
+#define TYPE_TOK 410
+#define INCLUDE_TOK 411
+#define DEFINE_TOK 412
+#define CONST_TOK 413
+#define RETURN_TOK 414
+#define WHILE_TOK 415

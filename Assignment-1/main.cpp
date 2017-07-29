@@ -1,4 +1,4 @@
-text#include <bits/stdc++.h>
+#include <bits/stdc++.h>
 #include "tok.h"
 #include <stdlib.h>
 #include <string>
@@ -48,15 +48,15 @@ int main(int argc, char const *argv[])
 	while(!feof(fp)){
 		yylex(fp,token_code,yytext);
 	}
-	/*
 	for (int i = 0; i <= string_index; ++i)
 	{
 		cout<<parsed_word[i]<<endl;
 	}
-	*/
 	//remove_duplicate(token_code);
 	cout<<"\n\t\t\tTOKEN IDs\t\t\t"<<endl;
 	cout<<endl;
+	string abc = "       ";
+	cout<<trim(abc)<<endl;
 	for (int i = 0; i <= tok_index && token_code[i] != 0; ++i)
 	{
 		cout<<token_code[i]<<" - ";
@@ -177,6 +177,9 @@ int main(int argc, char const *argv[])
 				break;
 			case WHILE_TOK:
 				cout<<"WHILE_TOK"<<endl;
+				break;
+			case VARNAME_ERROR:
+				cout<<"Variable Name Error"<<endl;
 				break;
 			default:
 				cout<<"NOT FOUND"<<endl;
@@ -597,7 +600,8 @@ void yylex(FILE *fp,unsigned int * token_code,char* yytext){
 					else{
 						if((parsed_word[i][0]-'0') >= 0 && (parsed_word[i][0]-'0') <= 9){
 							cout<<" identifiers can not be started with integers  Lol => "<<parsed_word[i]<<endl;
-							exit(1);
+							token_code[tok_index++] = VARNAME_ERROR;
+							//exit(1);
 						}
 						token_code[tok_index++] = ID_TOK;
 					}

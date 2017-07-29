@@ -45,3 +45,4 @@
 #define CONST_TOK 413
 #define RETURN_TOK 414
 #define WHILE_TOK 415
+#define VARNAME_ERROR 416

@@ -4,6 +4,7 @@
 using namespace std;
 #define EMPTY -1
 #define START 0
+#define ERROR -1
 int construct_dfa(FILE *fp);
 int *state_sequence = new int[2000];
 int state_index = 0;
@@ -23,7 +24,12 @@ int main(int argc, char const *argv[])
 	cout<<"\nFinal State = "<<construct_dfa(fp)<<endl;
 	for (int i = 0; i <= state_index; ++i)
 	{
-		cout<<state_sequence[i]<<" ";
+		if(state_sequence[i] == 0){
+			cout<<"S ";
+		}
+		else{
+			cout<<state_sequence[i]<<" ";
+		}
 	}
 	cout<<endl;
 	return 0;
@@ -36,6 +42,9 @@ int construct_dfa(FILE *fp){
 		if ((int)charecter == -1)
 			break;
 		switch(current_state){
+			case ERROR:
+				current_state = ERROR;
+				break;
 			case 0:
 				if(charecter == 'f'){
 					current_state = 1;
@@ -51,7 +60,7 @@ int construct_dfa(FILE *fp){
 				}
 				else if((charecter >= 'a' && charecter <= 'd') || (charecter == 'g' || charecter == 'h') || 
 					(charecter >='j' && charecter <= 'v') || (charecter >= 'x' && charecter <= 'z') || 
-					(charecter >= 'A' && charecter <= 'Z') || ((charecter-'0' >= 0) && (charecter-'0' <= 9))){
+					(charecter >= 'A' && charecter <= 'Z') || charecter == '_'){
 					current_state = 15;
 				}
 				else if(charecter == '+'){
@@ -105,6 +114,9 @@ int construct_dfa(FILE *fp){
 				else if(charecter == ' '){
 					current_state = 48;
 				}
+				else if((charecter-'0' >= 0) && (charecter-'0' <= 9)){
+					current_state = 51;
+				}
 				break;
 			case 1:
 				if(charecter == 'o'){
@@ -124,7 +136,9 @@ int construct_dfa(FILE *fp){
 					current_state = START;
 				}
 				break;
-			case 3:
+			case 3:case 8:case 10:case 14:case 17:case 18:case 20:case 21:case 23:case 25:case 27:case 29:
+			case 30:case 32:case 33:case 35:case 37:case 38:case 40:case 41:case 43:case 44:case 45:case 46:
+			case 47:
 				fseek(fp,-1,SEEK_CUR);
 				current_state = START;
 				break;
@@ -164,10 +178,6 @@ int construct_dfa(FILE *fp){
 					current_state = START;
 				}
 				break;
-			case 8:
-				fseek(fp,-1,SEEK_CUR);
-				current_state = START;
-				break;
 			case 9:
 				if(charecter == 'f'){
 					current_state = 10;
@@ -176,10 +186,6 @@ int construct_dfa(FILE *fp){
 					fseek(fp,-1,SEEK_CUR);
 					current_state = START;
 				}
-				break;
-			case 10:
-				fseek(fp,-1,SEEK_CUR);
-				current_state = START;
 				break;
 			case 11:
 				if(charecter == 'l'){
@@ -208,13 +214,9 @@ int construct_dfa(FILE *fp){
 					current_state = START;
 				}
 				break;
-			case 14:
-				fseek(fp,-1,SEEK_CUR);
-				current_state = START;
-				break;
 			case 15:
 				if ((charecter >= 'a' && charecter <= 'z') || (charecter >= 'A' && charecter <= 'Z')||
-					((charecter-'0' >= 0)&&(charecter - '0' <= 9))){
+					((charecter-'0' >= 0)&&(charecter - '0' <= 9)) || charecter == '_'){
 					current_state = 15;
 				}
 				else{
@@ -234,14 +236,6 @@ int construct_dfa(FILE *fp){
 					current_state = START;
 				}
 				break;
-			case 17:
-				fseek(fp,-1,SEEK_CUR);
-				current_state = START;
-				break;
-			case 18:
-				fseek(fp,-1,SEEK_CUR);
-				current_state = START;
-				break;
 			case 19:
 				if(charecter == '-'){
 					current_state = 20;
@@ -254,14 +248,6 @@ int construct_dfa(FILE *fp){
 					current_state = START;
 				}
 				break;
-			case 20:
-				fseek(fp,-1,SEEK_CUR);
-				current_state = START;
-				break;
-			case 21:
-				fseek(fp,-1,SEEK_CUR);
-				current_state = START;
-				break;
 			case 22:	// multiplication
 				if(charecter == '='){
 					current_state = 23;
@@ -270,10 +256,6 @@ int construct_dfa(FILE *fp){
 					fseek(fp,-1,SEEK_CUR);
 					current_state = START;
 				}
-				break;
-			case 23:
-				fseek(fp,-1,SEEK_CUR);
-				current_state = START;
 				break;
 			case 24:
 				if(charecter == '='){
@@ -284,10 +266,6 @@ int construct_dfa(FILE *fp){
 					current_state = START;
 				}
 				break;
-			case 25:
-				fseek(fp,-1,SEEK_CUR);
-				current_state = START;
-				break;
 			case 26:
 				if(charecter == '='){
 					current_state = 27;
@@ -296,10 +274,6 @@ int construct_dfa(FILE *fp){
 					fseek(fp,-1,SEEK_CUR);
 					current_state = START;
 				}
-				break;
-			case 27:
-				fseek(fp,-1,SEEK_CUR);
-				current_state = START;
 				break;
 			case 28:	//greater than 
 				if(charecter == '='){
@@ -313,14 +287,6 @@ int construct_dfa(FILE *fp){
 					current_state = START;
 				}
 				break;
-			case 29:
-				fseek(fp,-1,SEEK_CUR);
-				current_state = START;
-				break;
-			case 30:
-				fseek(fp,-1,SEEK_CUR);
-				current_state = START;
-				break;
 			case 31: // less than
 				if(charecter == '='){
 					current_state = 32;
@@ -333,22 +299,10 @@ int construct_dfa(FILE *fp){
 					current_state = 0;
 				}
 				break;
-			case 32:
-				fseek(fp,-1,SEEK_CUR);
-				current_state = START;
-				break;
-			case 33:
-				fseek(fp,-1,SEEK_CUR);
-				current_state = START;
-				break;
 			case 34:
 				if(charecter == '='){
 					current_state = 35;
 				}
-				break;
-			case 35:
-				fseek(fp,-1,SEEK_CUR);
-				current_state = START;
 				break;
 			case 36:
 				if(charecter == '|'){
@@ -362,14 +316,6 @@ int construct_dfa(FILE *fp){
 					current_state = START;
 				}
 				break;
-			case 37:
-				fseek(fp,-1,SEEK_CUR);
-				current_state = START;
-				break;
-			case 38:
-				fseek(fp,-1,SEEK_CUR);
-				current_state = START;
-				break;
 			case 39:
 				if(charecter == '&'){
 					current_state = 40;
@@ -382,14 +328,6 @@ int construct_dfa(FILE *fp){
 					current_state = START;
 				}
 				break;
-			case 40:
-				fseek(fp,-1,SEEK_CUR);
-				current_state = START;
-				break;
-			case 41:
-				fseek(fp,-1,SEEK_CUR);
-				current_state = START;
-				break;
 			case 42:
 				if(charecter == '='){
 					current_state = 43;
@@ -399,29 +337,35 @@ int construct_dfa(FILE *fp){
 					current_state = START;
 				}
 				break;
-			case 43:
-				fseek(fp,-1,SEEK_CUR);
-				current_state = START;
-				break;
-			case 44:
-				fseek(fp,-1,SEEK_CUR);
-				current_state = START;
-				break;
-			case 45:
-				fseek(fp,-1,SEEK_CUR);
-				current_state = START;
-				break;
-			case 46:
-				fseek(fp,-1,SEEK_CUR);
-				current_state = START;
-				break;
-			case 47:	
-				fseek(fp,-1,SEEK_CUR);
-				current_state = START;
-				break;
 			case 48:
 				if(charecter == ' '){
 					current_state = 48;
+				}
+				else{
+					fseek(fp,-1,SEEK_CUR);
+					current_state = START;
+				}
+				break;
+			case 51:
+				if((charecter-'0' >= 0) && (charecter-'0' <= 9)){
+					current_state = 51;
+				}
+				else if(charecter == ' '){
+					current_state = 52;
+				}
+				else if((charecter >= 'a' && charecter <='z')||(charecter >= 'A' && charecter <= 'Z')||
+					(charecter == '(' || charecter == '{' || charecter == '[' || charecter == '=' || 
+					 charecter == '_')){
+					current_state = ERROR;
+				}
+				else{
+					fseek(fp,-1,SEEK_CUR);
+					current_state = START;
+				}
+				break;
+			case 52:
+				if(((charecter-'0' >= 0) && (charecter-'0' <= 9)) || (charecter == '=')){
+					current_state = ERROR;
 				}
 				else{
 					fseek(fp,-1,SEEK_CUR);

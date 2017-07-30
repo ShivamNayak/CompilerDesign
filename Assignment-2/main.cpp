@@ -6,8 +6,9 @@ using namespace std;
 #define START 0
 #define ERROR -1
 int construct_dfa(FILE *fp);
-int *state_sequence = new int[2000];
+int *state_sequence = new int[8000];
 int state_index = 0;
+int actual_states = 0;
 int main(int argc, char const *argv[])
 {
 	if (argc != 2){
@@ -20,7 +21,7 @@ int main(int argc, char const *argv[])
 		cerr <<" File not found"<<endl;
 		return 0;
 	}
-	memset(state_sequence,EMPTY,8000);
+	memset(state_sequence,EMPTY,32000);
 	cout<<"\nFinal State = "<<construct_dfa(fp)<<endl;
 	for (int i = 0; i <= state_index; ++i)
 	{
@@ -32,6 +33,7 @@ int main(int argc, char const *argv[])
 		}
 	}
 	cout<<endl;
+	cout<<"Actual No of states = "<<actual_states<<" Displayed = "<<state_index<<endl<<endl;
 	return 0;
 }
 int construct_dfa(FILE *fp){
@@ -378,11 +380,14 @@ int construct_dfa(FILE *fp){
 		}
 		if(state_index == 0){
 			state_sequence[state_index++] = current_state;
+			actual_states++;
 		}
 		else if(state_sequence[state_index-1] != current_state){
 			state_sequence[state_index++] = current_state;
+			actual_states++;
 		}
 	}
 	state_index--;
+	actual_states--;
 	return current_state;
 }

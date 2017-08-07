@@ -280,7 +280,7 @@ int construct_dfa(FILE *fp){
 				else if(charecter == 'e'){
 					current_state = 11;
 				}
-				else if((charecter >= 'a' && charecter <= 'd') || (charecter == 'g' || charecter == 'h') || 
+				else if((charecter >= 'a' &&	 charecter <= 'd') || (charecter == 'g' || charecter == 'h') || 
 					(charecter >='j' && charecter <= 'v') || (charecter >= 'x' && charecter <= 'z') || 
 					(charecter >= 'A' && charecter <= 'Z') || charecter == '_'){
 					current_state = 15;

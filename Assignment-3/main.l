@@ -8,6 +8,8 @@
 letter [a-zA-Z_]
 digit [0-9]
 quote ["'"]
+start ["/*"]
+end ["*/"]
 %%
 "for" {yyval[tok_index++] = FOR_TOK;printf("FOR_TOK\n");}
 "while" {yyval[tok_index++] = WHILE_TOK;printf("WHILE_TOK\n");}
@@ -24,6 +26,8 @@ quote ["'"]
 "return" {yyval[tok_index++] = RETURN_TOK;printf("RETURN_TOK\n");}
 "#include" {yyval[tok_index++] = INCLUDE_TOK;printf("INCLUDE_TOK\n");}
 "#define" {yyval[tok_index++] = DEFINE_TOK;printf("DEFINE_TOK\n");}
+"//". {printf("Single line comment ignoring....... :(\n");}
+"/*"([^*]|([*]+[^*/]))*[*]+[/]  {printf("Multiline Comment Ignoring ........ :(\n");}
 ";" {yyval[tok_index++] = SEMICOLON_TOK;printf("SEMICOLON_TOK\n");}
 "," {yyval[tok_index++] = COMMA_TOK;printf("COMMA_TOK\n");}
 "." {yyval[tok_index++] = DOT_TOK;printf("DOT_TOK\n");}

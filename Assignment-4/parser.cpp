@@ -15,8 +15,8 @@ int LPAREN_TOK =  3;
 int RPAREN_TOK =  4;
 using namespace std;
 vector <vector<pair<string,string> > > parsing_table(TOTAL_RULES);
-map<string, int> terminal_key;
 map<string, int> nonterminal_key;
+map<string, int> nonnonterminal_key;
 int token_no = 0;
 void insert_rule(vector<pair<string,string> > &rules);
 void display_rules(vector<pair<string,string> > &rules);
@@ -60,50 +60,50 @@ void insert_rule(vector<pair<string,string> > &rules){
 	rules[7] = make_pair("F","id");
 }
 void populate_parsing_table(void){
-	terminal_key["E"] = 0;
-	terminal_key["e"] = 1;
-	terminal_key["T"] = 2;
-	terminal_key["t"] = 3;
-	terminal_key["F"] = 4;
+	nonterminal_key["E"] = 0;
+	nonterminal_key["e"] = 1;
+	nonterminal_key["T"] = 2;
+	nonterminal_key["t"] = 3;
+	nonterminal_key["F"] = 4;
 	for (int i = 0; i < TOTAL_RULES; ++i)
 	{
 		vector<pair<string,string> > v(6);
 		parsing_table[i] = v;
 	}
-	parsing_table[terminal_key["E"]][ID_TOK] = make_pair("E","Te");
-	parsing_table[terminal_key["E"]][ADDITION_TOK] = make_pair("","");
-	parsing_table[terminal_key["E"]][MULTIPLICATION_TOK] = make_pair("","");
-	parsing_table[terminal_key["E"]][LPAREN_TOK] = make_pair("E","Te");
-	parsing_table[terminal_key["E"]][RPAREN_TOK] = make_pair("","");
-	parsing_table[terminal_key["E"]][MARKER] = make_pair("","");
+	parsing_table[nonterminal_key["E"]][ID_TOK] = make_pair("E","Te");
+	parsing_table[nonterminal_key["E"]][ADDITION_TOK] = make_pair("","");
+	parsing_table[nonterminal_key["E"]][MULTIPLICATION_TOK] = make_pair("","");
+	parsing_table[nonterminal_key["E"]][LPAREN_TOK] = make_pair("E","Te");
+	parsing_table[nonterminal_key["E"]][RPAREN_TOK] = make_pair("","");
+	parsing_table[nonterminal_key["E"]][MARKER] = make_pair("","");
 	
-	parsing_table[terminal_key["e"]][ID_TOK] = make_pair("","");
-	parsing_table[terminal_key["e"]][ADDITION_TOK] = make_pair("e","+Te");
-	parsing_table[terminal_key["e"]][MULTIPLICATION_TOK] = make_pair("","");
-	parsing_table[terminal_key["e"]][LPAREN_TOK] = make_pair("","");
-	parsing_table[terminal_key["e"]][RPAREN_TOK] = make_pair("e","");
-	parsing_table[terminal_key["e"]][MARKER] = make_pair("e","");
+	parsing_table[nonterminal_key["e"]][ID_TOK] = make_pair("","");
+	parsing_table[nonterminal_key["e"]][ADDITION_TOK] = make_pair("e","+Te");
+	parsing_table[nonterminal_key["e"]][MULTIPLICATION_TOK] = make_pair("","");
+	parsing_table[nonterminal_key["e"]][LPAREN_TOK] = make_pair("","");
+	parsing_table[nonterminal_key["e"]][RPAREN_TOK] = make_pair("e","");
+	parsing_table[nonterminal_key["e"]][MARKER] = make_pair("e","");
 
-	parsing_table[terminal_key["T"]][ID_TOK] = make_pair("T","Ft");
-	parsing_table[terminal_key["T"]][ADDITION_TOK] = make_pair("","");
-	parsing_table[terminal_key["T"]][MULTIPLICATION_TOK] = make_pair("","");
-	parsing_table[terminal_key["T"]][LPAREN_TOK] = make_pair("T","FT");
-	parsing_table[terminal_key["T"]][RPAREN_TOK] = make_pair("","");
-	parsing_table[terminal_key["T"]][MARKER] = make_pair("","");
+	parsing_table[nonterminal_key["T"]][ID_TOK] = make_pair("T","Ft");
+	parsing_table[nonterminal_key["T"]][ADDITION_TOK] = make_pair("","");
+	parsing_table[nonterminal_key["T"]][MULTIPLICATION_TOK] = make_pair("","");
+	parsing_table[nonterminal_key["T"]][LPAREN_TOK] = make_pair("T","FT");
+	parsing_table[nonterminal_key["T"]][RPAREN_TOK] = make_pair("","");
+	parsing_table[nonterminal_key["T"]][MARKER] = make_pair("","");
 
-	parsing_table[terminal_key["t"]][ID_TOK] = make_pair("","");
-	parsing_table[terminal_key["t"]][ADDITION_TOK] = make_pair("t","");
-	parsing_table[terminal_key["t"]][MULTIPLICATION_TOK] = make_pair("t","*Ft");
-	parsing_table[terminal_key["t"]][LPAREN_TOK] = make_pair("","");
-	parsing_table[terminal_key["t"]][RPAREN_TOK] = make_pair("t","");
-	parsing_table[terminal_key["t"]][MARKER] = make_pair("t","");
+	parsing_table[nonterminal_key["t"]][ID_TOK] = make_pair("","");
+	parsing_table[nonterminal_key["t"]][ADDITION_TOK] = make_pair("t","");
+	parsing_table[nonterminal_key["t"]][MULTIPLICATION_TOK] = make_pair("t","*Ft");
+	parsing_table[nonterminal_key["t"]][LPAREN_TOK] = make_pair("","");
+	parsing_table[nonterminal_key["t"]][RPAREN_TOK] = make_pair("t","");
+	parsing_table[nonterminal_key["t"]][MARKER] = make_pair("t","");
 
-	parsing_table[terminal_key["F"]][ID_TOK] = make_pair("F","X");
-	parsing_table[terminal_key["F"]][ADDITION_TOK] = make_pair("","");
-	parsing_table[terminal_key["F"]][MULTIPLICATION_TOK] = make_pair("","");
-	parsing_table[terminal_key["F"]][LPAREN_TOK] = make_pair("F","(E)");
-	parsing_table[terminal_key["F"]][RPAREN_TOK] = make_pair("","");
-	parsing_table[terminal_key["F"]][MARKER] = make_pair("","");
+	parsing_table[nonterminal_key["F"]][ID_TOK] = make_pair("F","X");
+	parsing_table[nonterminal_key["F"]][ADDITION_TOK] = make_pair("","");
+	parsing_table[nonterminal_key["F"]][MULTIPLICATION_TOK] = make_pair("","");
+	parsing_table[nonterminal_key["F"]][LPAREN_TOK] = make_pair("F","(E)");
+	parsing_table[nonterminal_key["F"]][RPAREN_TOK] = make_pair("","");
+	parsing_table[nonterminal_key["F"]][MARKER] = make_pair("","");
 	
 }
 void display_rules(vector<pair<string,string> > &rules){
@@ -143,8 +143,8 @@ bool parse_input(int *input){
 			i += 1;
 		}
 		else{
-			pair<string,string> p = parsing_table[terminal_key[top]][input[i]];
-		//	cout<<"Terminal = "<<terminal_key[top]<<" Non terminal = "<<input[i]<<endl;
+			pair<string,string> p = parsing_table[nonterminal_key[top]][input[i]];
+		//	cout<<"Terminal = "<<nonterminal_key[top]<<" Non nonterminal = "<<input[i]<<endl;
 			if(p.first == "" && p.second == ""){
 				return false;
 			}

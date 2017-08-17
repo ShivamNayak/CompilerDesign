@@ -87,7 +87,7 @@ void populate_parsing_table(void){
 	parsing_table[nonterminal_key["T"]][ID_TOK] = make_pair("T","Ft");
 	parsing_table[nonterminal_key["T"]][ADDITION_TOK] = make_pair("","");
 	parsing_table[nonterminal_key["T"]][MULTIPLICATION_TOK] = make_pair("","");
-	parsing_table[nonterminal_key["T"]][LPAREN_TOK] = make_pair("T","FT");
+	parsing_table[nonterminal_key["T"]][LPAREN_TOK] = make_pair("T","Ft");
 	parsing_table[nonterminal_key["T"]][RPAREN_TOK] = make_pair("","");
 	parsing_table[nonterminal_key["T"]][MARKER] = make_pair("","");
 
@@ -144,7 +144,6 @@ bool parse_input(int *input){
 		}
 		else{
 			pair<string,string> p = parsing_table[nonterminal_key[top]][input[i]];
-		//	cout<<"Terminal = "<<nonterminal_key[top]<<" Non nonterminal = "<<input[i]<<endl;
 			if(p.first == "" && p.second == ""){
 				return false;
 			}

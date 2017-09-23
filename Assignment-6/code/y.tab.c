@@ -81,173 +81,208 @@ extern int YYPARSE_DECL();
 #define RETURN_TOK 269
 #define INCLUDE_TOK 270
 #define DEFINE_TOK 271
-#define SEMICOLON_TOK 272
-#define COMMA_TOK 273
-#define DOT_TOK 274
-#define LCURLY_TOK 275
-#define RCURLY_TOK 276
-#define RPAREN_TOK 277
-#define LPAREN_TOK 278
-#define ARRAY_BRACKET_LTOK 279
-#define ARRAY_BRACKET_RTOK 280
-#define ADDITION_TOK 281
-#define INCREMENT_TOK 282
-#define ADDITION_EQUAL_TOK 283
-#define MINUS_TOK 284
-#define DECREMENT_TOK 285
-#define MINUS_EQUAL_TOK 286
-#define MULTIPLICATION_TOK 287
-#define MULTIPLICATION_EQUAL_TOK 288
-#define DIVISION_EQUAL_TOK 289
-#define DIVISION_TOK 290
-#define MODULO_TOK 291
-#define MODULO_EQUAL_TOK 292
-#define RIGHT_SHIFT_TOK 293
-#define GREATER_THAN_EQUAL_TOK 294
-#define GREATER_TOK 295
-#define LEFT_SHIFT_TOK 296
-#define LESS_THAN_EQUAL_TOK 297
-#define LESS_TOK 298
-#define EQUAL_COMPARE_TOK 299
-#define EQUAL_TOK 300
-#define NOT_EQUAL_TOK 301
-#define NOT_TOK 302
-#define BIT_OR_EQUAL_TOK 303
-#define BIT_OR_TOK 304
-#define OR_TOK 305
-#define AND_TOK 306
-#define BIT_AND_EQUAL_TOK 307
-#define BIT_AND_TOK 308
-#define XOR_TOK 309
-#define SPACE_TOK 310
-#define COLON_TOK 311
-#define ID_TOK 312
-#define INT_CONST_TOK 313
-#define RIGHT_SHIT_TOK 314
+#define MAIN_TOK 272
+#define SEMICOLON_TOK 273
+#define COMMA_TOK 274
+#define DOT_TOK 275
+#define LCURLY_TOK 276
+#define RCURLY_TOK 277
+#define RPAREN_TOK 278
+#define LPAREN_TOK 279
+#define ARRAY_BRACKET_LTOK 280
+#define ARRAY_BRACKET_RTOK 281
+#define ADDITION_TOK 282
+#define INCREMENT_TOK 283
+#define ADDITION_EQUAL_TOK 284
+#define MINUS_TOK 285
+#define DECREMENT_TOK 286
+#define MINUS_EQUAL_TOK 287
+#define MULTIPLICATION_TOK 288
+#define MULTIPLICATION_EQUAL_TOK 289
+#define DIVISION_EQUAL_TOK 290
+#define DIVISION_TOK 291
+#define MODULO_TOK 292
+#define MODULO_EQUAL_TOK 293
+#define RIGHT_SHIFT_TOK 294
+#define GREATER_THAN_EQUAL_TOK 295
+#define GREATER_TOK 296
+#define LEFT_SHIFT_TOK 297
+#define LESS_THAN_EQUAL_TOK 298
+#define LESS_TOK 299
+#define EQUAL_COMPARE_TOK 300
+#define EQUAL_TOK 301
+#define NOT_EQUAL_TOK 302
+#define NOT_TOK 303
+#define BIT_OR_EQUAL_TOK 304
+#define BIT_OR_TOK 305
+#define OR_TOK 306
+#define AND_TOK 307
+#define BIT_AND_EQUAL_TOK 308
+#define BIT_AND_TOK 309
+#define XOR_TOK 310
+#define SPACE_TOK 311
+#define COLON_TOK 312
+#define ID_TOK 313
+#define INT_CONST_TOK 314
+#define RIGHT_SHIT_TOK 315
 #define YYERRCODE 256
 typedef short YYINT;
 static const YYINT yylhs[] = {                           -1,
-    0,    1,    1,    2,    2,    2,    2,    2,    5,    8,
-    8,    3,    3,    3,    3,    3,    3,    3,    3,    3,
-    3,    3,    3,   10,   10,   10,   10,   10,   10,   10,
-   10,   10,   10,   10,   10,   10,   10,   10,   10,   10,
-   10,   10,   10,   10,   10,   10,   10,   10,    6,    6,
+    0,    1,    1,    2,    2,    2,    2,    2,    2,    2,
+    2,    2,    2,    8,    8,    9,    9,    9,    9,    9,
+    9,   10,   11,   12,   13,    5,   14,   14,    3,    3,
+    3,    3,    3,    3,    3,    3,    3,    3,    3,    3,
+   16,   16,   16,   16,   16,   16,   16,   16,   16,   16,
+   16,   16,   16,   16,   16,   16,   16,   16,   16,    6,
     6,    6,    6,    6,    6,    6,    6,    6,    6,    6,
-   11,   11,   11,   11,   12,   12,   12,   12,   12,   12,
-   12,    9,    9,    4,    4,    7,    7,
+    6,   17,   17,   17,   17,   18,   18,   18,   18,   18,
+   18,   18,   15,   15,   15,   15,   15,   15,   15,   15,
+   15,   15,   15,   15,   15,   15,   15,    4,    4,    7,
+    7,
 };
 static const YYINT yylen[] = {                            2,
-    1,    2,    0,    1,    2,    2,    7,    7,    3,    2,
-    0,    2,    2,    2,    2,    1,    1,    1,    3,    1,
-    1,    3,    1,    3,    3,    3,    3,    3,    3,    3,
+    1,    2,    0,    1,    2,    2,    7,    7,    6,    6,
+    6,    6,    6,    8,    0,    1,    3,    3,    3,    3,
+    0,    2,    2,    2,    2,    3,    2,    0,    2,    2,
+    2,    2,    1,    1,    1,    3,    1,    1,    3,    1,
     3,    3,    3,    3,    3,    3,    3,    3,    3,    3,
     3,    3,    3,    3,    3,    3,    3,    3,    3,    3,
     3,    3,    3,    3,    3,    3,    3,    3,    3,    3,
-    2,    2,    2,    2,    3,    3,    3,    3,    3,    3,
-    2,    3,    3,   11,    4,    7,    0,
+    3,    2,    2,    2,    2,    3,    3,    3,    3,    3,
+    3,    2,    3,    3,    3,    3,    3,    3,    3,    3,
+    3,    3,    3,    3,    3,    3,    3,   11,    4,    7,
+    0,
 };
 static const YYINT yydefred[] = {                         3,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    4,    0,    0,    0,    0,   17,    2,    0,    0,   20,
-   18,   21,   23,    0,    0,    0,    0,   12,   13,   14,
-   15,   63,   64,   71,   61,   62,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    5,    0,    6,    0,
-    0,    0,    0,    0,   49,   53,   50,   54,   51,   55,
-   52,   56,   57,   58,    0,   73,   19,   22,   59,   60,
-   65,   68,   66,   69,   67,   70,    0,    0,    0,   75,
+    4,    0,    0,    0,    0,   34,    2,    0,    0,   37,
+   35,   38,   40,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,   74,   75,   82,   72,    0,   73,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,   10,    9,
-    0,    0,    0,   24,   31,   32,   25,   33,   34,   26,
-   35,   36,   37,   38,   27,   28,   39,   40,   29,   30,
-   41,   43,   45,   47,   42,   44,   46,   48,    0,    0,
-    0,    0,    0,    0,    8,    7,    0,    0,    0,    0,
-    0,    0,    0,   74,    0,   76,
+    0,    0,    0,    0,    5,    0,    6,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,   85,   86,   87,
+   88,   89,   90,   91,   92,   93,   60,   64,   61,   65,
+   62,   66,   63,   67,   68,   69,    0,   84,   36,   39,
+   70,   71,   94,   96,   76,   79,   77,   80,   95,   97,
+   78,   81,    0,    0,    0,   99,    0,    0,    0,    0,
+    0,    0,    0,    0,   16,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,   27,   26,    0,    0,    0,    0,    0,
+   22,   23,   24,   25,    0,    0,    0,    0,    0,    0,
+    0,    0,   41,   46,   55,   42,   47,   43,   48,   44,
+   49,   45,   50,   51,   53,   52,   54,   56,   58,   57,
+   59,    0,    0,    0,    0,    0,    9,   10,   17,   18,
+   19,   20,   11,   12,   13,    0,    0,    8,    7,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+   98,    0,   14,  100,
 };
 static const YYINT yydgoto[] = {                          1,
-    2,   77,   18,   19,   49,   20,  131,   78,   21,   67,
-   22,   23,
+    2,  103,   18,   19,   57,   20,  174,  110,  116,  117,
+  118,  119,  120,  104,   21,   89,   22,   23,
 };
 static const YYINT yysindex[] = {                         0,
-    0, -253, -276, -271, -269, -256, -296, -288, -272, -266,
-    0, -259, -250, -233, -264,    0,    0, -229, -210,    0,
-    0,    0,    0, -171, -198, -197, -198,    0,    0,    0,
-    0,    0,    0,    0,    0,    0, -285, -274, -257, -255,
- -238, -287, -235, -231, -222, -219,    0, -253,    0, -196,
- -247, -160, -159, -158,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0, -220,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0, -253, -156, -179,    0,
- -153, -253, -189, -217, -188, -215, -187, -213, -211, -186,
- -185, -209, -184, -183, -207, -205, -202, -200,    0,    0,
- -182, -128, -129,    0,    0,    0,    0,    0,    0,    0,
+    0, -250, -269, -267, -257, -251, -270, -281, -272, -236,
+    0, -219, -216, -210, -191,    0,    0, -227, -214,    0,
+    0,    0,    0, -151, -199, -195, -199, -206, -157, -130,
+ -129, -128,    0,    0,    0,    0, -225,    0, -288, -279,
+ -274, -264, -258, -234, -232, -230, -223, -276, -213, -193,
+ -190, -188, -186, -184,    0, -250,    0, -161, -224, -125,
+ -124, -123, -107, -205, -205, -205, -205,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0, -138, -178,
- -139, -253, -198, -173,    0,    0, -133, -253, -268, -127,
- -262, -136, -130,    0, -128,    0,
+    0,    0,    0,    0,    0,    0, -240,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0, -250, -120, -143,    0, -117, -250, -153, -115,
+ -152, -149, -148, -147,    0, -111, -106, -105, -104, -103,
+ -102, -101, -100, -182, -141, -180, -178, -176, -174, -172,
+ -170, -168, -166,    0,    0, -140,  -85,  -83,  -94, -214,
+    0,    0,    0,    0, -214, -205, -205, -205, -205, -214,
+ -214, -214,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,  -92, -132,  -93, -250,  -81,    0,    0,    0,    0,
+    0,    0,    0,    0,    0, -199, -126,    0,    0,  -99,
+  -90, -250, -122, -266,  -80,  -88, -265,  -84,  -78,  -82,
+    0,  -85,    0,    0,
 };
 static const YYINT yyrindex[] = {                         0,
-    0,  143,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0, -126,    0,    0,    0,    0,    0,
+    0,  188,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,  -77,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,  -76,  -75,
+  -73,  -72,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,  -74,    0,    0,    0,    0,
+    0,    0,  -71,  -70,  -70,  -70,  -70,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,  -69,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,  -74,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0, -132,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0, -125,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0, -132,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0, -131,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,  -68,    0,    0,    0,
+    0,    0,    0,    0,    0,  -70,  -70,  -70,  -70,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0, -131,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,  -68,    0,    0,
 };
 static const YYINT yygindex[] = {                         0,
-    0,   -2,    0,    0,    0,  -24,    3,   72,    0,    0,
-   11,  109,
+    0,   -2,    0,    0, -121,  -24,   -9,    0,  -61,    0,
+    0,    0,    0,   99,    0,    0,   11,  158,
 };
-#define YYTABLESIZE 151
+#define YYTABLESIZE 209
 static const YYINT yytable[] = {                         17,
-   52,   24,   54,    3,    4,    5,   25,    6,   26,    7,
-    8,    9,   10,   12,   14,   28,   13,   35,   11,   35,
-   36,   27,   36,   29,   65,   66,   55,   56,   12,   37,
-   38,   13,   39,   40,   41,   42,   43,   57,   58,   30,
-   44,   45,   47,  141,   46,   31,   37,   38,   14,   39,
-   40,   41,   32,   43,   59,   60,   61,   62,   15,   16,
-   83,   33,   84,   85,   48,   86,   87,   88,   89,   90,
-   91,   92,   93,   63,   64,   94,   69,   70,   34,  103,
-   71,   72,   95,   96,   44,   45,   97,   98,   46,   73,
-   74,   50,   75,   76,  105,  106,  108,  109,  111,  112,
-  113,  114,  117,  118,  121,  122,  123,  124,  137,  125,
-  126,  127,  128,   51,   53,   79,   80,   81,   82,  100,
-  101,  102,  104,  107,  110,  115,  116,  119,  120,  136,
-  129,  130,  132,  133,  134,  140,  135,  138,  139,  143,
-  144,  145,    1,   11,   77,   16,   72,  146,   99,  142,
-   68,
+   60,   28,   62,  121,  122,  123,    3,    4,    5,   24,
+    6,   25,    7,    8,    9,   10,   12,   36,  177,   13,
+   38,   26,   11,  178,   69,   70,   14,   27,  183,  184,
+  185,   30,   12,   71,   72,   13,   87,   88,   73,   74,
+   31,  124,   29,  125,  126,   55,  197,  127,   75,   76,
+  128,  129,   14,  130,   77,   78,  131,  111,  112,  113,
+  114,   56,   15,   16,  132,   51,   52,  115,  133,   54,
+   43,   44,   63,   45,   46,   47,   32,   49,   79,   80,
+   81,   82,   83,   84,  179,  180,  181,  182,   68,   85,
+   86,   36,   37,   33,   38,   39,   34,   40,   41,   91,
+   92,   42,   35,   43,   44,  138,   45,   46,   47,   48,
+   49,   58,   50,   59,   51,   52,   53,   61,   54,   93,
+   94,   64,   95,   96,   97,   98,   99,  100,  101,  102,
+  153,  154,  156,  157,  158,  159,  160,  161,  162,  163,
+  164,  165,  166,  167,  168,  169,  170,  171,   65,   66,
+   67,  105,  106,  107,  108,  109,  135,  136,  137,  139,
+  141,  191,  140,  142,  143,  144,  145,  146,  147,  148,
+  149,  155,  189,  172,  173,  150,  151,  152,  175,  176,
+  186,  187,  194,  188,  190,  192,  199,    1,  193,  195,
+  196,  200,  204,  201,  202,   33,   29,   30,  203,   31,
+   32,  134,   28,   83,  198,   90,   15,   21,  101,
 };
 static const YYINT yycheck[] = {                          2,
-   25,  278,   27,  257,  258,  259,  278,  261,  278,  263,
-  264,  265,  266,  282,  302,  312,  285,  282,  272,  282,
-  285,  278,  285,  312,  312,  313,  312,  313,  282,  294,
-  295,  285,  297,  298,  299,  300,  301,  312,  313,  312,
-  305,  306,  272,  312,  309,  312,  294,  295,  302,  297,
-  298,  299,  312,  301,  312,  313,  312,  313,  312,  313,
-  281,  312,  283,  284,  275,  286,  287,  288,  289,  290,
-  291,  292,  293,  312,  313,  296,  312,  313,  312,   82,
-  312,  313,  303,  304,  305,  306,  307,  308,  309,  312,
-  313,  263,  312,  313,  312,  313,  312,  313,  312,  313,
-  312,  313,  312,  313,  312,  313,  312,  313,  133,  312,
-  313,  312,  313,  312,  312,  312,  277,  277,  277,  276,
-  300,  275,  312,  312,  312,  312,  312,  312,  312,  132,
-  313,  260,  262,  272,  313,  138,  276,  311,  272,  267,
-  277,  272,    0,  276,  276,  272,  272,  145,   77,  139,
-   42,
+   25,  272,   27,   65,   66,   67,  257,  258,  259,  279,
+  261,  279,  263,  264,  265,  266,  283,  283,  140,  286,
+  286,  279,  273,  145,  313,  314,  303,  279,  150,  151,
+  152,  313,  283,  313,  314,  286,  313,  314,  313,  314,
+  313,  282,  313,  284,  285,  273,  313,  288,  313,  314,
+  291,  292,  303,  294,  313,  314,  297,  263,  264,  265,
+  266,  276,  313,  314,  305,  306,  307,  273,  309,  310,
+  295,  296,  279,  298,  299,  300,  313,  302,  313,  314,
+  313,  314,  313,  314,  146,  147,  148,  149,  314,  313,
+  314,  283,  284,  313,  286,  287,  313,  289,  290,  313,
+  314,  293,  313,  295,  296,  108,  298,  299,  300,  301,
+  302,  263,  304,  313,  306,  307,  308,  313,  310,  313,
+  314,  279,  313,  314,  313,  314,  313,  314,  313,  314,
+  313,  314,  313,  314,  313,  314,  313,  314,  313,  314,
+  313,  314,  313,  314,  313,  314,  313,  314,  279,  279,
+  279,  313,  278,  278,  278,  263,  277,  301,  276,  313,
+  313,  186,  278,  313,  313,  313,  278,  274,  274,  274,
+  274,  313,  175,  314,  260,  278,  278,  278,  262,  274,
+  273,  314,  273,  277,  266,  312,  267,    0,  288,  192,
+  313,  280,  202,  278,  273,  273,  273,  273,  281,  273,
+  273,  103,  277,  273,  194,   48,  278,  278,  277,
 };
 #define YYFINAL 1
 #ifndef YYDEBUG
 #define YYDEBUG 0
 #endif
-#define YYMAXTOKEN 314
-#define YYUNDFTOKEN 329
+#define YYMAXTOKEN 315
+#define YYUNDFTOKEN 336
 #define YYTRANSLATE(a) ((a) > YYMAXTOKEN ? YYUNDFTOKEN : (a))
 #if YYDEBUG
 static const char *const yyname[] = {
@@ -261,16 +296,17 @@ static const char *const yyname[] = {
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"FOR_TOK","WHILE_TOK",
 "SWITCH_TOK","CASE_TOK","IF_TOK","ELSE_TOK","INTEGER_TOK","FLOATING_TOK",
 "DOUBLE_TOK","CHAR_TOK","BREAK_TOK","DEFAULT_TOK","RETURN_TOK","INCLUDE_TOK",
-"DEFINE_TOK","SEMICOLON_TOK","COMMA_TOK","DOT_TOK","LCURLY_TOK","RCURLY_TOK",
-"RPAREN_TOK","LPAREN_TOK","ARRAY_BRACKET_LTOK","ARRAY_BRACKET_RTOK",
-"ADDITION_TOK","INCREMENT_TOK","ADDITION_EQUAL_TOK","MINUS_TOK","DECREMENT_TOK",
-"MINUS_EQUAL_TOK","MULTIPLICATION_TOK","MULTIPLICATION_EQUAL_TOK",
-"DIVISION_EQUAL_TOK","DIVISION_TOK","MODULO_TOK","MODULO_EQUAL_TOK",
-"RIGHT_SHIFT_TOK","GREATER_THAN_EQUAL_TOK","GREATER_TOK","LEFT_SHIFT_TOK",
-"LESS_THAN_EQUAL_TOK","LESS_TOK","EQUAL_COMPARE_TOK","EQUAL_TOK",
-"NOT_EQUAL_TOK","NOT_TOK","BIT_OR_EQUAL_TOK","BIT_OR_TOK","OR_TOK","AND_TOK",
-"BIT_AND_EQUAL_TOK","BIT_AND_TOK","XOR_TOK","SPACE_TOK","COLON_TOK","ID_TOK",
-"INT_CONST_TOK","RIGHT_SHIT_TOK",0,0,0,0,0,0,0,0,0,0,0,0,0,0,"illegal-symbol",
+"DEFINE_TOK","MAIN_TOK","SEMICOLON_TOK","COMMA_TOK","DOT_TOK","LCURLY_TOK",
+"RCURLY_TOK","RPAREN_TOK","LPAREN_TOK","ARRAY_BRACKET_LTOK",
+"ARRAY_BRACKET_RTOK","ADDITION_TOK","INCREMENT_TOK","ADDITION_EQUAL_TOK",
+"MINUS_TOK","DECREMENT_TOK","MINUS_EQUAL_TOK","MULTIPLICATION_TOK",
+"MULTIPLICATION_EQUAL_TOK","DIVISION_EQUAL_TOK","DIVISION_TOK","MODULO_TOK",
+"MODULO_EQUAL_TOK","RIGHT_SHIFT_TOK","GREATER_THAN_EQUAL_TOK","GREATER_TOK",
+"LEFT_SHIFT_TOK","LESS_THAN_EQUAL_TOK","LESS_TOK","EQUAL_COMPARE_TOK",
+"EQUAL_TOK","NOT_EQUAL_TOK","NOT_TOK","BIT_OR_EQUAL_TOK","BIT_OR_TOK","OR_TOK",
+"AND_TOK","BIT_AND_EQUAL_TOK","BIT_AND_TOK","XOR_TOK","SPACE_TOK","COLON_TOK",
+"ID_TOK","INT_CONST_TOK","RIGHT_SHIT_TOK",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,"illegal-symbol",
 };
 static const char *const yyrule[] = {
 "$accept : programe",
@@ -282,6 +318,23 @@ static const char *const yyrule[] = {
 "statement : reserved_word balanced_paran",
 "statement : IF_TOK LPAREN_TOK relational_expression RPAREN_TOK statement ELSE_TOK statement",
 "statement : SWITCH_TOK LPAREN_TOK ID_TOK RPAREN_TOK LCURLY_TOK case_blocks RCURLY_TOK",
+"statement : INTEGER_TOK MAIN_TOK LPAREN_TOK main_args RPAREN_TOK balanced_paran",
+"statement : INTEGER_TOK ID_TOK LPAREN_TOK function_args RPAREN_TOK balanced_paran",
+"statement : FLOATING_TOK ID_TOK LPAREN_TOK function_args RPAREN_TOK balanced_paran",
+"statement : DOUBLE_TOK ID_TOK LPAREN_TOK function_args RPAREN_TOK balanced_paran",
+"statement : CHAR_TOK ID_TOK LPAREN_TOK function_args RPAREN_TOK balanced_paran",
+"main_args : INTEGER_TOK ID_TOK COMMA_TOK CHAR_TOK MULTIPLICATION_TOK ID_TOK ARRAY_BRACKET_LTOK ARRAY_BRACKET_RTOK",
+"main_args :",
+"function_args : SEMICOLON_TOK",
+"function_args : int_arg COMMA_TOK function_args",
+"function_args : float_arg COMMA_TOK function_args",
+"function_args : double_arg COMMA_TOK function_args",
+"function_args : char_arg COMMA_TOK function_args",
+"function_args :",
+"int_arg : INTEGER_TOK ID_TOK",
+"float_arg : FLOATING_TOK ID_TOK",
+"double_arg : DOUBLE_TOK ID_TOK",
+"char_arg : CHAR_TOK ID_TOK",
 "balanced_paran : LCURLY_TOK nested_statement RCURLY_TOK",
 "nested_statement : statement nested_statement",
 "nested_statement :",
@@ -302,22 +355,16 @@ static const char *const yyrule[] = {
 "arith_expression : ID_TOK MULTIPLICATION_TOK ID_TOK",
 "arith_expression : ID_TOK DIVISION_TOK ID_TOK",
 "arith_expression : ID_TOK MODULO_TOK ID_TOK",
+"arith_expression : ID_TOK ADDITION_TOK INT_CONST_TOK",
+"arith_expression : ID_TOK MINUS_TOK INT_CONST_TOK",
+"arith_expression : ID_TOK MULTIPLICATION_TOK INT_CONST_TOK",
+"arith_expression : ID_TOK DIVISION_TOK INT_CONST_TOK",
+"arith_expression : ID_TOK MODULO_TOK INT_CONST_TOK",
 "arith_expression : ID_TOK RIGHT_SHIFT_TOK ID_TOK",
 "arith_expression : ID_TOK LEFT_SHIFT_TOK ID_TOK",
+"arith_expression : ID_TOK RIGHT_SHIFT_TOK INT_CONST_TOK",
+"arith_expression : ID_TOK LEFT_SHIFT_TOK INT_CONST_TOK",
 "arith_expression : ID_TOK ADDITION_EQUAL_TOK ID_TOK",
-"arith_expression : ID_TOK ADDITION_EQUAL_TOK INT_CONST_TOK",
-"arith_expression : ID_TOK MINUS_EQUAL_TOK ID_TOK",
-"arith_expression : ID_TOK MINUS_EQUAL_TOK INT_CONST_TOK",
-"arith_expression : ID_TOK MULTIPLICATION_EQUAL_TOK ID_TOK",
-"arith_expression : ID_TOK MULTIPLICATION_EQUAL_TOK INT_CONST_TOK",
-"arith_expression : ID_TOK DIVISION_EQUAL_TOK ID_TOK",
-"arith_expression : ID_TOK DIVISION_EQUAL_TOK INT_CONST_TOK",
-"arith_expression : ID_TOK MODULO_EQUAL_TOK ID_TOK",
-"arith_expression : ID_TOK MODULO_EQUAL_TOK INT_CONST_TOK",
-"arith_expression : ID_TOK BIT_OR_EQUAL_TOK ID_TOK",
-"arith_expression : ID_TOK BIT_AND_EQUAL_TOK ID_TOK",
-"arith_expression : ID_TOK BIT_OR_EQUAL_TOK INT_CONST_TOK",
-"arith_expression : ID_TOK BIT_AND_EQUAL_TOK INT_CONST_TOK",
 "arith_expression : ID_TOK BIT_OR_TOK ID_TOK",
 "arith_expression : ID_TOK BIT_AND_TOK ID_TOK",
 "arith_expression : ID_TOK BIT_OR_TOK INT_CONST_TOK",
@@ -347,6 +394,19 @@ static const char *const yyrule[] = {
 "logic_expression : NOT_TOK ID_TOK",
 "assignment_expression : ID_TOK EQUAL_TOK ID_TOK",
 "assignment_expression : ID_TOK EQUAL_TOK INT_CONST_TOK",
+"assignment_expression : ID_TOK ADDITION_EQUAL_TOK INT_CONST_TOK",
+"assignment_expression : ID_TOK MINUS_EQUAL_TOK ID_TOK",
+"assignment_expression : ID_TOK MINUS_EQUAL_TOK INT_CONST_TOK",
+"assignment_expression : ID_TOK MULTIPLICATION_EQUAL_TOK ID_TOK",
+"assignment_expression : ID_TOK MULTIPLICATION_EQUAL_TOK INT_CONST_TOK",
+"assignment_expression : ID_TOK DIVISION_EQUAL_TOK ID_TOK",
+"assignment_expression : ID_TOK DIVISION_EQUAL_TOK INT_CONST_TOK",
+"assignment_expression : ID_TOK MODULO_EQUAL_TOK ID_TOK",
+"assignment_expression : ID_TOK MODULO_EQUAL_TOK INT_CONST_TOK",
+"assignment_expression : ID_TOK BIT_OR_EQUAL_TOK ID_TOK",
+"assignment_expression : ID_TOK BIT_AND_EQUAL_TOK ID_TOK",
+"assignment_expression : ID_TOK BIT_OR_EQUAL_TOK INT_CONST_TOK",
+"assignment_expression : ID_TOK BIT_AND_EQUAL_TOK INT_CONST_TOK",
 "reserved_word : FOR_TOK LPAREN_TOK INTEGER_TOK ID_TOK EQUAL_TOK INT_CONST_TOK SEMICOLON_TOK relational_expression SEMICOLON_TOK unary_expression RPAREN_TOK",
 "reserved_word : WHILE_TOK LPAREN_TOK relational_expression RPAREN_TOK",
 "case_blocks : CASE_TOK INT_CONST_TOK COLON_TOK statement BREAK_TOK SEMICOLON_TOK case_blocks",
@@ -388,7 +448,7 @@ typedef struct {
 } YYSTACKDATA;
 /* variables for the parser stack */
 static YYSTACKDATA yystack;
-#line 131 "main.y"
+#line 186 "main.y"
 
 int main(int argc,char *argv[]){
 	#if YYDEBUG
@@ -407,7 +467,7 @@ void yyerror(char *s){
 void success(void){
 	printf("%s\n","PARSED SUCCESSFULLY .......... :)");
 }
-#line 411 "y.tab.c"
+#line 471 "y.tab.c"
 
 #if YYDEBUG
 #include <stdio.h>		/* needed for printf */
@@ -613,7 +673,7 @@ case 1:
 #line 26 "main.y"
 	{success();}
 break;
-#line 617 "y.tab.c"
+#line 677 "y.tab.c"
     }
     yystack.s_mark -= yym;
     yystate = *yystack.s_mark;

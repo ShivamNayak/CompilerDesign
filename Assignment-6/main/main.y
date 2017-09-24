@@ -14,7 +14,7 @@
 
 %token SEMICOLON_TOK COMMA_TOK DOT_TOK LCURLY_TOK RCURLY_TOK RPAREN_TOK LPAREN_TOK ARRAY_BRACKET_LTOK ARRAY_BRACKET_RTOK
 
-%token ADDITION_TOK INCREMENT_TOK ADDITION_EQUAL_TOK MINUS_TOK DECREMENT_TOK MINUS_EQUAL_TOK MULTIPLICATION_TOK MULTIPLICATION_EQUAL_TOK DIVISION_EQUAL_TOK DIVISION_TOK MODULO_TOK MODULO_EQUAL_TOK RIGHT_SHIFT_TOK GREATER_THAN_EQUAL_TOK GREATER_TOK LEFT_SHIFT_TOK LESS_THAN_EQUAL_TOK LESS_TOK EQUAL_COMPARE_TOK EQUAL_TOK NOT_EQUAL_TOK NOT_TOK BIT_OR_EQUAL_TOK BIT_OR_TOK OR_TOK AND_TOK BIT_AND_EQUAL_TOK BIT_AND_TOK XOR_TOK
+%token ADDITION_TOK INCREMENT_TOK ADDITION_EQUAL_TOK MINUS_TOK DECREMENT_TOK MINUS_EQUAL_TOK MULTIPLICATION_TOK MULTIPLICATION_EQUAL_TOK DIVISION_EQUAL_TOK DIVISION_TOK MODULO_TOK MODULO_EQUAL_TOK RIGHT_SHIFT_TOK GREATER_THAN_EQUAL_TOK GREATER_TOK LEFT_SHIFT_TOK LESS_THAN_EQUAL_TOK LESS_TOK EQUAL_COMPARE_TOK EQUAL_TOK NOT_EQUAL_TOK NOT_TOK BIT_OR_EQUAL_TOK BIT_OR_TOK OR_TOK AND_TOK BIT_AND_EQUAL_TOK BIT_AND_TOK XOR_TOK XOR_EQUAL_TOK
 
 %token SPACE_TOK COLON_TOK ID_TOK INT_CONST_TOK COLON_TOK
 
@@ -35,7 +35,7 @@ statement:
 	SEMICOLON_TOK
 	| expression SEMICOLON_TOK
 	| reserved_word balanced_paran 		/* bug for(..); and while(..);*/
-	| IF_TOK LPAREN_TOK relational_expression RPAREN_TOK statement ELSE_TOK statement  // if(..){...}else{..}
+	| IF_TOK LPAREN_TOK relational_expression RPAREN_TOK balanced_paran ELSE_TOK balanced_paran  // if(..){...}else{..}
 	| SWITCH_TOK LPAREN_TOK ID_TOK RPAREN_TOK LCURLY_TOK case_blocks RCURLY_TOK		   // switch(c){ case ... }
 	| INTEGER_TOK MAIN_TOK LPAREN_TOK main_args RPAREN_TOK balanced_paran			   // int main(...){ ... }
 	| INTEGER_TOK ID_TOK LPAREN_TOK function_args RPAREN_TOK balanced_paran 		   // int func(...){ ... }
@@ -84,18 +84,20 @@ nested_statement:
 	;
 
 expression:
-	INTEGER_TOK ID_TOK 									// int a
-	| FLOATING_TOK ID_TOK 								// float a
-	| DOUBLE_TOK ID_TOK 								// double a
-	| CHAR_TOK ID_TOK 									// char a
-	| ID_TOK 											// a
-	| INT_CONST_TOK 									// 2
-	| assignment_expression 							// a = 2 or a = b
-	| ID_TOK EQUAL_TOK arith_expression 				// a = arith_exp
-	| relational_expression 							// a >,<,>=,<=,== b or 2
-	| unary_expression									// a++,++a,a--,--a
-	| ID_TOK EQUAL_TOK logic_expression 				// a = a||a , a&&a, a^a, !a
-	| logic_expression 									// a||a , a&&a , a^a
+	INTEGER_TOK ID_TOK 														// int a
+	| FLOATING_TOK ID_TOK 													// float a
+	| DOUBLE_TOK ID_TOK 													// double a
+	| CHAR_TOK ID_TOK 														// char a
+	| ID_TOK 																// a
+	| INT_CONST_TOK 														// 2
+	| INTEGER_TOK assignment_expression										// int a=2;
+	| INTEGER_TOK assignment_expression COMMA_TOK assignment_expression	    // int a=2,b=6;
+	| assignment_expression 												// a = 2 or a = b
+	| ID_TOK EQUAL_TOK arith_expression 									// a = arith_exp
+	| relational_expression 												// a >,<,>=,<=,== b or 2
+	| unary_expression														// a++,++a,a--,--a
+	| ID_TOK EQUAL_TOK logic_expression 									// a = a||a , a&&a, a^a, !a
+	| logic_expression 														// a||a , a&&a , a^a
 //	| case_blocks
 	;
 
@@ -169,6 +171,8 @@ assignment_expression:
 	| ID_TOK BIT_AND_EQUAL_TOK ID_TOK 					// 	a &= b
 	| ID_TOK BIT_OR_EQUAL_TOK INT_CONST_TOK 			// 	a |= 2
 	| ID_TOK BIT_AND_EQUAL_TOK INT_CONST_TOK 			// 	a &= 2
+	| ID_TOK XOR_EQUAL_TOK ID_TOK 						//  a ^= b
+	| ID_TOK XOR_EQUAL_TOK INT_CONST_TOK 				// 	a ^= 2
 	; 
 
 reserved_word:
@@ -178,7 +182,7 @@ reserved_word:
 	;
 
 case_blocks:
-	CASE_TOK INT_CONST_TOK COLON_TOK statement BREAK_TOK SEMICOLON_TOK case_blocks
+	CASE_TOK INT_CONST_TOK COLON_TOK nested_statement BREAK_TOK SEMICOLON_TOK case_blocks
 	|
 	;
 

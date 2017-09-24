@@ -65,6 +65,7 @@ end ["*/"]
 "&=" {return BIT_AND_EQUAL_TOK;}
 "&" {return BIT_AND_TOK;}
 "^" {return XOR_TOK;}
+"^=" {return XOR_EQUAL_TOK;}
 ":" {return COLON_TOK;}
 [\t\n" "]
 {letter}({letter}|{digit})* {return ID_TOK;}

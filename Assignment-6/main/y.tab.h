@@ -52,8 +52,9 @@
 #define BIT_AND_EQUAL_TOK 308
 #define BIT_AND_TOK 309
 #define XOR_TOK 310
-#define SPACE_TOK 311
-#define COLON_TOK 312
-#define ID_TOK 313
-#define INT_CONST_TOK 314
-#define RIGHT_SHIT_TOK 315
+#define XOR_EQUAL_TOK 311
+#define SPACE_TOK 312
+#define COLON_TOK 313
+#define ID_TOK 314
+#define INT_CONST_TOK 315
+#define RIGHT_SHIT_TOK 316

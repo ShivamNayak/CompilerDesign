@@ -8,7 +8,7 @@ int main(int argc, char  *argv[])
 	a *= 50;
 	if ( a > 10){
 		b++;
-		for (int i = 0; i < 20; ++i)
+		for (int  i = 0; i < 20; ++i)
 		{
 			int t = 10;
 			t += 1;

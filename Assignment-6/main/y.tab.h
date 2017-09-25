@@ -57,4 +57,3 @@
 #define COLON_TOK 313
 #define ID_TOK 314
 #define INT_CONST_TOK 315
-#define RIGHT_SHIT_TOK 316

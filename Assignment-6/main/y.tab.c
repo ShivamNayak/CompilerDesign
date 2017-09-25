@@ -125,7 +125,6 @@ extern int YYPARSE_DECL();
 #define COLON_TOK 313
 #define ID_TOK 314
 #define INT_CONST_TOK 315
-#define RIGHT_SHIT_TOK 316
 #define YYERRCODE 256
 typedef short YYINT;
 static const YYINT yylhs[] = {                           -1,
@@ -302,8 +301,8 @@ static const YYINT yycheck[] = {                         26,
 #ifndef YYDEBUG
 #define YYDEBUG 0
 #endif
-#define YYMAXTOKEN 316
-#define YYUNDFTOKEN 339
+#define YYMAXTOKEN 315
+#define YYUNDFTOKEN 338
 #define YYTRANSLATE(a) ((a) > YYMAXTOKEN ? YYUNDFTOKEN : (a))
 #if YYDEBUG
 static const char *const yyname[] = {
@@ -326,8 +325,8 @@ static const char *const yyname[] = {
 "LEFT_SHIFT_TOK","LESS_THAN_EQUAL_TOK","LESS_TOK","EQUAL_COMPARE_TOK",
 "EQUAL_TOK","NOT_EQUAL_TOK","NOT_TOK","BIT_OR_EQUAL_TOK","BIT_OR_TOK","OR_TOK",
 "AND_TOK","BIT_AND_EQUAL_TOK","BIT_AND_TOK","XOR_TOK","XOR_EQUAL_TOK",
-"SPACE_TOK","COLON_TOK","ID_TOK","INT_CONST_TOK","RIGHT_SHIT_TOK",0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"illegal-symbol",
+"SPACE_TOK","COLON_TOK","ID_TOK","INT_CONST_TOK",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,"illegal-symbol",
 };
 static const char *const yyrule[] = {
 "$accept : programe",
@@ -485,7 +484,7 @@ typedef struct {
 } YYSTACKDATA;
 /* variables for the parser stack */
 static YYSTACKDATA yystack;
-#line 205 "main.y"
+#line 201 "main.y"
 
 int main(int argc,char *argv[]){
 	#if YYDEBUG
@@ -504,7 +503,7 @@ void yyerror(char *s){
 void success(void){
 	printf("%s\n","PARSED SUCCESSFULLY .......... :)");
 }
-#line 508 "y.tab.c"
+#line 507 "y.tab.c"
 
 #if YYDEBUG
 #include <stdio.h>		/* needed for printf */
@@ -707,10 +706,10 @@ yyreduce:
     switch (yyn)
     {
 case 1:
-#line 26 "main.y"
+#line 22 "main.y"
 	{success();}
 break;
-#line 714 "y.tab.c"
+#line 713 "y.tab.c"
     }
     yystack.s_mark -= yym;
     yystate = *yystack.s_mark;

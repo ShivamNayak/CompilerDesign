@@ -1,6 +1,8 @@
 int main(int argc, char  *argv[])
 {
 	int a = 6;
+	int b;
+	int c;
 	a = b + c;
 	a = b - c;
 	a *= 50;
@@ -32,27 +34,24 @@ int main(int argc, char  *argv[])
 	}
 	switch(c){
 		case 1:
-			int x;
 			for (int i = 0; i < 20; ++i)
 			{
 				++a;
 			}
 			break;
 		case 2:
-			float y;
 			a += 20;
 			break;
 		case 3:
-			double z;
 			b ^= 10;
 			break;
 		case 4:
-			char p;
 			break;
 	}
+	int dev = myfunc(a);
 }
-int myfunc(int a,float b,int c,double d,char e,int f,){
-	int a = 6;
+int myfunc(int a,float b,int c,double d,char e,int f,char x){
+	a = 6;
 	a = b + c;
 	a = b - c;
 	a *= 50;
@@ -70,7 +69,7 @@ int myfunc(int a,float b,int c,double d,char e,int f,){
 			b += 2010;
 		}
 	}
-	a = a|b;
+	a = a||b;
 	for (int i = 0; i < 10; ++i)
 	{
 		a += 10;
@@ -84,22 +83,18 @@ int myfunc(int a,float b,int c,double d,char e,int f,){
 	}
 	switch(c){
 		case 1:
-			int x;
 			for (int i = 0; i < 20; ++i)
 			{
 				++a;
 			}
 			break;
 		case 2:
-			float y;
 			a += 20;
 			break;
 		case 3:
-			double z;
-			b ^= 10;
+			b *= 10;
 			break;
 		case 4:
-			char p;
 			break;
 	}
 }

@@ -51,6 +51,10 @@ main_args:
 
 function_args:
 	SEMICOLON_TOK
+	| int_arg
+	| float_arg
+	| double_arg
+	| char_arg
 	| int_arg COMMA_TOK function_args
 	| float_arg COMMA_TOK function_args
 	| double_arg COMMA_TOK function_args
@@ -73,7 +77,6 @@ double_arg:
 char_arg:
 	CHAR_TOK ID_TOK 
 	;
-
 balanced_paran:
 	LCURLY_TOK nested_statement RCURLY_TOK
 	;
@@ -98,7 +101,8 @@ expression:
 	| unary_expression														// a++,++a,a--,--a
 	| ID_TOK EQUAL_TOK logic_expression 									// a = a||a , a&&a, a^a, !a
 	| logic_expression 														// a||a , a&&a , a^a
-//	| case_blocks
+	| func_call 															// void function()
+	| ID_TOK assignment_expression 											// a = func()
 	;
 
 arith_expression:  							
@@ -173,6 +177,7 @@ assignment_expression:
 	| ID_TOK BIT_AND_EQUAL_TOK INT_CONST_TOK 			// 	a &= 2
 	| ID_TOK XOR_EQUAL_TOK ID_TOK 						//  a ^= b
 	| ID_TOK XOR_EQUAL_TOK INT_CONST_TOK 				// 	a ^= 2
+	| ID_TOK EQUAL_TOK func_call 						// a = func()
 	; 
 
 reserved_word:
@@ -186,6 +191,16 @@ case_blocks:
 	|
 	;
 
+func_call:
+	ID_TOK LPAREN_TOK call_args RPAREN_TOK
+	;
+
+call_args:
+	SEMICOLON_TOK
+	| ID_TOK
+	| ID_TOK COMMA_TOK call_args
+	| 
+	;
 %%
 
 int main(int argc,char *argv[]){

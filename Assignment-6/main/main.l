@@ -2,6 +2,7 @@
 	#include <stdio.h>
 	#include <stdlib.h>
 	#include "y.tab.h"
+	extern int yylineno;
 %}
 letter [a-zA-Z_]
 digit [0-9]
@@ -67,7 +68,8 @@ end ["*/"]
 "^" {return XOR_TOK;}
 "^=" {return XOR_EQUAL_TOK;}
 ":" {return COLON_TOK;}
-[\t\n" "]
+[\t" "]
+[\n] {yylineno++;}
 {letter}({letter}|{digit})* {return ID_TOK;}
 {digit}+ {return INT_CONST_TOK;}
 {digit}+({letter}|{digit})* {;}

@@ -3,7 +3,7 @@ int main(int argc, char  *argv[])
 	int a = 6;
 	int b;
 	int c;
-	a = b + c;
+	a = 20 + 10;
 	a = b - c;
 	a *= 50;
 	if ( a > 10){
@@ -49,6 +49,8 @@ int main(int argc, char  *argv[])
 			break;
 	}
 	int dev = myfunc(a);
+	if(a>10);
+	x = (((x+x)));
 }
 int myfunc(int a,float b,int c,double d,char e,int f,char x){
 	a = 6;
@@ -95,6 +97,12 @@ int myfunc(int a,float b,int c,double d,char e,int f,char x){
 			b *= 10;
 			break;
 		case 4:
+			break;
+		default:
+			for (int i = 0; i < x; ++i)
+			{
+				++a;
+			}
 			break;
 	}
 }

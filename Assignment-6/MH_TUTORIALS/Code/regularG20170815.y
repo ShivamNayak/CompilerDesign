@@ -1,33 +1,34 @@
 %{
-#include<stdlib.h>
-#include<string.h>
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-#include "language.h"
-#define MAX_DERIVATION_STEPS 10
-#define _debug true
-#define true 1
-#define _debugPrint(s) if(_debug) fprintf(stderr,"%s",s)
+	#include<stdlib.h>
+	#include<string.h>
+	#include<stdio.h>
+	#include<stdlib.h>
+	#include<string.h>
+	#include "language.h"
+	#define MAX_DERIVATION_STEPS 10
+	#define _debug true
+	#define true 1
+	#define _debugPrint(s) if(_debug) fprintf(stderr,"%s",s)
 
-int derivationStep = 0;
-char _debugString[1000];
-char _derivationString[1000];
-void generateString(GRAMMAR *g);
-SYMBOL* applyProdRule(SYMBOL *head, GRAMMAR *g);
-STARTEND  duplicateSymbolString(SYMBOL *rhs);
-int isNT(SYMBOL *s, GRAMMAR *g);
-void freeString(STARTEND se);
-GRAMMAR *g;
-extern FILE *yyin;
-int yyerror(char *s);
-int yylex();
-extern char yytext[];
-FILE *grammarOutFile;
-void printGrammar(GRAMMAR *g);
-void printGrammarRuleInString(RULE *r, char str[]);
-void printStringInString(SYMBOL *s, char str[]);
+	int derivationStep = 0;
+	char _debugString[1000];
+	char _derivationString[1000];
+	void generateString(GRAMMAR *g);
+	SYMBOL* applyProdRule(SYMBOL *head, GRAMMAR *g);
+	STARTEND  duplicateSymbolString(SYMBOL *rhs);
+	int isNT(SYMBOL *s, GRAMMAR *g);
+	void freeString(STARTEND se);
+	GRAMMAR *g;
+	extern FILE *yyin;
+	int yyerror(char *s);
+	int yylex();
+	extern char yytext[];
+	FILE *grammarOutFile;
+	void printGrammar(GRAMMAR *g);
+	void printGrammarRuleInString(RULE *r, char str[]);
+	void printStringInString(SYMBOL *s, char str[]);
 %}
+
 %union {
 	char charval;
 	SYMBOL *tsymbolP;

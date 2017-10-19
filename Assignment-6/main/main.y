@@ -1,3 +1,5 @@
+/*	23 Non-terminals and 59 Terminals */
+	
 %{
 	#include <stdio.h>
 	#include <stdlib.h>
@@ -7,7 +9,7 @@
 	void yyerror(char *s);
 	int yylex(void);
 	void success(void);	
-	extern int yylineno,yychar;
+	extern int yylineno;
 
 %}
 
@@ -124,13 +126,18 @@ operand:
 	| INT_CONST_TOK
 	;
 
+rel_operand:
+	operand
+	| arith_expression
+	;
+
 relational_expression:
-	operand GREATER_THAN_EQUAL_TOK operand   				// a >= a
-	| operand GREATER_TOK operand 							// a > a
-	| operand LESS_THAN_EQUAL_TOK operand 					// a <= a
-	| operand LESS_TOK operand 								// a < a
-	| operand EQUAL_COMPARE_TOK operand 					// a == b
-	| operand NOT_EQUAL_TOK operand 						// a != b
+	rel_operand GREATER_THAN_EQUAL_TOK operand   				// a >= a
+	| rel_operand GREATER_TOK operand 							// a > a
+	| rel_operand LESS_THAN_EQUAL_TOK operand 					// a <= a
+	| rel_operand LESS_TOK operand 								// a < a
+	| rel_operand EQUAL_COMPARE_TOK operand 					// a == b
+	| rel_operand NOT_EQUAL_TOK operand 						// a != b
 	| LPAREN_TOK relational_expression RPAREN_TOK       	// (................(relational_expression)....................)
 	;
 

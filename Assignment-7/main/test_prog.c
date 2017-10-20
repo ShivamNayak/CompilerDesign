@@ -1,19 +1,34 @@
+int x;
 int main(int argc)
 {
-	int a = 10;
-	for (int i = 0; i < 10; ++i)
-	{
-		for (int i = 0; i < 20; ++i)
-		{
-			if (i < 3)
+	int a,c;
+	a = 10;
+	switch(c){
+		case 1:
+			a = a + a;
+			for (int i = 0; i < 10; ++i)
 			{
-				int b;
-				b = a * a;
+				if (a > 10)
+				{
+					switch(a){
+						case 1:
+							int b;
+							b = a * 10;
+							break;
+						case 2:
+							int x;
+					}
+				}
+				else{
+					b = 10;
+				}
 			}
-			else{
-				b = a - a;
-			}
-		}
+			break;
+		case 2:
+			a = a - a;
+		case 3:
+			a = a * a;
+		default:
+			a = a / a;
 	}
-	int x = 20;
 }

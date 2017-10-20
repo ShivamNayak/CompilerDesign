@@ -107,6 +107,7 @@ actual_statement:
 	| WHILE_TOK LPAREN_TOK relational_expression RPAREN_TOK statement_block
 	| FOR_TOK LPAREN_TOK declaration_statement EQUAL_TOK INT_CONST_TOK SEMICOLON_TOK relational_expression SEMICOLON_TOK unary_expression RPAREN_TOK statement_block
 	| IF_TOK LPAREN_TOK relational_expression RPAREN_TOK statement_block ELSE_TOK statement_block
+	| IF_TOK LPAREN_TOK relational_expression RPAREN_TOK statement_block
 	| SWITCH_TOK LPAREN_TOK ID_TOK RPAREN_TOK switch_block {
 		check_scope_declaration($3.name);
 	}
@@ -193,7 +194,8 @@ arith_expression:
 	;
 
 relational_expression:
-	operand GREATER_THAN_EQUAL_TOK operand {check_scope_declaration($1.name);}  	
+	operand {check_scope_declaration($1.name);}
+	| operand GREATER_THAN_EQUAL_TOK operand {check_scope_declaration($1.name);}  	
 	| operand GREATER_TOK operand 	{check_scope_declaration($1.name);}			
 	| operand LESS_THAN_EQUAL_TOK operand {check_scope_declaration($1.name);}		
 	| operand LESS_TOK operand 	{check_scope_declaration($1.name);}				
@@ -242,6 +244,7 @@ int main(int argc,const char* argv[]){
 	init_symbol_table();
 	yyin = fopen(argv[1],"r");
 	yyparse();
+	printf("node size is: %ld\n",sizeof(symbol_table[0]));
 	return 0;
 }
 void success(void){
@@ -350,16 +353,17 @@ void check_scope_declaration(char *name){
 	yyerror("Un-declared till now");
 }
 int found(char *name){
-	return symbol_table[(int)name[0]].entry_index != -1  || strlen(name) > 1 ;
+	return symbol_table[(int)name[0]].entry_index != -1  || strlen(name) > 1 || is_number(name);
 }
 int  check_type(char *name1,char *name2){
-	if (strlen(name1) == 1 && strlen(name2) == 1){
+	if (strlen(name1) == 1 && strlen(name2) == 1 && !is_number(name2)){
 		for(int i = 0; i < symbol_table[(int)name1[0]].scope_array_index;i++){
 			for(int j = 0; j < symbol_table[(int)name2[0]].scope_array_index;j++){
 				if (symbol_table[(int)name1[0]].type[symbol_table[(int)name1[0]].scope[i]] == symbol_table[(int)name2[0]].type[symbol_table[(int)name2[0]].scope[j]] && symbol_table[(int)name1[0]].type[symbol_table[(int)name1[0]].scope[i]] != 0 )
 					return symbol_table[(int)name1[0]].type[symbol_table[(int)name1[0]].scope[i]];
 			}
 		}
+		printf("%s === %s\n",name1,name2);
 		yyerror("Mismatched Type");
 	}
 	else if(strlen(name1) == 1){

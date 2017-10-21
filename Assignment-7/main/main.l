@@ -79,7 +79,9 @@ end ["*/"]
 {digit}+ {
 	char *temp = strdup(yytext);
 	yylval.n.name = (char*)malloc(sizeof(char)*yyleng);
+	yylval.n.i_val = (char*)malloc(sizeof(char)*yyleng);
 	strncpy(yylval.n.name,temp,yyleng);
+	strncpy(yylval.n.i_val,temp,yyleng);
 	temp = NULL;
 	return INT_CONST_TOK;}
 {digit}+({letter}|{digit})* {;}

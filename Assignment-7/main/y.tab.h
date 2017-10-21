@@ -64,9 +64,16 @@
 #ifndef YYSTYPE_IS_DECLARED
 #define YYSTYPE_IS_DECLARED 1
 typedef union{
+
+	struct s1{
+    	int i_type;
+    	char *i_val;
+    }p;
+
 	struct s2{
 		char *name;
 		int i_type;
+		char *i_val;
 	}n;
 
     struct s3{

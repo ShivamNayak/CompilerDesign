@@ -12,7 +12,7 @@ int main(int argc)
 		case 3:
 			a = a * a;
 		default:
-			a = a / a;
+			a = a - a;
 	}
 	if (1)
 	{

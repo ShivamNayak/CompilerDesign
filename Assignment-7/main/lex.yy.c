@@ -1153,21 +1153,23 @@ YY_RULE_SETUP
 {
 	char *temp = strdup(yytext);
 	yylval.n.name = (char*)malloc(sizeof(char)*yyleng);
+	yylval.n.i_val = (char*)malloc(sizeof(char)*yyleng);
 	strncpy(yylval.n.name,temp,yyleng);
+	strncpy(yylval.n.i_val,temp,yyleng);
 	temp = NULL;
 	return INT_CONST_TOK;}
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 85 "main.l"
+#line 87 "main.l"
 {;}
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 86 "main.l"
+#line 88 "main.l"
 ECHO;
 	YY_BREAK
-#line 1171 "lex.yy.c"
+#line 1173 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2171,7 +2173,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 86 "main.l"
+#line 88 "main.l"
 
 
 int yywrap(){return 1;}

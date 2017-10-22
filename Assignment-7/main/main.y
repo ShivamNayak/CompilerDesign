@@ -437,18 +437,7 @@ void display_table(void){
 			printf("----------------------------------------------------------------------------------------------------\n");
 		}
 	}
-	/*
-	printf("\t\t\t%s\n\n","VALUE TABLE BUILT SO FAR");
-	printf("----------------------------------------------------------------------------------------------------\n");
-	for(int i=0;i <= 122;i++){
-		if(value_table[i].index != -1){
-			for(int j=0;j < symbol_table[i].scope_array_index;j++){
-				printf("| index: %d total_of_scope_used: %d value = %s in the scope %d\t   |\n",value_table[i].index,symbol_table[i].scope_array_index,value_table[i].value_array[symbol_table[i].scope[j]],symbol_table[i].scope[j]);
-			}
-			printf("----------------------------------------------------------------------------------------------------\n");
-		}
-	}
-	*/
+	printf("Total Size used by variables in symbol table is : %ld KB\n",sizeof(symbol_table[0]) * 122 / 1000);
 }
 void check_scope_declaration(char *name){
 	if(DEBUG_INFO){

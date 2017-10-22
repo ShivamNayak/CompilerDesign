@@ -552,6 +552,7 @@ void display_table(void){
 			printf("----------------------------------------------------------------------------------------------------\n");
 		}
 	}
+	printf("Total Size used by variables in symbol table is : %ld KB\n",sizeof(symbol_table[0]) * 122 / 1000);
 	/*
 	printf("\t\t\t%s\n\n","VALUE TABLE BUILT SO FAR");
 	printf("----------------------------------------------------------------------------------------------------\n");
@@ -678,7 +679,7 @@ int retrieve_value(char *name,int scope){
 	}
 	return atoi(value_table[name[0]].value_array[scope]);
 }
-#line 682 "y.tab.c"
+#line 683 "y.tab.c"
 
 #if YYDEBUG
 #include <stdio.h>		/* needed for printf */
@@ -1166,7 +1167,7 @@ case 63:
 		var_buffer[var_buffer_index++] = yystack.l_mark[0].n.name[0];
 	}
 break;
-#line 1170 "y.tab.c"
+#line 1171 "y.tab.c"
     }
     yystack.s_mark -= yym;
     yystate = *yystack.s_mark;

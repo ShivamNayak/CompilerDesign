@@ -420,16 +420,16 @@ void check_scope_declaration(char *name){
 	yyerror("Un-declared till now");
 }
 int found(char *name){
-	return symbol_table[(int)name[0]].entry_index != -1  || strlen(name) > 1 || is_number(name);
+	return symbol_table[name[0]].entry_index != -1  || strlen(name) > 1 || is_number(name);
 }
 int  check_type(char *name1,char *name2){
 	if(DEBUG_INFO){
 		printf("Current scope in check_type for %s %s is: %d in line_no: %d\n",name1,name2,global_scope,yylineno);
 	}
 	if (strlen(name1) == 1 && strlen(name2) == 1 && !is_number(name2)){
-		for(int i = 0; i < symbol_table[(int)name1[0]].scope_array_index;i++){
-			for(int j = 0; j < symbol_table[(int)name2[0]].scope_array_index;j++){
-				if (symbol_table[(int)name1[0]].type[symbol_table[(int)name1[0]].scope[i]] == symbol_table[(int)name2[0]].type[symbol_table[(int)name2[0]].scope[j]] && symbol_table[(int)name1[0]].type[symbol_table[(int)name1[0]].scope[i]] != 0 )
+		for(int i = 0; i < symbol_table[name1[0]].scope_array_index;i++){
+			for(int j = 0; j < symbol_table[name2[0]].scope_array_index;j++){
+				if (symbol_table[name1[0]].type[symbol_table[name1[0]].scope[i]] == symbol_table[name2[0]].type[symbol_table[name2[0]].scope[j]] && symbol_table[name1[0]].type[symbol_table[name1[0]].scope[i]] != 0 )
 					return symbol_table[(int)name1[0]].type[symbol_table[(int)name1[0]].scope[i]];
 			}
 		}

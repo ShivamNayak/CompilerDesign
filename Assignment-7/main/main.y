@@ -4,7 +4,7 @@
 	#include <string.h>
 	#include <ctype.h>
 	#include "error.h"
-	#define DEBUG_INFO 1
+	#define DEBUG_INFO 0
 	#define itoa my_itoa
 	int yylex(void);
 	extern char* yytext;
@@ -157,7 +157,9 @@ assignment_expression:
 
 	}
 	| declaration_statement EQUAL_TOK INT_CONST_TOK SEMICOLON_TOK {
-		printf("Declaration statement is correctly parsed at line no %d\n",yylineno);
+		if(DEBUG_INFO){
+			printf("Declaration statement is correctly parsed at line no %d\n",yylineno);
+		}
 	}
 	| ID_TOK EQUAL_TOK operand SEMICOLON_TOK {
 		check_scope_declaration($1.name);
@@ -236,13 +238,48 @@ arith_expression:
 	;
 
 relational_expression:
-	operand {check_scope_declaration($1.name);}
-	| operand GREATER_THAN_EQUAL_TOK operand {check_scope_declaration($1.name);}  	
-	| operand GREATER_TOK operand 	{check_scope_declaration($1.name);}			
-	| operand LESS_THAN_EQUAL_TOK operand {check_scope_declaration($1.name);}		
-	| operand LESS_TOK operand 	{check_scope_declaration($1.name);}				
-	| operand EQUAL_COMPARE_TOK operand {check_scope_declaration($1.name);}			
-	| operand NOT_EQUAL_TOK operand 	{check_scope_declaration($1.name);}			
+	operand {
+		check_scope_declaration($1.name);
+		if(DEBUG_INFO){
+			printf("relational expression having only operand has been found in line no: %d\n",yylineno);
+		}
+	}
+	| operand GREATER_THAN_EQUAL_TOK operand {
+		check_scope_declaration($1.name);
+		if(DEBUG_INFO){
+			printf("relational expression has been found in line no: %d\n",yylineno);
+		}  	
+	}
+	| operand GREATER_TOK operand 	{
+		check_scope_declaration($1.name);
+		if(DEBUG_INFO){
+			printf("relational expression has been found in line no: %d\n",yylineno);
+		}			
+	}
+	| operand LESS_THAN_EQUAL_TOK operand {
+		check_scope_declaration($1.name);
+		if(DEBUG_INFO){
+			printf("relational expression has been found in line no: %d\n",yylineno);
+		}		
+	}
+	| operand LESS_TOK operand 	{
+		check_scope_declaration($1.name);
+		if(DEBUG_INFO){
+			printf("relational expression has been found in line no: %d\n",yylineno);
+		}				
+	}
+	| operand EQUAL_COMPARE_TOK operand {
+		check_scope_declaration($1.name);
+		if(DEBUG_INFO){
+			printf("relational expression has been found in line no: %d\n",yylineno);
+		}			
+	}
+	| operand NOT_EQUAL_TOK operand 	{
+		check_scope_declaration($1.name);
+		if(DEBUG_INFO){
+			printf("relational expression has been found in line no: %d\n",yylineno);
+		}			
+	}
 	| LPAREN_TOK relational_expression RPAREN_TOK       					
 	;
 
@@ -287,7 +324,6 @@ int main(int argc,const char* argv[]){
 	init_value_table();
 	yyin = fopen(argv[1],"r");
 	yyparse();
-	printf("node size is: %ld\n",sizeof(symbol_table[0]));
 	return 0;
 }
 void success(void){
@@ -305,6 +341,10 @@ void yyerror(char *s){
 void init_symbol_table(void){
 	for(int i=0;i <= 122;i++){
 		symbol_table[i].entry_index = -1;
+	}
+	if(DEBUG_INFO){
+		printf("Symbol table initialised with NULL\n");
+		printf("Each node size of Symbol table is: %ld\n",sizeof(symbol_table[0]));
 	}
 }
 void init_value_table(void){
@@ -430,7 +470,7 @@ int  check_type(char *name1,char *name2){
 		for(int i = 0; i < symbol_table[name1[0]].scope_array_index;i++){
 			for(int j = 0; j < symbol_table[name2[0]].scope_array_index;j++){
 				if (symbol_table[name1[0]].type[symbol_table[name1[0]].scope[i]] == symbol_table[name2[0]].type[symbol_table[name2[0]].scope[j]] && symbol_table[name1[0]].type[symbol_table[name1[0]].scope[i]] != 0 )
-					return symbol_table[(int)name1[0]].type[symbol_table[(int)name1[0]].scope[i]];
+					return symbol_table[name1[0]].type[symbol_table[(int)name1[0]].scope[i]];
 			}
 		}
 		printf("%s === %s\n",name1,name2);

@@ -23,7 +23,7 @@
 	#include <string.h>
 	#include <ctype.h>
 	#include "error.h"
-	#define DEBUG_INFO 1
+	#define DEBUG_INFO 0
 	#define itoa my_itoa
 	int yylex(void);
 	extern char* yytext;
@@ -432,14 +432,13 @@ typedef struct {
 } YYSTACKDATA;
 /* variables for the parser stack */
 static YYSTACKDATA yystack;
-#line 284 "main.y"
+#line 321 "main.y"
 
 int main(int argc,const char* argv[]){
 	init_symbol_table();
 	init_value_table();
 	yyin = fopen(argv[1],"r");
 	yyparse();
-	printf("node size is: %ld\n",sizeof(symbol_table[0]));
 	return 0;
 }
 void success(void){
@@ -457,6 +456,10 @@ void yyerror(char *s){
 void init_symbol_table(void){
 	for(int i=0;i <= 122;i++){
 		symbol_table[i].entry_index = -1;
+	}
+	if(DEBUG_INFO){
+		printf("Symbol table initialised with NULL\n");
+		printf("Each node size of Symbol table is: %ld\n",sizeof(symbol_table[0]));
 	}
 }
 void init_value_table(void){
@@ -582,7 +585,7 @@ int  check_type(char *name1,char *name2){
 		for(int i = 0; i < symbol_table[name1[0]].scope_array_index;i++){
 			for(int j = 0; j < symbol_table[name2[0]].scope_array_index;j++){
 				if (symbol_table[name1[0]].type[symbol_table[name1[0]].scope[i]] == symbol_table[name2[0]].type[symbol_table[name2[0]].scope[j]] && symbol_table[name1[0]].type[symbol_table[name1[0]].scope[i]] != 0 )
-					return symbol_table[(int)name1[0]].type[symbol_table[(int)name1[0]].scope[i]];
+					return symbol_table[name1[0]].type[symbol_table[(int)name1[0]].scope[i]];
 			}
 		}
 		printf("%s === %s\n",name1,name2);
@@ -675,7 +678,7 @@ int retrieve_value(char *name,int scope){
 	}
 	return atoi(value_table[name[0]].value_array[scope]);
 }
-#line 679 "y.tab.c"
+#line 682 "y.tab.c"
 
 #if YYDEBUG
 #include <stdio.h>		/* needed for printf */
@@ -941,11 +944,13 @@ break;
 case 34:
 #line 159 "main.y"
 	{
-		printf("Declaration statement is correctly parsed at line no %d\n",yylineno);
+		if(DEBUG_INFO){
+			printf("Declaration statement is correctly parsed at line no %d\n",yylineno);
+		}
 	}
 break;
 case 35:
-#line 162 "main.y"
+#line 164 "main.y"
 	{
 		check_scope_declaration(yystack.l_mark[-3].n.name);
 		check_scope_declaration(yystack.l_mark[-1].n.name);
@@ -955,7 +960,7 @@ case 35:
 	}
 break;
 case 36:
-#line 172 "main.y"
+#line 174 "main.y"
 	{
 		check_scope_declaration(yystack.l_mark[-2].n.name);
 		check_scope_declaration(yystack.l_mark[0].n.name);
@@ -965,7 +970,7 @@ case 36:
 	}
 break;
 case 37:
-#line 179 "main.y"
+#line 181 "main.y"
 	{
 		check_scope_declaration(yystack.l_mark[-2].n.name);
 		check_scope_declaration(yystack.l_mark[0].n.name);
@@ -975,7 +980,7 @@ case 37:
 	}
 break;
 case 38:
-#line 186 "main.y"
+#line 188 "main.y"
 	{
 		check_scope_declaration(yystack.l_mark[-2].n.name);
 		check_scope_declaration(yystack.l_mark[0].n.name);
@@ -985,7 +990,7 @@ case 38:
 	}
 break;
 case 39:
-#line 193 "main.y"
+#line 195 "main.y"
 	{
 		check_scope_declaration(yystack.l_mark[-2].n.name);
 		check_scope_declaration(yystack.l_mark[0].n.name);
@@ -995,7 +1000,7 @@ case 39:
 	}
 break;
 case 40:
-#line 200 "main.y"
+#line 202 "main.y"
 	{
 		check_scope_declaration(yystack.l_mark[-2].n.name);
 		check_scope_declaration(yystack.l_mark[0].n.name);
@@ -1005,7 +1010,7 @@ case 40:
 	}
 break;
 case 41:
-#line 207 "main.y"
+#line 209 "main.y"
 	{
 		check_scope_declaration(yystack.l_mark[-2].n.name);
 		check_scope_declaration(yystack.l_mark[0].n.name);
@@ -1015,7 +1020,7 @@ case 41:
 	}
 break;
 case 42:
-#line 214 "main.y"
+#line 216 "main.y"
 	{
 		check_scope_declaration(yystack.l_mark[-2].n.name);
 		check_scope_declaration(yystack.l_mark[0].n.name);
@@ -1025,7 +1030,7 @@ case 42:
 	}
 break;
 case 43:
-#line 221 "main.y"
+#line 223 "main.y"
 	{
 		check_scope_declaration(yystack.l_mark[-2].n.name);
 		check_scope_declaration(yystack.l_mark[0].n.name);
@@ -1035,7 +1040,7 @@ case 43:
 	}
 break;
 case 44:
-#line 228 "main.y"
+#line 230 "main.y"
 	{
 		check_scope_declaration(yystack.l_mark[-2].n.name);
 		check_scope_declaration(yystack.l_mark[0].n.name);
@@ -1045,88 +1050,123 @@ case 44:
 	}
 break;
 case 45:
-#line 235 "main.y"
+#line 237 "main.y"
 	{}
 break;
 case 46:
-#line 239 "main.y"
-	{check_scope_declaration(yystack.l_mark[0].n.name);}
+#line 241 "main.y"
+	{
+		check_scope_declaration(yystack.l_mark[0].n.name);
+		if(DEBUG_INFO){
+			printf("relational expression having only operand has been found in line no: %d\n",yylineno);
+		}
+	}
 break;
 case 47:
-#line 240 "main.y"
-	{check_scope_declaration(yystack.l_mark[-2].n.name);}
+#line 247 "main.y"
+	{
+		check_scope_declaration(yystack.l_mark[-2].n.name);
+		if(DEBUG_INFO){
+			printf("relational expression has been found in line no: %d\n",yylineno);
+		}  	
+	}
 break;
 case 48:
-#line 241 "main.y"
-	{check_scope_declaration(yystack.l_mark[-2].n.name);}
+#line 253 "main.y"
+	{
+		check_scope_declaration(yystack.l_mark[-2].n.name);
+		if(DEBUG_INFO){
+			printf("relational expression has been found in line no: %d\n",yylineno);
+		}			
+	}
 break;
 case 49:
-#line 242 "main.y"
-	{check_scope_declaration(yystack.l_mark[-2].n.name);}
+#line 259 "main.y"
+	{
+		check_scope_declaration(yystack.l_mark[-2].n.name);
+		if(DEBUG_INFO){
+			printf("relational expression has been found in line no: %d\n",yylineno);
+		}		
+	}
 break;
 case 50:
-#line 243 "main.y"
-	{check_scope_declaration(yystack.l_mark[-2].n.name);}
+#line 265 "main.y"
+	{
+		check_scope_declaration(yystack.l_mark[-2].n.name);
+		if(DEBUG_INFO){
+			printf("relational expression has been found in line no: %d\n",yylineno);
+		}				
+	}
 break;
 case 51:
-#line 244 "main.y"
-	{check_scope_declaration(yystack.l_mark[-2].n.name);}
+#line 271 "main.y"
+	{
+		check_scope_declaration(yystack.l_mark[-2].n.name);
+		if(DEBUG_INFO){
+			printf("relational expression has been found in line no: %d\n",yylineno);
+		}			
+	}
 break;
 case 52:
-#line 245 "main.y"
-	{check_scope_declaration(yystack.l_mark[-2].n.name);}
+#line 277 "main.y"
+	{
+		check_scope_declaration(yystack.l_mark[-2].n.name);
+		if(DEBUG_INFO){
+			printf("relational expression has been found in line no: %d\n",yylineno);
+		}			
+	}
 break;
 case 54:
-#line 250 "main.y"
+#line 287 "main.y"
 	{check_scope_declaration(yystack.l_mark[-1].n.name);}
 break;
 case 55:
-#line 251 "main.y"
+#line 288 "main.y"
 	{check_scope_declaration(yystack.l_mark[-1].n.name);}
 break;
 case 56:
-#line 252 "main.y"
+#line 289 "main.y"
 	{check_scope_declaration(yystack.l_mark[0].n.name);}
 break;
 case 57:
-#line 253 "main.y"
+#line 290 "main.y"
 	{check_scope_declaration(yystack.l_mark[0].n.name);}
 break;
 case 58:
-#line 257 "main.y"
+#line 294 "main.y"
 	{}
 break;
 case 59:
-#line 258 "main.y"
+#line 295 "main.y"
 	{}
 break;
 case 60:
-#line 262 "main.y"
+#line 299 "main.y"
 	{
 		assign_type(yystack.l_mark[-1].t.i_type,1);
 	}
 break;
 case 61:
-#line 268 "main.y"
+#line 305 "main.y"
 	{
 		assign_type(yystack.l_mark[-1].t.i_type,0);
 	}
 break;
 case 62:
-#line 274 "main.y"
+#line 311 "main.y"
 	{
 		insert_by_name(yystack.l_mark[0].n.name);
 		var_buffer[var_buffer_index++] = yystack.l_mark[0].n.name[0];
 	}
 break;
 case 63:
-#line 278 "main.y"
+#line 315 "main.y"
 	{
 		insert_by_name(yystack.l_mark[0].n.name);
 		var_buffer[var_buffer_index++] = yystack.l_mark[0].n.name[0];
 	}
 break;
-#line 1130 "y.tab.c"
+#line 1170 "y.tab.c"
     }
     yystack.s_mark -= yym;
     yystate = *yystack.s_mark;

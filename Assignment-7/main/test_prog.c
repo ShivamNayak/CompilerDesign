@@ -14,7 +14,7 @@ int main(int argc)
 		default:
 			a = a - a;
 	}
-	if (1)
+	if (a > c)
 	{
 		int x = 50;
 		for (int i = 0; i < 10; ++i)

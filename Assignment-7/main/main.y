@@ -4,8 +4,8 @@
 	#include <string.h>
 	#include <ctype.h>
 	#include "error.h"
-	#define DEBUG_INFO 0
-	#define itoa my_itoa
+	#define DEBUG_INFO 1
+	#define MAX_FUNCTION 10
 	int yylex(void);
 	extern char* yytext;
 	extern FILE* yyin;
@@ -14,6 +14,7 @@
 	int var_buffer[100];
 	int var_buffer_index = 0;
 	int scope_adjust = 0;
+	int function_index = 0;
 	struct entry{
 		int entry_index;
 		char var_name;
@@ -22,27 +23,18 @@
 		int line_no[10];
 		int scope_array_index;
 		int global_flag;
-	}symbol_table[122],temp_table[122];
-	
-	struct value_table_entry{
-		int index;
-		char *value_array[10];
-	}value_table[122];
+	}symbol_table[MAX_FUNCTION][122],temp_table[122]; 
 
 	void insert_by_name(char *name);
 	int found(char *name);
-	void display_table(void);
+	void display_table(int table_index);
 	int check_for_same_scope(struct entry node1,struct entry node2);
-	void check_scope_declaration(char *name);
+	void check_scope_declaration(char *name,int scope);
 	int check_type(char *name1,char *name2);
 	int is_number(const char *s);
 	void init_symbol_table(void);
-	void init_value_table(void);
 	void check_type_assign(char *name,int type,int scope);
-	void insert_into_value_table(char *name,int scope,char *value);
-	int retrieve_value(char *name,int scope);
-	int min(int a,int b);
-	char *my_itoa(int num, char *str);
+	void invalidate_scope_var(int target_scope);
 
 %}
 
@@ -86,12 +78,25 @@ programe:
 
 function:
 	global_declaration_statement SEMICOLON_TOK function
-	| data_type MAIN_TOK LPAREN_TOK main_args RPAREN_TOK statement_block
+	|data_type MAIN_TOK LPAREN_TOK func_args RPAREN_TOK{
+		function_index++;
+		if(DEBUG_INFO){
+			printf("%dth Main Function has been found in line no: %d\n",function_index,yylineno);
+		}
+	} statement_block function_declr
+
+function_declr:
+	data_type ID_TOK LPAREN_TOK func_args RPAREN_TOK{
+		function_index++;
+		if(DEBUG_INFO){
+			printf("%dth User Defined Function has been found in line no: %d\n",function_index,yylineno);
+		}
+	} statement_block function_declr
 	|
 	;
 
-main_args:
-	main_args COMMA_TOK data_type ID_TOK
+func_args:
+	func_args COMMA_TOK data_type ID_TOK
 	| data_type ID_TOK
 	;
 
@@ -106,6 +111,7 @@ statement_block:
 	LCURLY_TOK {
 		global_scope += 1;
 	} statement nested_blocks {
+		invalidate_scope_var(global_scope);
 		global_scope -= 1;
 	} RCURLY_TOK
 	;
@@ -127,9 +133,10 @@ actual_statement:
 	| IF_TOK LPAREN_TOK relational_expression RPAREN_TOK statement_block ELSE_TOK statement_block
 	| IF_TOK LPAREN_TOK relational_expression RPAREN_TOK statement_block
 	| SWITCH_TOK LPAREN_TOK ID_TOK RPAREN_TOK switch_block {
-		check_scope_declaration($3.name);
+		check_scope_declaration($3.name,global_scope);
 	}
 	| assignment_expression
+	| unary_expression SEMICOLON_TOK
 	;
 switch_block:
 	LCURLY_TOK {
@@ -149,11 +156,8 @@ optional_break:
 	;
 assignment_expression:
 	ID_TOK EQUAL_TOK arith_expression SEMICOLON_TOK {
-		check_scope_declaration($1.name);
+		check_scope_declaration($1.name,global_scope);
 		check_type_assign($1.name,$3.i_type,global_scope);
-		//$1.i_val = $3.i_val;
-		//printf("in assignment arith exp ==> value of %s is = %d\n",$1.name,atoi($1.i_val));
-		//insert_into_value_table($1.name,global_scope,$3.i_val);
 
 	}
 	| declaration_statement EQUAL_TOK INT_CONST_TOK SEMICOLON_TOK {
@@ -162,120 +166,100 @@ assignment_expression:
 		}
 	}
 	| ID_TOK EQUAL_TOK operand SEMICOLON_TOK {
-		check_scope_declaration($1.name);
-		check_scope_declaration($3.name);
+		check_scope_declaration($1.name,global_scope);
+		check_scope_declaration($3.name,global_scope);
 		check_type($1.name,$3.name);
-		//$1.i_val = $3.i_val;
-		//insert_into_value_table($1.name,global_scope,$3.i_val);
 	}
 	;
 
 arith_expression:
 	operand ADDITION_TOK operand {
-		check_scope_declaration($1.name);
-		check_scope_declaration($3.name);
+		check_scope_declaration($1.name,global_scope);
+		check_scope_declaration($3.name,global_scope);
 		$$.i_type = check_type($1.name,$3.name);
-		//int temp = retrieve_value($1.name,global_scope) + retrieve_value($3.name,global_scope);
-		//$$.i_val = my_itoa(temp,$$.i_val);
 	}														
 	| operand MINUS_TOK operand {
-		check_scope_declaration($1.name);
-		check_scope_declaration($3.name);
+		check_scope_declaration($1.name,global_scope);
+		check_scope_declaration($3.name,global_scope);
 		$$.i_type = check_type($1.name,$3.name);
-		//int temp = retrieve_value($1.name,global_scope) - retrieve_value($3.name,global_scope);
-		//$$.i_val = my_itoa(temp,$$.i_val);
 	}												
 	| operand MULTIPLICATION_TOK operand{
-		check_scope_declaration($1.name);
-		check_scope_declaration($3.name);
+		check_scope_declaration($1.name,global_scope);
+		check_scope_declaration($3.name,global_scope);
 		$$.i_type = check_type($1.name,$3.name);
-		//int temp = retrieve_value($1.name,global_scope) * retrieve_value($3.name,global_scope);
-		//$$.i_val = my_itoa(temp,$$.i_val);
 	} 												
 	| operand DIVISION_TOK operand {
-		check_scope_declaration($1.name);
-		check_scope_declaration($3.name);
+		check_scope_declaration($1.name,global_scope);
+		check_scope_declaration($3.name,global_scope);
 		$$.i_type = check_type($1.name,$3.name);
-		//int temp = retrieve_value($1.name,global_scope) / retrieve_value($3.name,global_scope);
-		//$$.i_val = my_itoa(temp,$$.i_val);
 	}													
 	| operand MODULO_TOK operand 	{
-		check_scope_declaration($1.name);
-		check_scope_declaration($3.name);
+		check_scope_declaration($1.name,global_scope);
+		check_scope_declaration($3.name,global_scope);
 		$$.i_type = check_type($1.name,$3.name);
-		//int temp = retrieve_value($1.name,global_scope) % retrieve_value($3.name,global_scope);
-		//$$.i_val = my_itoa(temp,$$.i_val);
 	}												
 	| operand RIGHT_SHIFT_TOK operand{
-		check_scope_declaration($1.name);
-		check_scope_declaration($3.name);
+		check_scope_declaration($1.name,global_scope);
+		check_scope_declaration($3.name,global_scope);
 		$$.i_type = check_type($1.name,$3.name);
-		//int temp = retrieve_value($1.name,global_scope) >> retrieve_value($3.name,global_scope);
-		//$$.i_val = my_itoa(temp,$$.i_val);
 	}																
 	| operand LEFT_SHIFT_TOK operand {
-		check_scope_declaration($1.name);
-		check_scope_declaration($3.name);
+		check_scope_declaration($1.name,global_scope);
+		check_scope_declaration($3.name,global_scope);
 		$$.i_type = check_type($1.name,$3.name);
-		//int temp = retrieve_value($1.name,global_scope) << retrieve_value($3.name,global_scope);
-		//$$.i_val = my_itoa(temp,$$.i_val);
 	}																
 	| operand BIT_OR_TOK operand 	{
-		check_scope_declaration($1.name);
-		check_scope_declaration($3.name);
+		check_scope_declaration($1.name,global_scope);
+		check_scope_declaration($3.name,global_scope);
 		$$.i_type = check_type($1.name,$3.name);
-		//int temp = retrieve_value($1.name,global_scope) | retrieve_value($3.name,global_scope);
-		//$$.i_val = my_itoa(temp,$$.i_val);
 	}													
 	| operand BIT_AND_TOK operand 	{
-		check_scope_declaration($1.name);
-		check_scope_declaration($3.name);
+		check_scope_declaration($1.name,global_scope);
+		check_scope_declaration($3.name,global_scope);
 		$$.i_type = check_type($1.name,$3.name);
-		//int temp = retrieve_value($1.name,global_scope) + retrieve_value($3.name,global_scope);
-		//$$.i_val = my_itoa(temp,$$.i_val);
 	}													
 	| LPAREN_TOK arith_expression RPAREN_TOK {}           			
 	;
 
 relational_expression:
 	operand {
-		check_scope_declaration($1.name);
+		check_scope_declaration($1.name,global_scope);
 		if(DEBUG_INFO){
 			printf("relational expression having only operand has been found in line no: %d\n",yylineno);
 		}
 	}
 	| operand GREATER_THAN_EQUAL_TOK operand {
-		check_scope_declaration($1.name);
+		check_scope_declaration($1.name,global_scope);
 		if(DEBUG_INFO){
 			printf("relational expression has been found in line no: %d\n",yylineno);
 		}  	
 	}
 	| operand GREATER_TOK operand 	{
-		check_scope_declaration($1.name);
+		check_scope_declaration($1.name,global_scope);
 		if(DEBUG_INFO){
 			printf("relational expression has been found in line no: %d\n",yylineno);
 		}			
 	}
 	| operand LESS_THAN_EQUAL_TOK operand {
-		check_scope_declaration($1.name);
+		check_scope_declaration($1.name,global_scope);
 		if(DEBUG_INFO){
 			printf("relational expression has been found in line no: %d\n",yylineno);
 		}		
 	}
 	| operand LESS_TOK operand 	{
-		check_scope_declaration($1.name);
+		check_scope_declaration($1.name,global_scope);
 		if(DEBUG_INFO){
 			printf("relational expression has been found in line no: %d\n",yylineno);
 		}				
 	}
 	| operand EQUAL_COMPARE_TOK operand {
-		check_scope_declaration($1.name);
+		check_scope_declaration($1.name,global_scope);
 		if(DEBUG_INFO){
 			printf("relational expression has been found in line no: %d\n",yylineno);
 		}			
 	}
 	| operand NOT_EQUAL_TOK operand 	{
-		check_scope_declaration($1.name);
+		check_scope_declaration($1.name,global_scope);
 		if(DEBUG_INFO){
 			printf("relational expression has been found in line no: %d\n",yylineno);
 		}			
@@ -284,10 +268,10 @@ relational_expression:
 	;
 
 unary_expression:
-	ID_TOK INCREMENT_TOK {check_scope_declaration($1.name);} 		
-	| ID_TOK DECREMENT_TOK {check_scope_declaration($1.name);}		
-	| INCREMENT_TOK ID_TOK {check_scope_declaration($2.name);}		
-	| DECREMENT_TOK ID_TOK {check_scope_declaration($2.name);}		
+	ID_TOK INCREMENT_TOK {check_scope_declaration($1.name,global_scope);} 		
+	| ID_TOK DECREMENT_TOK {check_scope_declaration($1.name,global_scope);}		
+	| INCREMENT_TOK ID_TOK {check_scope_declaration($2.name,global_scope);}		
+	| DECREMENT_TOK ID_TOK {check_scope_declaration($2.name,global_scope);}		
 	;
 
 operand:
@@ -321,13 +305,14 @@ inline_declaration:
 
 int main(int argc,const char* argv[]){
 	init_symbol_table();
-	init_value_table();
 	yyin = fopen(argv[1],"r");
 	yyparse();
 	return 0;
 }
 void success(void){
-	display_table();
+	for(int i=0;i <= function_index;i++){
+		display_table(i);
+	}
 	printf("\n\n\t\t\tSUCCESSFULLY PARSED :)\n");
 }
 void yyerror(char *s){
@@ -335,21 +320,20 @@ void yyerror(char *s){
 	for(int i = 0; i < REASON ; i++){
 		printf ("%s\n",error_reason[i]);
 	}
-	display_table();
+	for(int i=0;i <= function_index;i++){
+		display_table(i);
+	}
 	exit(1);
 }
 void init_symbol_table(void){
-	for(int i=0;i <= 122;i++){
-		symbol_table[i].entry_index = -1;
+	for(int table_index = 0;table_index <= MAX_FUNCTION;table_index++){
+		for(int i=0;i <= 122;i++){
+			symbol_table[table_index][i].entry_index = -1;
+		}
 	}
 	if(DEBUG_INFO){
 		printf("Symbol table initialised with NULL\n");
-		printf("Each node size of Symbol table is: %ld\n",sizeof(symbol_table[0]));
-	}
-}
-void init_value_table(void){
-	for(int i=0;i <= 122;i++){
-		value_table[i].index = -1;
+		printf("Each node size of Symbol table is: %ld\n",sizeof(symbol_table[function_index][0]));
 	}
 }
 void insert_by_name(char *name){
@@ -369,40 +353,40 @@ void assign_type(int t,int flag){
 	struct entry node;
 	for(int i = 0;i < var_buffer_index;i++){
 		if(var_buffer[i] >= 0){
-			node = symbol_table[var_buffer[i]];
+			node = symbol_table[function_index][var_buffer[i]];
 			if(node.var_name == temp_table[var_buffer[i]].var_name){
 				if(check_for_same_scope(node,temp_table[var_buffer[i]])){
 					yyerror("Variable having same name with same scope");
 				}
 				else{
 					int element = var_buffer[i];
-					symbol_table[element].entry_index = element;
-					symbol_table[element].var_name = temp_table[element].var_name;
-					symbol_table[element].scope[symbol_table[element].scope_array_index] = global_scope;
-					symbol_table[element].type[global_scope] = t;
-					symbol_table[element].line_no[global_scope] = yylineno;
-					symbol_table[element].scope_array_index++;
-					if(flag == 0 && symbol_table[element].global_flag != 1){
-						symbol_table[element].global_flag = 0;
+					symbol_table[function_index][element].entry_index = element;
+					symbol_table[function_index][element].var_name = temp_table[element].var_name;
+					symbol_table[function_index][element].scope[symbol_table[function_index][element].scope_array_index] = global_scope;
+					symbol_table[function_index][element].type[global_scope] = t;
+					symbol_table[function_index][element].line_no[global_scope] = yylineno;
+					symbol_table[function_index][element].scope_array_index++;
+					if(flag == 0 && symbol_table[function_index][element].global_flag != 1){
+						symbol_table[function_index][element].global_flag = 0;
 					}
 					else{
-						symbol_table[element].global_flag = 1;
+						symbol_table[function_index][element].global_flag = 1;
 					}
 				}
 			}
 			else{
 					int element = var_buffer[i];
-					symbol_table[element].entry_index = element;
-					symbol_table[element].var_name = temp_table[element].var_name;
-					symbol_table[element].scope[symbol_table[element].scope_array_index] = global_scope;
-					symbol_table[element].type[global_scope] = t;
-					symbol_table[element].line_no[global_scope] = yylineno;
-					symbol_table[element].scope_array_index++;
-					if(flag == 0 && symbol_table[element].global_flag != 1){
-						symbol_table[element].global_flag = 0;
+					symbol_table[function_index][element].entry_index = element;
+					symbol_table[function_index][element].var_name = temp_table[element].var_name;
+					symbol_table[function_index][element].scope[symbol_table[function_index][element].scope_array_index] = global_scope;
+					symbol_table[function_index][element].type[global_scope] = t;
+					symbol_table[function_index][element].line_no[global_scope] = yylineno;
+					symbol_table[function_index][element].scope_array_index++;
+					if(flag == 0 && symbol_table[function_index][element].global_flag != 1){
+						symbol_table[function_index][element].global_flag = 0;
 					}
 					else{
-						symbol_table[element].global_flag = 1;
+						symbol_table[function_index][element].global_flag = 1;
 					}
 			}
 		}
@@ -426,40 +410,75 @@ int check_for_same_scope(struct entry node1,struct entry node2){
 		return 0;
 	}
 }
-void display_table(void){
-	printf("\t\t\t%s\n\n","SYMBOL TABLE BUILT SO FAR");
+void display_table(int table_index){
+	char *decision = NULL;
+	printf("\t\t\t%dth %s\n\n",table_index,"SYMBOL TABLE BUILT SO FAR");
 	printf("----------------------------------------------------------------------------------------------------\n");
 	for(int i=0;i <= 122;i++){
-		if(symbol_table[i].entry_index != -1){
-			for(int j=0;j < symbol_table[i].scope_array_index;j++){
-				printf("| index: %d name: %c total_of_scope_used: %d type = %d in the scope %d line_no: %d global_flag: %d\t   |\n",symbol_table[i].entry_index,symbol_table[i].var_name,symbol_table[i].scope_array_index,symbol_table[i].type[symbol_table[i].scope[j]],symbol_table[i].scope[j],symbol_table[i].line_no[symbol_table[i].scope[j]],symbol_table[i].global_flag);
+		if(symbol_table[table_index][i].entry_index != -1){
+			for(int j=0;j < symbol_table[table_index][i].scope_array_index;j++){
+				switch(symbol_table[table_index][i].type[symbol_table[table_index][i].scope[j]]){
+					case 0:
+						decision = (char*)malloc(sizeof(char) * 12);
+						strncpy(decision,(char*)"Invalidated",11);
+						break;
+					case 1:
+						decision = (char*)malloc(sizeof(char) * 4);
+						strncpy(decision,(char*)"Int",3);
+						break;
+					case 2:
+						decision = (char*)malloc(sizeof(char) * 5);
+						strncpy(decision,(char*)"Float",4);
+						break;
+					case 3:
+						decision = (char*)malloc(sizeof(char) * 6);
+						strncpy(decision,(char*)"Double",5);
+						break;
+					case 4:
+						decision = (char*)malloc(sizeof(char) * 5);
+						strncpy(decision,(char*)"Char",4);
+						break;
+
+				}
+				printf("| index: %d name: %c total_of_scope_used: %d type = %s in the scope %d line_no: %d global_flag: %d\t   |\n",symbol_table[table_index][i].entry_index,symbol_table[table_index][i].var_name,symbol_table[table_index][i].scope_array_index,decision,symbol_table[table_index][i].scope[j],symbol_table[table_index][i].line_no[symbol_table[table_index][i].scope[j]],symbol_table[table_index][i].global_flag);
+				free(decision);
 			}
 			printf("----------------------------------------------------------------------------------------------------\n");
 		}
 	}
-	printf("Total Size used by variables in symbol table is : %ld KB\n",sizeof(symbol_table[0]) * 122 / 1000);
 }
-void check_scope_declaration(char *name){
+void check_scope_declaration(char *name,int Scope){
 	if(DEBUG_INFO){
 		printf("Current scope in check_scope_declaration for %s is:  %d in line no: %d\n",name,global_scope,yylineno);
 	}
 	if(found(name)){
-		return;
+		if (is_number(name) || symbol_table[function_index][name[0]].type[Scope] != 0){
+			return;
+		}
+		else{
+			for(int i = 0; i < Scope ; i++){
+				if(symbol_table[function_index][name[0]].type[i] != 0){
+					return;
+				}
+			}
+			yyerror("Un-declared till now");
+		}
+		yyerror("Un-declared till now");
 	}
 	yyerror("Un-declared till now");
 }
 int found(char *name){
-	return symbol_table[name[0]].entry_index != -1  || strlen(name) > 1 || is_number(name);
+	return symbol_table[function_index][name[0]].entry_index != -1  || strlen(name) > 1 || is_number(name);
 }
 int  check_type(char *name1,char *name2){
 	if(DEBUG_INFO){
 		printf("Current scope in check_type for %s %s is: %d in line_no: %d\n",name1,name2,global_scope,yylineno);
 	}
 	if (strlen(name1) == 1 && strlen(name2) == 1 && !is_number(name2)){
-		for(int i = 0; i < symbol_table[name1[0]].scope_array_index;i++){
-			for(int j = 0; j < symbol_table[name2[0]].scope_array_index;j++){
-				if (symbol_table[name1[0]].type[symbol_table[name1[0]].scope[i]] == symbol_table[name2[0]].type[symbol_table[name2[0]].scope[j]] && symbol_table[name1[0]].type[symbol_table[name1[0]].scope[i]] != 0 )
-					return symbol_table[name1[0]].type[symbol_table[(int)name1[0]].scope[i]];
+		for(int i = 0; i < symbol_table[function_index][name1[0]].scope_array_index;i++){
+			for(int j = 0; j < symbol_table[function_index][name2[0]].scope_array_index;j++){
+				if (symbol_table[function_index][name1[0]].type[symbol_table[function_index][name1[0]].scope[i]] == symbol_table[function_index][name2[0]].type[symbol_table[function_index][name2[0]].scope[j]] && symbol_table[function_index][name1[0]].type[symbol_table[function_index][name1[0]].scope[i]] != 0 )
+					return symbol_table[function_index][name1[0]].type[symbol_table[function_index][(int)name1[0]].scope[i]];
 			}
 		}
 		printf("%s === %s\n",name1,name2);
@@ -467,8 +486,8 @@ int  check_type(char *name1,char *name2){
 	}
 	else if(strlen(name1) == 1){
 		if (is_number(name2)){
-			for(int i = 0;i < symbol_table[name1[0]].scope_array_index;i++){
-				if(symbol_table[name1[0]].type[symbol_table[name1[0]].scope[i]] == 1){
+			for(int i = 0;i < symbol_table[function_index][name1[0]].scope_array_index;i++){
+				if(symbol_table[function_index][name1[0]].type[symbol_table[function_index][name1[0]].scope[i]] == 1){
 					return 1;
 				}
 			}
@@ -478,8 +497,8 @@ int  check_type(char *name1,char *name2){
 	}
 	else if(strlen(name2) == 1){
 		if(is_number(name1)){
-			for(int i = 0;i < symbol_table[name2[0]].scope_array_index;i++){
-				if(symbol_table[name2[0]].type[symbol_table[name2[0]].scope[i]] == 1){
+			for(int i = 0;i < symbol_table[function_index][name2[0]].scope_array_index;i++){
+				if(symbol_table[function_index][name2[0]].type[symbol_table[function_index][name2[0]].scope[i]] == 1){
 					return 1;
 				}
 			}
@@ -493,23 +512,17 @@ int  check_type(char *name1,char *name2){
 		}
 		yyerror("Un recognised type of two variables");
 	}
-
 }
 void check_type_assign(char *name,int type,int scope){
 	if(DEBUG_INFO){
 		printf("Current scope in check_type_assign is: %d in lineno: %d\n",global_scope,yylineno);
 	}
-	for(int i = 0;i < symbol_table[name[0]].scope_array_index;i++){
-		if(symbol_table[name[0]].type[symbol_table[name[0]].scope[i]] == type){
+	for(int i = 0;i < symbol_table[function_index][name[0]].scope_array_index;i++){
+		if(symbol_table[function_index][name[0]].type[symbol_table[function_index][name[0]].scope[i]] == type){
 			return;
 		}
 	}
 	yyerror("Mismatched type of LHS and RHS");
-}
-int min(int a,int b){
-	if (a > b)
-		return b;
-	return a;
 }
 int is_number(const char *s)
 {
@@ -518,37 +531,20 @@ int is_number(const char *s)
     }
     return 1;
 }
-char *my_itoa(int num, char *str)
-{
-	str = (char*)malloc(sizeof(char) * 20);
-	sprintf(str, "%d", num);
-	return str;
-}
-void insert_into_value_table(char *name,int scope,char *value){
-	value_table[name[0]].index = name[0];
-	if(value_table[name[0]].value_array[scope] == NULL){
-		value_table[name[0]].value_array[scope] = (char*)malloc(sizeof(char) * strlen(value) + 1);
-		strncpy(value_table[name[0]].value_array[scope],value,strlen(value));
-		printf("New value with new scope will be inserted\n");
+void invalidate_scope_var(int target_scope){
+	if(DEBUG_INFO){
+		printf("invalidated target scope: %d\n",target_scope);
 	}
-	else{
-		printf("VARIABLE VALUE WILL BE UPDATED TO ->  %s\n",value);
-		free(value_table[name[0]].value_array[scope]);
-		value_table[name[0]].value_array[scope] = (char*)malloc(sizeof(char) * strlen(value) + 1);
-		strncpy(value_table[name[0]].value_array[scope],value,strlen(value));
+	char *str;
+	for(int i = 0;i < 122;i++){
+		symbol_table[function_index][i].type[target_scope] = 0;
 	}
-	return;
-}
-int retrieve_value(char *name,int scope){
-	if (is_number(name)){
-		return atoi(name);
+	if(DEBUG_INFO){
+		printf("After invalidating .... \n");
 	}
-	if (value_table[name[0]].value_array[scope] == NULL){
-		int i = scope;
-		while (value_table[name[0]].value_array[i] == NULL){
-			i--;
+	if(DEBUG_INFO){
+		for(int i = 0;i <= function_index;i++){
+			display_table(i);
 		}
-		return atoi(value_table[name[0]].value_array[i]);
 	}
-	return atoi(value_table[name[0]].value_array[scope]);
 }

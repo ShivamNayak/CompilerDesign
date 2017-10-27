@@ -23,8 +23,8 @@
 	#include <string.h>
 	#include <ctype.h>
 	#include "error.h"
-	#define DEBUG_INFO 0
-	#define itoa my_itoa
+	#define DEBUG_INFO 1
+	#define MAX_FUNCTION 10
 	int yylex(void);
 	extern char* yytext;
 	extern FILE* yyin;
@@ -33,6 +33,7 @@
 	int var_buffer[100];
 	int var_buffer_index = 0;
 	int scope_adjust = 0;
+	int function_index = 0;
 	struct entry{
 		int entry_index;
 		char var_name;
@@ -41,29 +42,20 @@
 		int line_no[10];
 		int scope_array_index;
 		int global_flag;
-	}symbol_table[122],temp_table[122];
-	
-	struct value_table_entry{
-		int index;
-		char *value_array[10];
-	}value_table[122];
+	}symbol_table[MAX_FUNCTION][122],temp_table[122]; 
 
 	void insert_by_name(char *name);
 	int found(char *name);
-	void display_table(void);
+	void display_table(int table_index);
 	int check_for_same_scope(struct entry node1,struct entry node2);
-	void check_scope_declaration(char *name);
+	void check_scope_declaration(char *name,int scope);
 	int check_type(char *name1,char *name2);
 	int is_number(const char *s);
 	void init_symbol_table(void);
-	void init_value_table(void);
 	void check_type_assign(char *name,int type,int scope);
-	void insert_into_value_table(char *name,int scope,char *value);
-	int retrieve_value(char *name,int scope);
-	int min(int a,int b);
-	char *my_itoa(int num, char *str);
+	void invalidate_scope_var(int target_scope);
 
-#line 59 "main.y"
+#line 51 "main.y"
 #ifdef YYSTYPE
 #undef  YYSTYPE_IS_DECLARED
 #define YYSTYPE_IS_DECLARED 1
@@ -88,7 +80,7 @@ typedef union{
     }t;
 } YYSTYPE;
 #endif /* !YYSTYPE_IS_DECLARED */
-#line 92 "y.tab.c"
+#line 84 "y.tab.c"
 
 /* compatibility with bison */
 #ifdef YYPARSE_PARAM
@@ -183,120 +175,132 @@ extern int YYPARSE_DECL();
 #define YYERRCODE 256
 typedef short YYINT;
 static const YYINT yylhs[] = {                           -1,
-    0,    5,    5,    5,    7,    7,    1,    1,    1,    1,
-   10,   12,    8,   11,   11,    9,    9,   13,   13,   13,
-   13,   13,   13,   13,   20,   21,   17,   19,   19,   19,
-   22,   22,   18,   18,   18,    4,    4,    4,    4,    4,
-    4,    4,    4,    4,    4,   15,   15,   15,   15,   15,
-   15,   15,   15,   16,   16,   16,   16,    3,    3,    6,
-   14,    2,    2,
+    0,    5,    9,    5,   11,   10,   10,    7,    7,    1,
+    1,    1,    1,   13,   15,    8,   14,   14,   12,   12,
+   16,   16,   16,   16,   16,   16,   16,   16,   23,   24,
+   20,   22,   22,   22,   25,   25,   21,   21,   21,    4,
+    4,    4,    4,    4,    4,    4,    4,    4,    4,   18,
+   18,   18,   18,   18,   18,   18,   18,   19,   19,   19,
+   19,    3,    3,    6,   17,    2,    2,
 };
 static const YYINT yylen[] = {                            2,
-    1,    3,    6,    0,    4,    2,    1,    1,    1,    1,
-    0,    0,    6,    3,    0,    2,    0,    2,    5,   11,
-    7,    5,    5,    1,    0,    0,    5,    6,    4,    0,
-    2,    0,    4,    4,    4,    3,    3,    3,    3,    3,
-    3,    3,    3,    3,    3,    1,    3,    3,    3,    3,
-    3,    3,    3,    2,    2,    2,    2,    1,    1,    2,
-    2,    3,    1,
+    1,    3,    0,    8,    0,    8,    0,    4,    2,    1,
+    1,    1,    1,    0,    0,    6,    3,    0,    2,    0,
+    2,    5,   11,    7,    5,    5,    1,    2,    0,    0,
+    5,    6,    4,    0,    2,    0,    4,    4,    4,    3,
+    3,    3,    3,    3,    3,    3,    3,    3,    3,    1,
+    3,    3,    3,    3,    3,    3,    3,    2,    2,    2,
+    2,    1,    1,    2,    2,    3,    1,
 };
 static const YYINT yydefred[] = {                         0,
-    7,    8,    9,   10,    0,    0,    1,    0,    0,   63,
-    0,    0,    0,    0,    2,    0,    0,   62,    6,    0,
-    0,    0,   11,    3,    5,   17,    0,    0,    0,    0,
-    0,    0,    0,   17,   12,   16,    0,   24,    0,    0,
-    0,    0,    0,    0,    0,    0,   18,    0,    0,    0,
-   58,   59,    0,    0,    0,    0,    0,    0,    0,   14,
-   13,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,   35,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,   33,   34,    0,   53,   47,
-   48,   49,   50,   51,   52,   19,   25,   23,    0,   45,
-   36,   37,   38,   39,   40,   41,   42,   43,   44,    0,
-    0,    0,    0,    0,    0,   26,   21,    0,    0,   17,
-    0,    0,    0,    0,    0,   17,    0,   27,   56,   57,
-   54,   55,    0,    0,    0,   29,   20,    0,   31,   28,
+   10,   11,   12,   13,    0,    0,    1,    0,    0,   67,
+    0,    0,    0,    0,    2,    0,    0,   66,    9,    0,
+    3,    0,    0,    8,   14,    0,   20,    0,    4,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,   20,
+   15,   19,    0,    0,   27,    0,    0,    0,    0,    0,
+   60,   61,   58,   59,    0,    0,    0,    0,   21,    0,
+   28,    0,    0,    0,   62,   63,    0,    0,    0,    0,
+    0,    0,    0,   17,   16,    0,    5,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+   39,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+   37,   38,    0,    0,   57,   51,   52,   53,   54,   55,
+   56,   22,   29,   26,    0,   49,   40,   41,   42,   43,
+   44,   45,   46,   47,   48,    0,    0,    0,    0,    6,
+    0,    0,    0,   30,   24,    0,    0,   20,    0,    0,
+    0,   20,    0,   31,    0,    0,    0,   33,   23,    0,
+   35,   32,
 };
 static const YYINT yydgoto[] = {                          5,
-   33,   11,   53,   59,    7,    8,   17,   34,   27,   26,
-   35,   46,   36,   37,   54,  125,   98,   38,  116,  111,
-  121,  136,
+   39,   11,   67,   73,    7,    8,   17,   40,   23,   29,
+  103,   30,   27,   41,   58,   42,   43,   68,   44,  114,
+   45,  134,  128,  139,  148,
 };
-static const YYINT yysindex[] = {                      -186,
-    0,    0,    0,    0,    0, -265,    0, -250, -258,    0,
- -245, -186, -186, -283,    0, -277, -219,    0,    0, -186,
- -231, -256,    0,    0,    0,    0, -235, -218, -216, -208,
- -206, -223, -234,    0,    0,    0, -255,    0, -186, -271,
- -222, -271, -262, -245, -235, -184,    0, -221, -205, -271,
-    0,    0, -197, -174, -172, -171, -262, -144, -159,    0,
-    0, -158, -198, -160, -239, -239, -239, -239, -239, -239,
- -231, -157, -231, -128, -143,    0, -239, -239, -239, -239,
- -239, -239, -239, -239, -239,    0,    0, -139,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0, -130,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0, -271,
- -196, -231, -136, -176, -173,    0,    0, -264, -170,    0,
- -135, -169, -168, -244, -129,    0, -229,    0,    0,    0,
-    0,    0, -231, -229, -122,    0,    0, -196,    0,    0,
+static const YYINT yysindex[] = {                      -216,
+    0,    0,    0,    0,    0, -262,    0, -266, -265,    0,
+ -253, -216, -216, -284,    0, -282, -213,    0,    0, -216,
+    0, -276, -226,    0,    0, -216,    0, -261,    0, -220,
+ -217, -207, -196, -192, -187, -221, -219, -274, -201,    0,
+    0,    0, -247, -159,    0, -216, -216, -268, -199, -268,
+    0,    0,    0,    0, -255, -253, -220, -161,    0, -198,
+    0, -210, -183, -268,    0,    0, -225, -158, -157, -155,
+ -255, -114, -154,    0,    0, -151,    0, -191, -153, -235,
+ -235, -235, -235, -235, -235, -226, -147, -226,  -98, -146,
+    0, -235, -235, -235, -235, -235, -235, -235, -235, -235,
+    0,    0, -226, -140,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0, -132,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0, -216, -268, -186, -226,    0,
+ -138, -179, -170,    0,    0, -270, -169,    0, -131, -263,
+ -133,    0, -156,    0, -226, -156, -126,    0,    0, -186,
+    0,    0,
 };
-static const YYINT yyrindex[] = {                       148,
+static const YYINT yyrindex[] = {                         0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
- -118,  148,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0, -121,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0, -253, -121,    0,    0,    0,    0,    0,
-    0,    0, -238,    0,    0,    0,    0,    0,    0,    0,
+ -125,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,  160,    0,    0,    0, -112,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0, -244, -112,    0,    0,    0,
+    0,    0,    0,    0,    0,    0, -197,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0, -252,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
- -119,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0, -115,    0,    0,    0,
-    0,    0,    0, -217,    0,    0,    0, -119,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0, -228,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,  160,    0, -111,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0, -110,    0,    0, -249,    0,    0,    0, -111,
+    0,    0,
 };
 static const YYINT yygindex[] = {                         0,
-   53,  122,   39,  106,  152,    0,    0,  -21,  -33,    0,
-  121,    0,    0,  128,  -40,    0,    0,    0,   30,    0,
-    0,   35,
+    1,  126,   53,   95,  156,    0,  123,  -23,    0,   45,
+    0,  -38,    0,  115,    0,    0,  128,  -46,   41,    0,
+    0,   28,    0,    0,   35,
 };
-#define YYTABLESIZE 177
-static const YYINT yytable[] = {                         24,
-   45,   56,    9,   50,   22,   22,   22,   22,   22,   64,
-   22,   22,   57,   47,  122,   61,   13,  123,   12,   22,
-   22,   28,   29,   30,   14,   31,   18,   28,   29,   30,
-   46,   31,   19,  135,  131,   46,   23,  132,   51,   52,
-   23,   48,   32,   61,   10,  124,   32,   51,   52,   96,
-   20,   99,    6,   25,   21,   32,   39,   22,   40,   22,
-   22,   22,   22,  114,    6,   16,   41,  115,   42,  113,
-   51,   52,   22,   43,   32,   10,    1,    2,    3,    4,
-   32,   58,    1,    2,    3,    4,  127,   55,   61,   62,
-  117,   63,  134,   65,   66,   74,   67,   68,   69,   71,
-   70,   72,   73,   90,   91,   92,   93,   94,   95,   86,
-   87,  137,   88,   89,   97,  101,  102,  103,  104,  105,
-  106,  107,  108,  109,   76,    1,    2,    3,    4,  110,
-  100,  112,  118,   77,  119,  120,   78,  128,  126,   79,
-  129,  130,   80,   81,  133,   82,  139,    4,   83,   77,
-   60,   15,   78,   30,   44,   79,   84,   32,   80,   81,
-   85,   82,   75,   15,   83,   60,   49,  140,  138,    0,
-    0,    0,   84,    0,    0,    0,   85,
+#define YYTABLESIZE 207
+static const YYINT yytable[] = {                         26,
+    6,   57,   12,   70,   53,    9,   64,   54,   36,   13,
+   36,   37,    6,   16,   36,   53,   14,   79,   54,   71,
+   22,   59,   55,   36,   65,   18,   28,   19,   25,   25,
+   25,   25,   25,   24,   25,   25,   32,   33,   34,  140,
+   35,   65,   66,   25,   25,   25,   16,   10,   31,   60,
+   25,   25,   65,   25,   65,   66,   20,   46,   36,   20,
+   21,   37,  112,   77,  115,   80,   81,   47,   82,   83,
+   84,   50,   85,  132,   65,   66,   50,  133,   48,  126,
+  131,   25,   49,   25,   25,   25,   25,   50,   51,   38,
+   52,    1,    2,    3,    4,    1,    2,    3,    4,  143,
+   32,   33,   34,  146,   35,  135,  147,   72,   10,   61,
+   69,   75,   76,   78,  101,   86,   87,  102,   88,  104,
+  105,  149,   36,   89,  113,   37,   28,  116,  127,  129,
+  136,  137,  106,  107,  108,  109,  110,  111,  138,  142,
+  145,  144,  151,   64,  117,  118,  119,  120,  121,  122,
+  123,  124,  125,   38,   91,    1,    2,    3,    4,    7,
+   18,   34,   36,   92,   56,   90,   93,   15,   62,   94,
+  130,   74,   95,   96,   63,   97,  141,  152,   98,   92,
+  150,    0,   93,    0,    0,   94,   99,    0,   95,   96,
+  100,   97,    0,    0,   98,    0,    0,    0,    0,    0,
+    0,    0,   99,    0,    0,    0,  100,
 };
-static const YYINT yycheck[] = {                         21,
-   34,   42,  268,  275,  257,  258,  259,  260,  261,   50,
-  263,  264,  275,  269,  279,  269,  275,  282,  269,  272,
-  273,  257,  258,  259,  270,  261,  310,  257,  258,  259,
-  269,  261,  310,  263,  279,  274,  272,  282,  310,  311,
-  272,  297,  260,  297,  310,  310,  264,  310,  311,   71,
-  270,   73,    0,  310,  274,  273,  275,  310,  275,  312,
-  313,  314,  315,  260,   12,   13,  275,  264,  275,  110,
-  310,  311,   20,  297,  310,  310,  312,  313,  314,  315,
-  310,   43,  312,  313,  314,  315,  120,  310,  273,  311,
-  112,  297,  126,  291,  292,   57,  294,  295,  296,  274,
-  298,  274,  274,   65,   66,   67,   68,   69,   70,  269,
-  269,  133,  311,  274,  272,   77,   78,   79,   80,   81,
-   82,   83,   84,   85,  269,  312,  313,  314,  315,  269,
-  274,  262,  269,  278,  311,  309,  281,  273,  309,  284,
-  310,  310,  287,  288,  274,  290,  269,    0,  293,  278,
-  269,  273,  281,  273,   33,  284,  301,  273,  287,  288,
-  305,  290,   57,   12,  293,   45,   39,  138,  134,   -1,
+static const YYINT yycheck[] = {                         23,
+    0,   40,  269,   50,  279,  268,  275,  282,  279,  275,
+  260,  282,   12,   13,  264,  279,  270,   64,  282,  275,
+   20,  269,  297,  273,  269,  310,   26,  310,  257,  258,
+  259,  260,  261,  310,  263,  264,  257,  258,  259,  310,
+  261,  310,  311,  272,  273,  272,   46,  310,  310,  297,
+  279,  272,  297,  282,  310,  311,  270,  275,  279,  270,
+  274,  282,   86,  274,   88,  291,  292,  275,  294,  295,
+  296,  269,  298,  260,  310,  311,  274,  264,  275,  103,
+  127,  310,  275,  312,  313,  314,  315,  275,  310,  310,
+  310,  312,  313,  314,  315,  312,  313,  314,  315,  138,
+  257,  258,  259,  142,  261,  129,  263,   55,  310,  269,
+  310,  273,  311,  297,  269,  274,  274,  269,  274,  311,
+  274,  145,  279,   71,  272,  282,  126,  274,  269,  262,
+  269,  311,   80,   81,   82,   83,   84,   85,  309,  309,
+  274,  273,  269,  269,   92,   93,   94,   95,   96,   97,
+   98,   99,  100,  310,  269,  312,  313,  314,  315,    0,
+  273,  273,  273,  278,   39,   71,  281,   12,   46,  284,
+  126,   57,  287,  288,   47,  290,  136,  150,  293,  278,
+  146,   -1,  281,   -1,   -1,  284,  301,   -1,  287,  288,
+  305,  290,   -1,   -1,  293,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,  301,   -1,   -1,   -1,  305,
 };
 #define YYFINAL 5
@@ -304,7 +308,7 @@ static const YYINT yycheck[] = {                         21,
 #define YYDEBUG 0
 #endif
 #define YYMAXTOKEN 315
-#define YYUNDFTOKEN 340
+#define YYUNDFTOKEN 343
 #define YYTRANSLATE(a) ((a) > YYMAXTOKEN ? YYUNDFTOKEN : (a))
 #if YYDEBUG
 static const char *const yyname[] = {
@@ -328,23 +332,26 @@ static const char *const yyname[] = {
 "BIT_OR_EQUAL_TOK","BIT_OR_TOK","OR_TOK","AND_TOK","BIT_AND_EQUAL_TOK",
 "BIT_AND_TOK","XOR_TOK","XOR_EQUAL_TOK","SPACE_TOK","COLON_TOK","ID_TOK",
 "INT_CONST_TOK","INTEGER_TOK","FLOATING_TOK","DOUBLE_TOK","CHAR_TOK",0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"illegal-symbol",
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"illegal-symbol",
 };
 static const char *const yyrule[] = {
 "$accept : programe",
 "programe : function",
 "function : global_declaration_statement SEMICOLON_TOK function",
-"function : data_type MAIN_TOK LPAREN_TOK main_args RPAREN_TOK statement_block",
-"function :",
-"main_args : main_args COMMA_TOK data_type ID_TOK",
-"main_args : data_type ID_TOK",
+"$$1 :",
+"function : data_type MAIN_TOK LPAREN_TOK func_args RPAREN_TOK $$1 statement_block function_declr",
+"$$2 :",
+"function_declr : data_type ID_TOK LPAREN_TOK func_args RPAREN_TOK $$2 statement_block function_declr",
+"function_declr :",
+"func_args : func_args COMMA_TOK data_type ID_TOK",
+"func_args : data_type ID_TOK",
 "data_type : INTEGER_TOK",
 "data_type : FLOATING_TOK",
 "data_type : DOUBLE_TOK",
 "data_type : CHAR_TOK",
-"$$1 :",
-"$$2 :",
-"statement_block : LCURLY_TOK $$1 statement nested_blocks $$2 RCURLY_TOK",
+"$$3 :",
+"$$4 :",
+"statement_block : LCURLY_TOK $$3 statement nested_blocks $$4 RCURLY_TOK",
 "nested_blocks : statement_block statement nested_blocks",
 "nested_blocks :",
 "statement : statement actual_statement",
@@ -356,9 +363,10 @@ static const char *const yyrule[] = {
 "actual_statement : IF_TOK LPAREN_TOK relational_expression RPAREN_TOK statement_block",
 "actual_statement : SWITCH_TOK LPAREN_TOK ID_TOK RPAREN_TOK switch_block",
 "actual_statement : assignment_expression",
-"$$3 :",
-"$$4 :",
-"switch_block : LCURLY_TOK $$3 case_blocks $$4 RCURLY_TOK",
+"actual_statement : unary_expression SEMICOLON_TOK",
+"$$5 :",
+"$$6 :",
+"switch_block : LCURLY_TOK $$5 case_blocks $$6 RCURLY_TOK",
 "case_blocks : CASE_TOK INT_CONST_TOK COLON_TOK statement optional_break case_blocks",
 "case_blocks : DEFAULT_TOK COLON_TOK statement optional_break",
 "case_blocks :",
@@ -432,17 +440,18 @@ typedef struct {
 } YYSTACKDATA;
 /* variables for the parser stack */
 static YYSTACKDATA yystack;
-#line 321 "main.y"
+#line 305 "main.y"
 
 int main(int argc,const char* argv[]){
 	init_symbol_table();
-	init_value_table();
 	yyin = fopen(argv[1],"r");
 	yyparse();
 	return 0;
 }
 void success(void){
-	display_table();
+	for(int i=0;i <= function_index;i++){
+		display_table(i);
+	}
 	printf("\n\n\t\t\tSUCCESSFULLY PARSED :)\n");
 }
 void yyerror(char *s){
@@ -450,21 +459,20 @@ void yyerror(char *s){
 	for(int i = 0; i < REASON ; i++){
 		printf ("%s\n",error_reason[i]);
 	}
-	display_table();
+	for(int i=0;i <= function_index;i++){
+		display_table(i);
+	}
 	exit(1);
 }
 void init_symbol_table(void){
-	for(int i=0;i <= 122;i++){
-		symbol_table[i].entry_index = -1;
+	for(int table_index = 0;table_index <= MAX_FUNCTION;table_index++){
+		for(int i=0;i <= 122;i++){
+			symbol_table[table_index][i].entry_index = -1;
+		}
 	}
 	if(DEBUG_INFO){
 		printf("Symbol table initialised with NULL\n");
-		printf("Each node size of Symbol table is: %ld\n",sizeof(symbol_table[0]));
-	}
-}
-void init_value_table(void){
-	for(int i=0;i <= 122;i++){
-		value_table[i].index = -1;
+		printf("Each node size of Symbol table is: %ld\n",sizeof(symbol_table[function_index][0]));
 	}
 }
 void insert_by_name(char *name){
@@ -484,40 +492,40 @@ void assign_type(int t,int flag){
 	struct entry node;
 	for(int i = 0;i < var_buffer_index;i++){
 		if(var_buffer[i] >= 0){
-			node = symbol_table[var_buffer[i]];
+			node = symbol_table[function_index][var_buffer[i]];
 			if(node.var_name == temp_table[var_buffer[i]].var_name){
 				if(check_for_same_scope(node,temp_table[var_buffer[i]])){
 					yyerror("Variable having same name with same scope");
 				}
 				else{
 					int element = var_buffer[i];
-					symbol_table[element].entry_index = element;
-					symbol_table[element].var_name = temp_table[element].var_name;
-					symbol_table[element].scope[symbol_table[element].scope_array_index] = global_scope;
-					symbol_table[element].type[global_scope] = t;
-					symbol_table[element].line_no[global_scope] = yylineno;
-					symbol_table[element].scope_array_index++;
-					if(flag == 0 && symbol_table[element].global_flag != 1){
-						symbol_table[element].global_flag = 0;
+					symbol_table[function_index][element].entry_index = element;
+					symbol_table[function_index][element].var_name = temp_table[element].var_name;
+					symbol_table[function_index][element].scope[symbol_table[function_index][element].scope_array_index] = global_scope;
+					symbol_table[function_index][element].type[global_scope] = t;
+					symbol_table[function_index][element].line_no[global_scope] = yylineno;
+					symbol_table[function_index][element].scope_array_index++;
+					if(flag == 0 && symbol_table[function_index][element].global_flag != 1){
+						symbol_table[function_index][element].global_flag = 0;
 					}
 					else{
-						symbol_table[element].global_flag = 1;
+						symbol_table[function_index][element].global_flag = 1;
 					}
 				}
 			}
 			else{
 					int element = var_buffer[i];
-					symbol_table[element].entry_index = element;
-					symbol_table[element].var_name = temp_table[element].var_name;
-					symbol_table[element].scope[symbol_table[element].scope_array_index] = global_scope;
-					symbol_table[element].type[global_scope] = t;
-					symbol_table[element].line_no[global_scope] = yylineno;
-					symbol_table[element].scope_array_index++;
-					if(flag == 0 && symbol_table[element].global_flag != 1){
-						symbol_table[element].global_flag = 0;
+					symbol_table[function_index][element].entry_index = element;
+					symbol_table[function_index][element].var_name = temp_table[element].var_name;
+					symbol_table[function_index][element].scope[symbol_table[function_index][element].scope_array_index] = global_scope;
+					symbol_table[function_index][element].type[global_scope] = t;
+					symbol_table[function_index][element].line_no[global_scope] = yylineno;
+					symbol_table[function_index][element].scope_array_index++;
+					if(flag == 0 && symbol_table[function_index][element].global_flag != 1){
+						symbol_table[function_index][element].global_flag = 0;
 					}
 					else{
-						symbol_table[element].global_flag = 1;
+						symbol_table[function_index][element].global_flag = 1;
 					}
 			}
 		}
@@ -541,52 +549,75 @@ int check_for_same_scope(struct entry node1,struct entry node2){
 		return 0;
 	}
 }
-void display_table(void){
-	printf("\t\t\t%s\n\n","SYMBOL TABLE BUILT SO FAR");
+void display_table(int table_index){
+	char *decision = NULL;
+	printf("\t\t\t%dth %s\n\n",table_index,"SYMBOL TABLE BUILT SO FAR");
 	printf("----------------------------------------------------------------------------------------------------\n");
 	for(int i=0;i <= 122;i++){
-		if(symbol_table[i].entry_index != -1){
-			for(int j=0;j < symbol_table[i].scope_array_index;j++){
-				printf("| index: %d name: %c total_of_scope_used: %d type = %d in the scope %d line_no: %d global_flag: %d\t   |\n",symbol_table[i].entry_index,symbol_table[i].var_name,symbol_table[i].scope_array_index,symbol_table[i].type[symbol_table[i].scope[j]],symbol_table[i].scope[j],symbol_table[i].line_no[symbol_table[i].scope[j]],symbol_table[i].global_flag);
+		if(symbol_table[table_index][i].entry_index != -1){
+			for(int j=0;j < symbol_table[table_index][i].scope_array_index;j++){
+				switch(symbol_table[table_index][i].type[symbol_table[table_index][i].scope[j]]){
+					case 0:
+						decision = (char*)malloc(sizeof(char) * 12);
+						strncpy(decision,(char*)"Invalidated",11);
+						break;
+					case 1:
+						decision = (char*)malloc(sizeof(char) * 4);
+						strncpy(decision,(char*)"Int",3);
+						break;
+					case 2:
+						decision = (char*)malloc(sizeof(char) * 5);
+						strncpy(decision,(char*)"Float",4);
+						break;
+					case 3:
+						decision = (char*)malloc(sizeof(char) * 6);
+						strncpy(decision,(char*)"Double",5);
+						break;
+					case 4:
+						decision = (char*)malloc(sizeof(char) * 5);
+						strncpy(decision,(char*)"Char",4);
+						break;
+
+				}
+				printf("| index: %d name: %c total_of_scope_used: %d type = %s in the scope %d line_no: %d global_flag: %d\t   |\n",symbol_table[table_index][i].entry_index,symbol_table[table_index][i].var_name,symbol_table[table_index][i].scope_array_index,decision,symbol_table[table_index][i].scope[j],symbol_table[table_index][i].line_no[symbol_table[table_index][i].scope[j]],symbol_table[table_index][i].global_flag);
+				free(decision);
 			}
 			printf("----------------------------------------------------------------------------------------------------\n");
 		}
 	}
-	printf("Total Size used by variables in symbol table is : %ld KB\n",sizeof(symbol_table[0]) * 122 / 1000);
-	/*
-	printf("\t\t\t%s\n\n","VALUE TABLE BUILT SO FAR");
-	printf("----------------------------------------------------------------------------------------------------\n");
-	for(int i=0;i <= 122;i++){
-		if(value_table[i].index != -1){
-			for(int j=0;j < symbol_table[i].scope_array_index;j++){
-				printf("| index: %d total_of_scope_used: %d value = %s in the scope %d\t   |\n",value_table[i].index,symbol_table[i].scope_array_index,value_table[i].value_array[symbol_table[i].scope[j]],symbol_table[i].scope[j]);
-			}
-			printf("----------------------------------------------------------------------------------------------------\n");
-		}
-	}
-	*/
 }
-void check_scope_declaration(char *name){
+void check_scope_declaration(char *name,int Scope){
 	if(DEBUG_INFO){
 		printf("Current scope in check_scope_declaration for %s is:  %d in line no: %d\n",name,global_scope,yylineno);
 	}
 	if(found(name)){
-		return;
+		if (is_number(name) || symbol_table[function_index][name[0]].type[Scope] != 0){
+			return;
+		}
+		else{
+			for(int i = 0; i < Scope ; i++){
+				if(symbol_table[function_index][name[0]].type[i] != 0){
+					return;
+				}
+			}
+			yyerror("Un-declared till now");
+		}
+		yyerror("Un-declared till now");
 	}
 	yyerror("Un-declared till now");
 }
 int found(char *name){
-	return symbol_table[name[0]].entry_index != -1  || strlen(name) > 1 || is_number(name);
+	return symbol_table[function_index][name[0]].entry_index != -1  || strlen(name) > 1 || is_number(name);
 }
 int  check_type(char *name1,char *name2){
 	if(DEBUG_INFO){
 		printf("Current scope in check_type for %s %s is: %d in line_no: %d\n",name1,name2,global_scope,yylineno);
 	}
 	if (strlen(name1) == 1 && strlen(name2) == 1 && !is_number(name2)){
-		for(int i = 0; i < symbol_table[name1[0]].scope_array_index;i++){
-			for(int j = 0; j < symbol_table[name2[0]].scope_array_index;j++){
-				if (symbol_table[name1[0]].type[symbol_table[name1[0]].scope[i]] == symbol_table[name2[0]].type[symbol_table[name2[0]].scope[j]] && symbol_table[name1[0]].type[symbol_table[name1[0]].scope[i]] != 0 )
-					return symbol_table[name1[0]].type[symbol_table[(int)name1[0]].scope[i]];
+		for(int i = 0; i < symbol_table[function_index][name1[0]].scope_array_index;i++){
+			for(int j = 0; j < symbol_table[function_index][name2[0]].scope_array_index;j++){
+				if (symbol_table[function_index][name1[0]].type[symbol_table[function_index][name1[0]].scope[i]] == symbol_table[function_index][name2[0]].type[symbol_table[function_index][name2[0]].scope[j]] && symbol_table[function_index][name1[0]].type[symbol_table[function_index][name1[0]].scope[i]] != 0 )
+					return symbol_table[function_index][name1[0]].type[symbol_table[function_index][(int)name1[0]].scope[i]];
 			}
 		}
 		printf("%s === %s\n",name1,name2);
@@ -594,8 +625,8 @@ int  check_type(char *name1,char *name2){
 	}
 	else if(strlen(name1) == 1){
 		if (is_number(name2)){
-			for(int i = 0;i < symbol_table[name1[0]].scope_array_index;i++){
-				if(symbol_table[name1[0]].type[symbol_table[name1[0]].scope[i]] == 1){
+			for(int i = 0;i < symbol_table[function_index][name1[0]].scope_array_index;i++){
+				if(symbol_table[function_index][name1[0]].type[symbol_table[function_index][name1[0]].scope[i]] == 1){
 					return 1;
 				}
 			}
@@ -605,8 +636,8 @@ int  check_type(char *name1,char *name2){
 	}
 	else if(strlen(name2) == 1){
 		if(is_number(name1)){
-			for(int i = 0;i < symbol_table[name2[0]].scope_array_index;i++){
-				if(symbol_table[name2[0]].type[symbol_table[name2[0]].scope[i]] == 1){
+			for(int i = 0;i < symbol_table[function_index][name2[0]].scope_array_index;i++){
+				if(symbol_table[function_index][name2[0]].type[symbol_table[function_index][name2[0]].scope[i]] == 1){
 					return 1;
 				}
 			}
@@ -620,23 +651,17 @@ int  check_type(char *name1,char *name2){
 		}
 		yyerror("Un recognised type of two variables");
 	}
-
 }
 void check_type_assign(char *name,int type,int scope){
 	if(DEBUG_INFO){
 		printf("Current scope in check_type_assign is: %d in lineno: %d\n",global_scope,yylineno);
 	}
-	for(int i = 0;i < symbol_table[name[0]].scope_array_index;i++){
-		if(symbol_table[name[0]].type[symbol_table[name[0]].scope[i]] == type){
+	for(int i = 0;i < symbol_table[function_index][name[0]].scope_array_index;i++){
+		if(symbol_table[function_index][name[0]].type[symbol_table[function_index][name[0]].scope[i]] == type){
 			return;
 		}
 	}
 	yyerror("Mismatched type of LHS and RHS");
-}
-int min(int a,int b){
-	if (a > b)
-		return b;
-	return a;
 }
 int is_number(const char *s)
 {
@@ -645,41 +670,24 @@ int is_number(const char *s)
     }
     return 1;
 }
-char *my_itoa(int num, char *str)
-{
-	str = (char*)malloc(sizeof(char) * 20);
-	sprintf(str, "%d", num);
-	return str;
-}
-void insert_into_value_table(char *name,int scope,char *value){
-	value_table[name[0]].index = name[0];
-	if(value_table[name[0]].value_array[scope] == NULL){
-		value_table[name[0]].value_array[scope] = (char*)malloc(sizeof(char) * strlen(value) + 1);
-		strncpy(value_table[name[0]].value_array[scope],value,strlen(value));
-		printf("New value with new scope will be inserted\n");
+void invalidate_scope_var(int target_scope){
+	if(DEBUG_INFO){
+		printf("invalidated target scope: %d\n",target_scope);
 	}
-	else{
-		printf("VARIABLE VALUE WILL BE UPDATED TO ->  %s\n",value);
-		free(value_table[name[0]].value_array[scope]);
-		value_table[name[0]].value_array[scope] = (char*)malloc(sizeof(char) * strlen(value) + 1);
-		strncpy(value_table[name[0]].value_array[scope],value,strlen(value));
+	char *str;
+	for(int i = 0;i < 122;i++){
+		symbol_table[function_index][i].type[target_scope] = 0;
 	}
-	return;
-}
-int retrieve_value(char *name,int scope){
-	if (is_number(name)){
-		return atoi(name);
+	if(DEBUG_INFO){
+		printf("After invalidating .... \n");
 	}
-	if (value_table[name[0]].value_array[scope] == NULL){
-		int i = scope;
-		while (value_table[name[0]].value_array[i] == NULL){
-			i--;
+	if(DEBUG_INFO){
+		for(int i = 0;i <= function_index;i++){
+			display_table(i);
 		}
-		return atoi(value_table[name[0]].value_array[i]);
 	}
-	return atoi(value_table[name[0]].value_array[scope]);
 }
-#line 683 "y.tab.c"
+#line 691 "y.tab.c"
 
 #if YYDEBUG
 #include <stdio.h>		/* needed for printf */
@@ -882,292 +890,288 @@ yyreduce:
     switch (yyn)
     {
 case 1:
-#line 84 "main.y"
+#line 76 "main.y"
 	{success();}
 break;
-case 7:
-#line 99 "main.y"
-	{yyval.t.i_type = 1;}
+case 3:
+#line 81 "main.y"
+	{
+		function_index++;
+		if(DEBUG_INFO){
+			printf("%dth Main Function has been found in line no: %d\n",function_index,yylineno);
+		}
+	}
 break;
-case 8:
-#line 100 "main.y"
-	{yyval.t.i_type = 2; }
-break;
-case 9:
-#line 101 "main.y"
-	{yyval.t.i_type = 3; }
+case 5:
+#line 89 "main.y"
+	{
+		function_index++;
+		if(DEBUG_INFO){
+			printf("%dth User Defined Function has been found in line no: %d\n",function_index,yylineno);
+		}
+	}
 break;
 case 10:
-#line 102 "main.y"
-	{yyval.t.i_type = 4; }
+#line 104 "main.y"
+	{yyval.t.i_type = 1;}
 break;
 case 11:
-#line 106 "main.y"
-	{
-		global_scope += 1;
-	}
+#line 105 "main.y"
+	{yyval.t.i_type = 2; }
 break;
 case 12:
-#line 108 "main.y"
-	{
-		global_scope -= 1;
-	}
+#line 106 "main.y"
+	{yyval.t.i_type = 3; }
 break;
-case 23:
-#line 129 "main.y"
-	{
-		check_scope_declaration(yystack.l_mark[-2].n.name);
-	}
+case 13:
+#line 107 "main.y"
+	{yyval.t.i_type = 4; }
 break;
-case 25:
-#line 135 "main.y"
+case 14:
+#line 111 "main.y"
 	{
 		global_scope += 1;
+	}
+break;
+case 15:
+#line 113 "main.y"
+	{
+		invalidate_scope_var(global_scope);
+		global_scope -= 1;
 	}
 break;
 case 26:
-#line 137 "main.y"
+#line 135 "main.y"
+	{
+		check_scope_declaration(yystack.l_mark[-2].n.name,global_scope);
+	}
+break;
+case 29:
+#line 142 "main.y"
+	{
+		global_scope += 1;
+	}
+break;
+case 30:
+#line 144 "main.y"
 	{
 		global_scope -= 1;
 	}
 break;
-case 33:
-#line 151 "main.y"
+case 37:
+#line 158 "main.y"
 	{
-		check_scope_declaration(yystack.l_mark[-3].n.name);
+		check_scope_declaration(yystack.l_mark[-3].n.name,global_scope);
 		check_type_assign(yystack.l_mark[-3].n.name,yystack.l_mark[-1].p.i_type,global_scope);
-		/*$1.i_val = $3.i_val;*/
-		/*printf("in assignment arith exp ==> value of %s is = %d\n",$1.name,atoi($1.i_val));*/
-		/*insert_into_value_table($1.name,global_scope,$3.i_val);*/
 
 	}
 break;
-case 34:
-#line 159 "main.y"
+case 38:
+#line 163 "main.y"
 	{
 		if(DEBUG_INFO){
 			printf("Declaration statement is correctly parsed at line no %d\n",yylineno);
 		}
 	}
 break;
-case 35:
-#line 164 "main.y"
-	{
-		check_scope_declaration(yystack.l_mark[-3].n.name);
-		check_scope_declaration(yystack.l_mark[-1].n.name);
-		check_type(yystack.l_mark[-3].n.name,yystack.l_mark[-1].n.name);
-		/*$1.i_val = $3.i_val;*/
-		/*insert_into_value_table($1.name,global_scope,$3.i_val);*/
-	}
-break;
-case 36:
-#line 174 "main.y"
-	{
-		check_scope_declaration(yystack.l_mark[-2].n.name);
-		check_scope_declaration(yystack.l_mark[0].n.name);
-		yyval.p.i_type = check_type(yystack.l_mark[-2].n.name,yystack.l_mark[0].n.name);
-		/*int temp = retrieve_value($1.name,global_scope) + retrieve_value($3.name,global_scope);*/
-		/*$$.i_val = my_itoa(temp,$$.i_val);*/
-	}
-break;
-case 37:
-#line 181 "main.y"
-	{
-		check_scope_declaration(yystack.l_mark[-2].n.name);
-		check_scope_declaration(yystack.l_mark[0].n.name);
-		yyval.p.i_type = check_type(yystack.l_mark[-2].n.name,yystack.l_mark[0].n.name);
-		/*int temp = retrieve_value($1.name,global_scope) - retrieve_value($3.name,global_scope);*/
-		/*$$.i_val = my_itoa(temp,$$.i_val);*/
-	}
-break;
-case 38:
-#line 188 "main.y"
-	{
-		check_scope_declaration(yystack.l_mark[-2].n.name);
-		check_scope_declaration(yystack.l_mark[0].n.name);
-		yyval.p.i_type = check_type(yystack.l_mark[-2].n.name,yystack.l_mark[0].n.name);
-		/*int temp = retrieve_value($1.name,global_scope) * retrieve_value($3.name,global_scope);*/
-		/*$$.i_val = my_itoa(temp,$$.i_val);*/
-	}
-break;
 case 39:
-#line 195 "main.y"
+#line 168 "main.y"
 	{
-		check_scope_declaration(yystack.l_mark[-2].n.name);
-		check_scope_declaration(yystack.l_mark[0].n.name);
-		yyval.p.i_type = check_type(yystack.l_mark[-2].n.name,yystack.l_mark[0].n.name);
-		/*int temp = retrieve_value($1.name,global_scope) / retrieve_value($3.name,global_scope);*/
-		/*$$.i_val = my_itoa(temp,$$.i_val);*/
+		check_scope_declaration(yystack.l_mark[-3].n.name,global_scope);
+		check_scope_declaration(yystack.l_mark[-1].n.name,global_scope);
+		check_type(yystack.l_mark[-3].n.name,yystack.l_mark[-1].n.name);
 	}
 break;
 case 40:
-#line 202 "main.y"
+#line 176 "main.y"
 	{
-		check_scope_declaration(yystack.l_mark[-2].n.name);
-		check_scope_declaration(yystack.l_mark[0].n.name);
+		check_scope_declaration(yystack.l_mark[-2].n.name,global_scope);
+		check_scope_declaration(yystack.l_mark[0].n.name,global_scope);
 		yyval.p.i_type = check_type(yystack.l_mark[-2].n.name,yystack.l_mark[0].n.name);
-		/*int temp = retrieve_value($1.name,global_scope) % retrieve_value($3.name,global_scope);*/
-		/*$$.i_val = my_itoa(temp,$$.i_val);*/
 	}
 break;
 case 41:
-#line 209 "main.y"
+#line 181 "main.y"
 	{
-		check_scope_declaration(yystack.l_mark[-2].n.name);
-		check_scope_declaration(yystack.l_mark[0].n.name);
+		check_scope_declaration(yystack.l_mark[-2].n.name,global_scope);
+		check_scope_declaration(yystack.l_mark[0].n.name,global_scope);
 		yyval.p.i_type = check_type(yystack.l_mark[-2].n.name,yystack.l_mark[0].n.name);
-		/*int temp = retrieve_value($1.name,global_scope) >> retrieve_value($3.name,global_scope);*/
-		/*$$.i_val = my_itoa(temp,$$.i_val);*/
 	}
 break;
 case 42:
-#line 216 "main.y"
+#line 186 "main.y"
 	{
-		check_scope_declaration(yystack.l_mark[-2].n.name);
-		check_scope_declaration(yystack.l_mark[0].n.name);
+		check_scope_declaration(yystack.l_mark[-2].n.name,global_scope);
+		check_scope_declaration(yystack.l_mark[0].n.name,global_scope);
 		yyval.p.i_type = check_type(yystack.l_mark[-2].n.name,yystack.l_mark[0].n.name);
-		/*int temp = retrieve_value($1.name,global_scope) << retrieve_value($3.name,global_scope);*/
-		/*$$.i_val = my_itoa(temp,$$.i_val);*/
 	}
 break;
 case 43:
-#line 223 "main.y"
+#line 191 "main.y"
 	{
-		check_scope_declaration(yystack.l_mark[-2].n.name);
-		check_scope_declaration(yystack.l_mark[0].n.name);
+		check_scope_declaration(yystack.l_mark[-2].n.name,global_scope);
+		check_scope_declaration(yystack.l_mark[0].n.name,global_scope);
 		yyval.p.i_type = check_type(yystack.l_mark[-2].n.name,yystack.l_mark[0].n.name);
-		/*int temp = retrieve_value($1.name,global_scope) | retrieve_value($3.name,global_scope);*/
-		/*$$.i_val = my_itoa(temp,$$.i_val);*/
 	}
 break;
 case 44:
-#line 230 "main.y"
+#line 196 "main.y"
 	{
-		check_scope_declaration(yystack.l_mark[-2].n.name);
-		check_scope_declaration(yystack.l_mark[0].n.name);
+		check_scope_declaration(yystack.l_mark[-2].n.name,global_scope);
+		check_scope_declaration(yystack.l_mark[0].n.name,global_scope);
 		yyval.p.i_type = check_type(yystack.l_mark[-2].n.name,yystack.l_mark[0].n.name);
-		/*int temp = retrieve_value($1.name,global_scope) + retrieve_value($3.name,global_scope);*/
-		/*$$.i_val = my_itoa(temp,$$.i_val);*/
 	}
 break;
 case 45:
-#line 237 "main.y"
-	{}
+#line 201 "main.y"
+	{
+		check_scope_declaration(yystack.l_mark[-2].n.name,global_scope);
+		check_scope_declaration(yystack.l_mark[0].n.name,global_scope);
+		yyval.p.i_type = check_type(yystack.l_mark[-2].n.name,yystack.l_mark[0].n.name);
+	}
 break;
 case 46:
-#line 241 "main.y"
+#line 206 "main.y"
 	{
-		check_scope_declaration(yystack.l_mark[0].n.name);
+		check_scope_declaration(yystack.l_mark[-2].n.name,global_scope);
+		check_scope_declaration(yystack.l_mark[0].n.name,global_scope);
+		yyval.p.i_type = check_type(yystack.l_mark[-2].n.name,yystack.l_mark[0].n.name);
+	}
+break;
+case 47:
+#line 211 "main.y"
+	{
+		check_scope_declaration(yystack.l_mark[-2].n.name,global_scope);
+		check_scope_declaration(yystack.l_mark[0].n.name,global_scope);
+		yyval.p.i_type = check_type(yystack.l_mark[-2].n.name,yystack.l_mark[0].n.name);
+	}
+break;
+case 48:
+#line 216 "main.y"
+	{
+		check_scope_declaration(yystack.l_mark[-2].n.name,global_scope);
+		check_scope_declaration(yystack.l_mark[0].n.name,global_scope);
+		yyval.p.i_type = check_type(yystack.l_mark[-2].n.name,yystack.l_mark[0].n.name);
+	}
+break;
+case 49:
+#line 221 "main.y"
+	{}
+break;
+case 50:
+#line 225 "main.y"
+	{
+		check_scope_declaration(yystack.l_mark[0].n.name,global_scope);
 		if(DEBUG_INFO){
 			printf("relational expression having only operand has been found in line no: %d\n",yylineno);
 		}
 	}
 break;
-case 47:
-#line 247 "main.y"
+case 51:
+#line 231 "main.y"
 	{
-		check_scope_declaration(yystack.l_mark[-2].n.name);
+		check_scope_declaration(yystack.l_mark[-2].n.name,global_scope);
 		if(DEBUG_INFO){
 			printf("relational expression has been found in line no: %d\n",yylineno);
 		}  	
 	}
 break;
-case 48:
-#line 253 "main.y"
+case 52:
+#line 237 "main.y"
 	{
-		check_scope_declaration(yystack.l_mark[-2].n.name);
+		check_scope_declaration(yystack.l_mark[-2].n.name,global_scope);
 		if(DEBUG_INFO){
 			printf("relational expression has been found in line no: %d\n",yylineno);
 		}			
 	}
 break;
-case 49:
-#line 259 "main.y"
+case 53:
+#line 243 "main.y"
 	{
-		check_scope_declaration(yystack.l_mark[-2].n.name);
+		check_scope_declaration(yystack.l_mark[-2].n.name,global_scope);
 		if(DEBUG_INFO){
 			printf("relational expression has been found in line no: %d\n",yylineno);
 		}		
 	}
 break;
-case 50:
-#line 265 "main.y"
+case 54:
+#line 249 "main.y"
 	{
-		check_scope_declaration(yystack.l_mark[-2].n.name);
+		check_scope_declaration(yystack.l_mark[-2].n.name,global_scope);
 		if(DEBUG_INFO){
 			printf("relational expression has been found in line no: %d\n",yylineno);
 		}				
 	}
 break;
-case 51:
-#line 271 "main.y"
-	{
-		check_scope_declaration(yystack.l_mark[-2].n.name);
-		if(DEBUG_INFO){
-			printf("relational expression has been found in line no: %d\n",yylineno);
-		}			
-	}
-break;
-case 52:
-#line 277 "main.y"
-	{
-		check_scope_declaration(yystack.l_mark[-2].n.name);
-		if(DEBUG_INFO){
-			printf("relational expression has been found in line no: %d\n",yylineno);
-		}			
-	}
-break;
-case 54:
-#line 287 "main.y"
-	{check_scope_declaration(yystack.l_mark[-1].n.name);}
-break;
 case 55:
-#line 288 "main.y"
-	{check_scope_declaration(yystack.l_mark[-1].n.name);}
+#line 255 "main.y"
+	{
+		check_scope_declaration(yystack.l_mark[-2].n.name,global_scope);
+		if(DEBUG_INFO){
+			printf("relational expression has been found in line no: %d\n",yylineno);
+		}			
+	}
 break;
 case 56:
-#line 289 "main.y"
-	{check_scope_declaration(yystack.l_mark[0].n.name);}
-break;
-case 57:
-#line 290 "main.y"
-	{check_scope_declaration(yystack.l_mark[0].n.name);}
+#line 261 "main.y"
+	{
+		check_scope_declaration(yystack.l_mark[-2].n.name,global_scope);
+		if(DEBUG_INFO){
+			printf("relational expression has been found in line no: %d\n",yylineno);
+		}			
+	}
 break;
 case 58:
-#line 294 "main.y"
-	{}
+#line 271 "main.y"
+	{check_scope_declaration(yystack.l_mark[-1].n.name,global_scope);}
 break;
 case 59:
-#line 295 "main.y"
-	{}
+#line 272 "main.y"
+	{check_scope_declaration(yystack.l_mark[-1].n.name,global_scope);}
 break;
 case 60:
-#line 299 "main.y"
+#line 273 "main.y"
+	{check_scope_declaration(yystack.l_mark[0].n.name,global_scope);}
+break;
+case 61:
+#line 274 "main.y"
+	{check_scope_declaration(yystack.l_mark[0].n.name,global_scope);}
+break;
+case 62:
+#line 278 "main.y"
+	{}
+break;
+case 63:
+#line 279 "main.y"
+	{}
+break;
+case 64:
+#line 283 "main.y"
 	{
 		assign_type(yystack.l_mark[-1].t.i_type,1);
 	}
 break;
-case 61:
-#line 305 "main.y"
+case 65:
+#line 289 "main.y"
 	{
 		assign_type(yystack.l_mark[-1].t.i_type,0);
 	}
 break;
-case 62:
-#line 311 "main.y"
+case 66:
+#line 295 "main.y"
 	{
 		insert_by_name(yystack.l_mark[0].n.name);
 		var_buffer[var_buffer_index++] = yystack.l_mark[0].n.name[0];
 	}
 break;
-case 63:
-#line 315 "main.y"
+case 67:
+#line 299 "main.y"
 	{
 		insert_by_name(yystack.l_mark[0].n.name);
 		var_buffer[var_buffer_index++] = yystack.l_mark[0].n.name[0];
 	}
 break;
-#line 1171 "y.tab.c"
+#line 1175 "y.tab.c"
     }
     yystack.s_mark -= yym;
     yystate = *yystack.s_mark;

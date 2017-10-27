@@ -26,8 +26,8 @@ end ["*/"]
 "#include" {return INCLUDE_TOK;}
 "#define" {return DEFINE_TOK;}
 "main" {return MAIN_TOK;}
-"//". {;}
-^"/*"[^*]*|[*]*"*/" {;}
+"//". {}
+^"/*"[^*]*|[*]*"*/" {}
 ";" {return SEMICOLON_TOK;}
 "," {return COMMA_TOK;}
 "." {return DOT_TOK;}

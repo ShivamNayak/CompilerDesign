@@ -918,13 +918,13 @@ YY_RULE_SETUP
 case 17:
 YY_RULE_SETUP
 #line 29 "main.l"
-{;}
+{}
 	YY_BREAK
 case 18:
 /* rule 18 can match eol */
 YY_RULE_SETUP
 #line 30 "main.l"
-{;}
+{}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP

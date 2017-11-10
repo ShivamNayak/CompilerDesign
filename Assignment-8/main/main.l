@@ -16,6 +16,20 @@ digit [0-9]
 ")" {return RPAREN_TOK;}
 ";" {return SEMICOLON_TOK;}
 "=" {return EQUAL_TOK;}
+"," {return COMMA_TOK;}
+"int" {return INTEGER_TOK;}
+"float" {return FLOATING_TOK;}
+"double" {return DOUBLE_TOK;}
+"char" {return CHAR_TOK;}
+"main" {return MAIN_TOK;}
+"if" {return IF_TOK;}
+"else" {return ELSE_TOK;}
+"{" {return LCURLY_TOK;}
+"}" {return RCURLY_TOK;}
+">=" {return GREATER_THAN_EQUAL_TOK;}
+">" {return GREATER_TOK;}
+"<=" {return LESS_THAN_EQUAL_TOK;}
+"<" {return LESS_TOK;}
 [\t" "]
 [\n] {yylineno++;}
 {letter}({letter}|{digit})* { 

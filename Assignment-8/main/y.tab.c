@@ -19,19 +19,37 @@
 
 #line 2 "main.y"
 	#include <stdio.h>
-	#include <stdlib.h>
 	#include <string.h>
-	int MAX_TEMP_VAR = 20;
-	int temp_var_index = 1;
-	char temp[2];
-	extern FILE* yyin;
+	#include <stdlib.h>
 	int yylex(void);
-	void reset_temp(void);
-	void yyerror(char *s);
-	extern int yylineno;
-	char* gencode(char *var1,char op,char *var2);
-	int label = 1;
-#line 17 "main.y"
+	extern FILE *yyin;
+	struct expression_type{
+		char *code;
+		char *address;
+	};
+	int temporary_var = 1;
+	int label_var = 1;
+	char *bool,*stat,*var,*begin_label1,*begin_label2;
+	struct expression_type *return_exp;
+	char* gen_temp_var(void){
+		char *temp = (char*)malloc(sizeof(char) * 20);
+		char *t = (char *)malloc(10);
+		temp[0] = 't';
+		snprintf(t,10,"%d",temporary_var);
+		strcat(temp,t);
+		temporary_var++;
+		return temp;
+	}
+	char* gen_label_var(void){
+		char *temp = (char*)malloc(sizeof(char) * 20);
+		char *t = (char *)malloc(10);
+		temp[0] = 'L';
+		snprintf(t,10,"%d",label_var);
+		strcat(temp,t);
+		label_var++;
+		return temp;
+	}	
+#line 35 "main.y"
 #ifdef YYSTYPE
 #undef  YYSTYPE_IS_DECLARED
 #define YYSTYPE_IS_DECLARED 1
@@ -39,14 +57,12 @@
 #ifndef YYSTYPE_IS_DECLARED
 #define YYSTYPE_IS_DECLARED 1
 typedef union{
-	struct custom_type{
-		int i_type;
-		char *i_name;
-		char *i_val;
-	}A;	
+	int i_val;
+	char *c_val;
+	struct expression_type *exp_type;
 } YYSTYPE;
 #endif /* !YYSTYPE_IS_DECLARED */
-#line 50 "y.tab.c"
+#line 66 "y.tab.c"
 
 /* compatibility with bison */
 #ifdef YYPARSE_PARAM
@@ -79,123 +95,131 @@ typedef union{
 
 extern int YYPARSE_DECL();
 
-#define ID_TOK 257
-#define INT_CONST_TOK 258
-#define SEMICOLON_TOK 259
-#define LPAREN_TOK 260
-#define RPAREN_TOK 261
-#define MAIN_TOK 262
-#define COMMA_TOK 263
-#define LCURLY_TOK 264
-#define RCURLY_TOK 265
-#define IF_TOK 266
-#define ELSE_TOK 267
-#define ADDITION_TOK 268
-#define MINUS_TOK 269
-#define MULTIPLICATION_TOK 270
-#define DIVISION_TOK 271
-#define MODULO_TOK 272
-#define UNARY_MINUS_CONST_TOK 273
-#define EQUAL_TOK 274
-#define INTEGER_TOK 275
-#define FLOATING_TOK 276
-#define DOUBLE_TOK 277
-#define CHAR_TOK 278
-#define LESS_TOK 279
-#define LESS_THAN_EQUAL_TOK 280
-#define GREATER_TOK 281
-#define GREATER_THAN_EQUAL_TOK 282
-#define EQUAL_COMPARE_TOK 283
-#define NOT_EQUAL_TOK 284
-#define UMINUS_TOK 285
+#define INT_CONST_TOK 257
+#define ID_TOK 258
+#define ELSE_TOK 259
+#define WHILE_TOK 260
+#define LPAREN_TOK 261
+#define RPAREN_TOK 262
+#define LCURLY_TOK 263
+#define RCURLY_TOK 264
+#define IF_TOK 265
+#define INTEGER_TOK 266
+#define EQUAL_TOK 267
+#define SEMICOLON_TOK 268
+#define RELATIONAL_TOK 269
+#define OR_TOK 270
+#define AND_TOK 271
+#define NOT_TOK 272
+#define ADDITION_TOK 273
+#define MINUS_TOK 274
+#define MULTIPLICATION_TOK 275
+#define DIVISION_TOK 276
+#define MODULO_TOK 277
 #define YYERRCODE 256
 typedef short YYINT;
 static const YYINT yylhs[] = {                           -1,
-    0,    6,    9,    9,    7,    7,    3,    3,    3,    3,
-    8,   10,   10,    2,    2,   11,   13,   14,   11,    4,
-    1,    1,    1,    1,    1,    1,    1,    1,   12,   12,
-   12,   12,   12,   12,   12,   12,    5,    5,
+    0,    8,    8,    7,    7,    7,    7,    7,    7,    2,
+    1,    1,    4,    5,    6,    6,    6,    6,    6,    6,
+    6,    6,    3,
 };
 static const YYINT yylen[] = {                            2,
-    1,    7,    7,    0,    4,    2,    1,    1,    1,    1,
-    4,    3,    0,    2,    0,    1,    0,    0,    9,    4,
-    1,    3,    3,    3,    3,    3,    3,    2,    1,    3,
-    3,    3,    3,    3,    3,    3,    1,    1,
+    1,    2,    0,    5,    5,    7,    2,    2,    4,    3,
+    2,    0,    2,    1,    3,    3,    3,    3,    3,    3,
+    1,    1,    3,
 };
-static const YYINT yydefred[] = {                         0,
-    7,    8,    9,   10,    0,    0,    1,    0,    0,    0,
-    0,    6,    0,    0,   15,    0,    0,    0,    0,    2,
-    5,    0,    0,   16,   15,    0,   14,    0,    0,    0,
-    0,   11,    0,   37,   38,    0,    0,    0,   21,    0,
-    0,    0,   12,    0,    0,   28,   20,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,   17,
-    0,   27,    0,    0,   24,   25,   26,   36,   31,   30,
-   33,   32,   34,   35,    0,    0,    0,    3,   18,    0,
-   19,
+static const YYINT yydefred[] = {                         3,
+    0,    0,   22,   14,    0,    0,    0,    0,    0,   21,
+    0,    2,    0,    0,    0,   13,    0,    8,    7,    0,
+    0,    0,    0,    0,    0,    0,   20,    0,    0,    0,
+    0,   17,   18,   19,    0,    0,    0,    9,   12,    4,
+    0,    0,    0,    0,   10,   11,    6,
 };
-static const YYINT yydgoto[] = {                          5,
-   38,   18,   10,   24,   39,    7,   11,   25,   20,   26,
-   27,   42,   75,   80,
+static const YYINT yydgoto[] = {                          1,
+   43,   40,   25,    9,   10,   11,   12,    2,
 };
-static const YYINT yysindex[] = {                      -184,
-    0,    0,    0,    0,    0, -258,    0, -249, -184, -241,
- -206,    0, -245, -184,    0, -184, -216, -201, -213,    0,
-    0, -236, -182,    0,    0, -205,    0, -181, -215, -215,
- -201,    0, -184,    0,    0, -215, -215, -219,    0, -262,
- -194, -202,    0, -197, -200,    0,    0, -215, -215, -215,
- -215, -215, -235, -235, -235, -235, -235, -235, -235,    0,
- -245,    0, -196, -196,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0, -245, -184, -172,    0,    0, -245,
-    0,
+static const YYINT yysindex[] = {                         0,
+    0, -207,    0,    0, -259, -168, -233, -234, -255,    0,
+ -213,    0, -168, -254, -168,    0, -168,    0,    0, -168,
+ -168, -168, -168, -168, -236, -194,    0, -227, -203, -271,
+ -271,    0,    0,    0, -221, -168, -221,    0,    0,    0,
+ -189, -230, -217, -221,    0,    0,    0,
 };
 static const YYINT yyrindex[] = {                         0,
+    0,   45,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,   96,    0, -168,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
- -168,    0,    0,    0,    0,    0,    0,    0,    0,    0,
- -188,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0, -256, -222,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,   96,    0,    0,    0,    0,
-    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0, -237,
+ -235,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+ -216,    1,    0,    0,    0,    0,    0,
 };
 static const YYINT yygindex[] = {                         0,
-  -16,   73,    1,    0,  -28,    0,   66,  -13,   24,   70,
-    0,    0,    0,    0,
+    0,  -34,   37,    0,   48,   -6,   14,    0,
 };
-#define YYTABLESIZE 101
-static const YYINT yytable[] = {                         16,
-    6,   41,   22,    8,   22,   48,   49,   50,   51,   52,
-    9,   22,   22,   40,   17,   12,   19,   53,   15,   45,
-   46,   34,   35,   22,   68,   69,   70,   71,   72,   73,
-   74,   63,   64,   65,   66,   67,   23,   29,   23,   47,
-   21,   34,   35,   28,   36,   23,   23,   76,   48,   49,
-   50,   51,   52,   37,   13,   22,   14,   23,   60,   32,
-   62,   77,   15,   61,   23,   14,   81,   48,   49,   50,
-   51,   52,   29,   50,   51,   52,   19,   30,   33,   21,
-   21,   21,   21,   21,   54,   55,   56,   57,   58,   59,
-    1,    2,    3,    4,   79,    4,   13,   31,   44,   78,
-   43,
+#define YYTABLESIZE 267
+static const YYINT yytable[] = {                         14,
+    5,   13,   42,   22,   23,   24,   26,   27,   26,   47,
+   29,   17,   18,   30,   31,   32,   33,   34,   20,   21,
+   22,   23,   24,    4,   15,   35,   16,   15,   44,   41,
+   15,   15,   16,   16,   37,   15,   15,   16,   16,    3,
+    4,   39,    5,    6,    1,   23,   45,    7,    8,    3,
+    4,   28,    5,    6,   19,   16,   46,    7,    8,   20,
+   21,   22,   23,   24,   38,    0,    0,    0,    0,   20,
+   21,   22,   23,   24,   36,    0,    0,    0,   20,   21,
+   22,   23,   24,   20,   21,   22,   23,   24,    3,    4,
+    0,    0,    6,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    5,    5,    0,
+    5,    5,    0,    0,    5,    5,    5,
 };
-static const YYINT yycheck[] = {                         13,
-    0,   30,  259,  262,  261,  268,  269,  270,  271,  272,
-  260,  268,  269,   30,   14,  257,   16,  280,  264,   36,
-   37,  257,  258,  280,   53,   54,   55,   56,   57,   58,
-   59,   48,   49,   50,   51,   52,  259,  274,  261,  259,
-  257,  257,  258,  257,  260,  268,  269,   61,  268,  269,
-  270,  271,  272,  269,  261,  257,  263,  280,  261,  265,
-  261,   75,  264,  261,  266,  263,   80,  268,  269,  270,
-  271,  272,  261,  270,  271,  272,   76,  260,  260,  268,
-  269,  270,  271,  272,  279,  280,  281,  282,  283,  284,
-  275,  276,  277,  278,  267,    0,  265,   25,   33,   76,
-   31,
+static const YYINT yycheck[] = {                          6,
+    0,  261,   37,  275,  276,  277,   13,  262,   15,   44,
+   17,  267,  268,   20,   21,   22,   23,   24,  273,  274,
+  275,  276,  277,  258,  262,  262,  262,  261,  259,   36,
+  268,  269,  268,  269,  262,  273,  274,  273,  274,  257,
+  258,  263,  260,  261,    0,  262,  264,  265,  266,  257,
+  258,   15,  260,  261,  268,    8,   43,  265,  266,  273,
+  274,  275,  276,  277,  268,   -1,   -1,   -1,   -1,  273,
+  274,  275,  276,  277,  269,   -1,   -1,   -1,  273,  274,
+  275,  276,  277,  273,  274,  275,  276,  277,  257,  258,
+   -1,   -1,  261,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,  257,  258,   -1,
+  260,  261,   -1,   -1,  264,  265,  266,
 };
-#define YYFINAL 5
+#define YYFINAL 1
 #ifndef YYDEBUG
 #define YYDEBUG 0
 #endif
-#define YYMAXTOKEN 285
-#define YYUNDFTOKEN 302
+#define YYMAXTOKEN 277
+#define YYUNDFTOKEN 288
 #define YYTRANSLATE(a) ((a) > YYMAXTOKEN ? YYUNDFTOKEN : (a))
 #if YYDEBUG
 static const char *const yyname[] = {
@@ -206,55 +230,37 @@ static const char *const yyname[] = {
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"ID_TOK","INT_CONST_TOK",
-"SEMICOLON_TOK","LPAREN_TOK","RPAREN_TOK","MAIN_TOK","COMMA_TOK","LCURLY_TOK",
-"RCURLY_TOK","IF_TOK","ELSE_TOK","ADDITION_TOK","MINUS_TOK",
-"MULTIPLICATION_TOK","DIVISION_TOK","MODULO_TOK","UNARY_MINUS_CONST_TOK",
-"EQUAL_TOK","INTEGER_TOK","FLOATING_TOK","DOUBLE_TOK","CHAR_TOK","LESS_TOK",
-"LESS_THAN_EQUAL_TOK","GREATER_TOK","GREATER_THAN_EQUAL_TOK",
-"EQUAL_COMPARE_TOK","NOT_EQUAL_TOK","UMINUS_TOK",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,"illegal-symbol",
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"INT_CONST_TOK","ID_TOK",
+"ELSE_TOK","WHILE_TOK","LPAREN_TOK","RPAREN_TOK","LCURLY_TOK","RCURLY_TOK",
+"IF_TOK","INTEGER_TOK","EQUAL_TOK","SEMICOLON_TOK","RELATIONAL_TOK","OR_TOK",
+"AND_TOK","NOT_TOK","ADDITION_TOK","MINUS_TOK","MULTIPLICATION_TOK",
+"DIVISION_TOK","MODULO_TOK",0,0,0,0,0,0,0,0,0,0,"illegal-symbol",
 };
 static const char *const yyrule[] = {
 "$accept : programe",
 "programe : function",
-"function : data_type MAIN_TOK LPAREN_TOK func_args RPAREN_TOK statement_block function_declr",
-"function_declr : data_type ID_TOK LPAREN_TOK func_args RPAREN_TOK statement_block function_declr",
-"function_declr :",
-"func_args : func_args COMMA_TOK data_type ID_TOK",
-"func_args : data_type ID_TOK",
-"data_type : INTEGER_TOK",
-"data_type : FLOATING_TOK",
-"data_type : DOUBLE_TOK",
-"data_type : CHAR_TOK",
-"statement_block : LCURLY_TOK statement nested_blocks RCURLY_TOK",
-"nested_blocks : statement_block statement nested_blocks",
-"nested_blocks :",
+"function : function actual_statement",
+"function :",
+"actual_statement : WHILE_TOK LPAREN_TOK boolean_val RPAREN_TOK statement_block",
+"actual_statement : IF_TOK LPAREN_TOK boolean_val RPAREN_TOK statement_block",
+"actual_statement : IF_TOK LPAREN_TOK boolean_val RPAREN_TOK statement_block ELSE_TOK statement_block",
+"actual_statement : expression SEMICOLON_TOK",
+"actual_statement : declaration SEMICOLON_TOK",
+"actual_statement : declaration EQUAL_TOK expression SEMICOLON_TOK",
+"statement_block : LCURLY_TOK statement RCURLY_TOK",
 "statement : statement actual_statement",
 "statement :",
-"actual_statement : assignment_expression",
-"$$1 :",
-"$$2 :",
-"actual_statement : IF_TOK LPAREN_TOK relational_expression RPAREN_TOK $$1 statement_block ELSE_TOK $$2 statement_block",
-"assignment_expression : ID_TOK EQUAL_TOK arith_expression SEMICOLON_TOK",
-"arith_expression : operand",
-"arith_expression : arith_expression ADDITION_TOK arith_expression",
-"arith_expression : arith_expression MINUS_TOK arith_expression",
-"arith_expression : arith_expression MULTIPLICATION_TOK arith_expression",
-"arith_expression : arith_expression DIVISION_TOK arith_expression",
-"arith_expression : arith_expression MODULO_TOK arith_expression",
-"arith_expression : LPAREN_TOK arith_expression RPAREN_TOK",
-"arith_expression : MINUS_TOK arith_expression",
-"relational_expression : operand",
-"relational_expression : operand LESS_THAN_EQUAL_TOK operand",
-"relational_expression : operand LESS_TOK operand",
-"relational_expression : operand GREATER_THAN_EQUAL_TOK operand",
-"relational_expression : operand GREATER_TOK operand",
-"relational_expression : operand EQUAL_COMPARE_TOK operand",
-"relational_expression : operand NOT_EQUAL_TOK operand",
-"relational_expression : arith_expression LESS_THAN_EQUAL_TOK operand",
-"operand : ID_TOK",
-"operand : INT_CONST_TOK",
+"declaration : INTEGER_TOK identifier",
+"identifier : ID_TOK",
+"expression : expression ADDITION_TOK expression",
+"expression : expression MINUS_TOK expression",
+"expression : expression MULTIPLICATION_TOK expression",
+"expression : expression DIVISION_TOK expression",
+"expression : expression MODULO_TOK expression",
+"expression : LPAREN_TOK expression RPAREN_TOK",
+"expression : identifier",
+"expression : INT_CONST_TOK",
+"boolean_val : expression RELATIONAL_TOK expression",
 
 };
 #endif
@@ -292,29 +298,15 @@ typedef struct {
 } YYSTACKDATA;
 /* variables for the parser stack */
 static YYSTACKDATA yystack;
-#line 122 "main.y"
-int main(int argc,const char* argv[]){
+#line 383 "main.y"
+int main(int argc,const char *argv[]){
 	yyin = fopen(argv[1],"r");
 	yyparse();
-	return 1;
 }
-void yyerror(char *s){
-	printf("Error: %s in lineno: %d\n",s,yylineno);
+void *yyerror(char *s){
+	printf("%s\n",s);
 }
-char* gencode(char *var1,char op,char *var2){
-	printf("Label: %d --> var1: %s, var2: %s, operation: %c\n",label,var1,var2,op);
-	char t[MAX_TEMP_VAR];
-	sprintf(t,"%d",temp_var_index);
-	temp_var_index++;
-	strcat(temp,t);
-	label++;
-	return temp;
-}
-void reset_temp(void){
-	temp[0] = 't';
-	temp[1] = '\0';
-}
-#line 318 "y.tab.c"
+#line 310 "y.tab.c"
 
 #if YYDEBUG
 #include <stdio.h>		/* needed for printf */
@@ -517,128 +509,373 @@ yyreduce:
     switch (yyn)
     {
 case 1:
-#line 40 "main.y"
+#line 57 "main.y"
 	{printf("Successfully parsed\n");}
 break;
 case 2:
-#line 43 "main.y"
-	{}
+#line 61 "main.y"
+	{printf("Actual: %s\n",yystack.l_mark[0].exp_type->code);}
 break;
-case 3:
-#line 46 "main.y"
-	{}
+case 4:
+#line 65 "main.y"
+	{
+			bool = yystack.l_mark[-2].c_val;
+			stat = yystack.l_mark[0].c_val;
+			begin_label1 = gen_label_var();
+			begin_label2 = gen_label_var();
+			char *pos = strstr(bool,"TRUE");
+			while(pos != NULL){
+				strncpy(pos,begin_label2,strlen(begin_label2));
+				strncpy(pos+strlen(begin_label2),"     ",(5 - strlen(begin_label2)));
+				pos = strstr(bool,"TRUE");
+			}
+			pos = strstr(bool,"FALSE");
+			while (pos != NULL){
+				strncpy(pos,"NEXT ",5);
+				pos = strstr(bool,"FALSE");
+			}
+			pos = strstr(stat,"NEXT");
+			while (pos != NULL){
+				strncpy(pos,begin_label1,strlen(begin_label1));
+				strncpy(pos+strlen(begin_label1),"     ",(5 - strlen(begin_label1)));
+				pos = strstr(stat,"NEXT");
+			}
+			char *temp_var = (char *)malloc(strlen(bool)+strlen(stat)+20);
+			strcat(temp_var,begin_label1);
+			strcat(temp_var," : ");
+			strcat(temp_var,bool);
+			strcat(temp_var,"\n");
+			strcat(temp_var,begin_label2);
+			strcat(temp_var," : ");
+			strcat(temp_var,stat);
+			strcat(temp_var,"\n");
+			strcat(temp_var,"goto ");
+			strcat(temp_var,begin_label1);
+			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
+			return_exp->address = (char *)malloc(2);
+			return_exp->address[0] = 'X';
+			return_exp->code = (char *)malloc(sizeof(char) * strlen(temp_var));
+			strncpy(return_exp->code,temp_var,strlen(temp_var));
+			yyval.exp_type = return_exp;
+		}
 break;
 case 5:
-#line 50 "main.y"
-	{}
+#line 105 "main.y"
+	{
+			bool = yystack.l_mark[-2].c_val;
+			stat = yystack.l_mark[0].c_val;
+			begin_label1 = gen_label_var();
+			char *pos = strstr(bool,"TRUE");
+			while (pos != NULL){
+				strncpy(pos,begin_label1,strlen(begin_label1));
+				strncpy(pos+strlen(begin_label1),"     ",(5 - strlen(begin_label1)));
+				pos = strstr(bool,"TRUE");
+			}
+			pos = strstr(bool,"FALSE");
+			while (pos != NULL){
+				strncpy(pos,"NEXT ",5);
+				pos = strstr(bool,"FALSE");
+			}
+			char *temp_var = (char *)malloc(strlen(bool)+strlen(stat)+20);
+			strcat(temp_var,bool);
+			strcat(temp_var,"\n");
+			strcat(temp_var,begin_label1);
+			strcat(temp_var," : ");
+			strcat(temp_var,stat);
+			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
+			return_exp->address = (char *)malloc(2);
+			return_exp->address[0] = 'X';
+			return_exp->code = (char *)malloc(sizeof(char) * strlen(temp_var));
+			strncpy(return_exp->code,temp_var,strlen(temp_var));
+			yyval.exp_type = return_exp;
+		}
 break;
 case 6:
-#line 51 "main.y"
-	{}
+#line 133 "main.y"
+	{
+			bool = yystack.l_mark[-4].c_val;
+			begin_label1 = gen_label_var();
+			char *pos = strstr (bool,"TRUE");		
+			while(pos!=NULL){
+				strncpy (pos,begin_label1,strlen(begin_label1));
+				strncpy (pos+strlen(begin_label1),"     ",(5-strlen(begin_label1)));
+				pos = strstr (bool,"TRUE");
+			}
+			begin_label2 = gen_label_var();
+			pos = strstr (bool,"FALSE");
+			while(pos!=NULL){
+				strncpy (pos,begin_label2,strlen(begin_label2));
+				strncpy (pos+strlen(begin_label2),"     ",(5-strlen(begin_label2)));
+				pos = strstr (bool,"FAIL");
+			}
+			char *temp_var = (char *)malloc(strlen(bool)+strlen(yystack.l_mark[-2].c_val)+strlen(yystack.l_mark[0].c_val)+20);
+			strcat(temp_var,bool);
+			strcat(temp_var,"\n");
+			strcat(temp_var,begin_label1);
+			strcat(temp_var," : ");
+			strcat(temp_var,yystack.l_mark[-2].c_val);
+			strcat(temp_var,"\n");
+			strcat(temp_var,"goto NEXT");
+			strcat(temp_var,"\n");
+			strcat(temp_var,begin_label2);
+			strcat(temp_var," : ");
+			strcat(temp_var,yystack.l_mark[0].c_val);
+			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
+			return_exp->address = (char *)malloc(2);
+			return_exp->address[0] = 'X';
+			return_exp->code = (char *)malloc(sizeof(char) * strlen(temp_var));
+			strncpy(return_exp->code,temp_var,strlen(temp_var));
+			yyval.exp_type = return_exp;
+		}
 break;
 case 7:
-#line 54 "main.y"
-	{yyval.A.i_type = 1;}
+#line 168 "main.y"
+	{ yyval.exp_type = yystack.l_mark[-1].exp_type;}
 break;
 case 8:
-#line 55 "main.y"
-	{yyval.A.i_type = 2; }
+#line 169 "main.y"
+	{
+			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
+			return_exp->address = (char *)malloc(20);
+			return_exp->address = yystack.l_mark[-1].c_val;
+			return_exp->code = NULL;
+			yyval.exp_type = return_exp;
+		}
 break;
 case 9:
-#line 56 "main.y"
-	{yyval.A.i_type = 3; }
+#line 176 "main.y"
+	{
+			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
+			return_exp->address = (char *)malloc(20);
+			return_exp->address = gen_temp_var();
+			char *temp_var = (char *)malloc(20);
+			strcat(temp_var,yystack.l_mark[-3].c_val);
+			strcat(temp_var,"=");
+			strcat(temp_var,yystack.l_mark[-1].exp_type->address);
+			char *temp = (char *)malloc(strlen(yystack.l_mark[-3].c_val) + strlen(yystack.l_mark[-1].exp_type->code) + strlen(temp_var) + 2);
+			if (yystack.l_mark[-1].exp_type->code[0] != 0){
+				strcat(temp,yystack.l_mark[-1].exp_type->code);
+				strcat(temp,"\n");
+			}
+			strcat(temp,temp_var);
+			return_exp->code = temp;
+			yyval.exp_type = return_exp;
+		}
 break;
 case 10:
-#line 57 "main.y"
-	{yyval.A.i_type = 4; }
+#line 195 "main.y"
+	{ yyval.c_val = yystack.l_mark[-1].c_val; }
 break;
 case 11:
-#line 60 "main.y"
-	{}
+#line 199 "main.y"
+	{ yyval.c_val = yystack.l_mark[0].exp_type->code;}
 break;
-case 12:
-#line 63 "main.y"
-	{}
+case 13:
+#line 203 "main.y"
+	{ yyval.c_val = yystack.l_mark[0].c_val;}
 break;
 case 14:
-#line 68 "main.y"
-	{}
+#line 206 "main.y"
+	{ yyval.c_val = yystack.l_mark[0].c_val;}
+break;
+case 15:
+#line 209 "main.y"
+	{
+			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
+			return_exp->address = (char *)malloc(sizeof(char) * 20);
+			return_exp->address = gen_temp_var();
+			var = (char *)malloc(sizeof(char) * 20);
+			strcat(var,return_exp->address);
+			strcat(var,"=");
+			strcat(var,yystack.l_mark[-2].exp_type->address);
+			strcat(var,"+");
+			strcat(var,yystack.l_mark[0].exp_type->address);
+			strcat(var,"\n");
+			int x = strlen(var);
+			char *return_var = (char *)malloc(strlen(yystack.l_mark[-2].exp_type->code)+strlen(yystack.l_mark[0].exp_type->code)+strlen(var)+6);
+			if (yystack.l_mark[-2].exp_type->code[0] != 0){
+				strcat(return_var,yystack.l_mark[-2].exp_type->code);
+				strcat(return_var,"\n");
+			}
+			if (yystack.l_mark[0].exp_type->code[0] != 0){
+				strcat(return_var,yystack.l_mark[0].exp_type->code);
+				strcat(return_var,"\n");
+			}
+			strcat(var,return_var);
+			return_exp->code = var;
+           	yyval.exp_type = return_exp;           
+		}
 break;
 case 16:
-#line 72 "main.y"
-	{}
+#line 234 "main.y"
+	{
+			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
+			return_exp->address = (char *)malloc(sizeof(char) * 20);
+			return_exp->address = gen_temp_var();
+			var = (char *)malloc(sizeof(char) * 20);
+			strcat(var,return_exp->address);
+			strcat(var,"=");
+			strcat(var,yystack.l_mark[-2].exp_type->address);
+			strcat(var,"-");
+			strcat(var,yystack.l_mark[0].exp_type->address);
+			strcat(var,"\n");
+			int x = strlen(var);
+			char *return_var = (char *)malloc(strlen(yystack.l_mark[-2].exp_type->code)+strlen(yystack.l_mark[0].exp_type->code)+strlen(var)+6);
+			if (yystack.l_mark[-2].exp_type->code[0] != 0){
+				strcat(return_var,yystack.l_mark[-2].exp_type->code);
+				strcat(return_var,"\n");
+			}
+			if (yystack.l_mark[0].exp_type->code[0] != 0){
+				strcat(return_var,yystack.l_mark[0].exp_type->code);
+				strcat(return_var,"\n");
+			}
+			strcat(var,return_var);
+			return_exp->code = var;
+           	yyval.exp_type = return_exp;
+
+		}
 break;
 case 17:
-#line 73 "main.y"
-	{printf("GOTO_LABEL(IF): %d\n",label);}
+#line 260 "main.y"
+	{
+			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
+			return_exp->address = (char *)malloc(sizeof(char) * 20);
+			return_exp->address = gen_temp_var();
+			var = (char *)malloc(sizeof(char) * 20);
+			strcat(var,return_exp->address);
+			strcat(var,"=");
+			strcat(var,yystack.l_mark[-2].exp_type->address);
+			strcat(var,"*");
+			strcat(var,yystack.l_mark[0].exp_type->address);
+			strcat(var,"\n");
+			int x = strlen(var);
+			char *return_var = (char *)malloc(strlen(yystack.l_mark[-2].exp_type->code)+strlen(yystack.l_mark[0].exp_type->code)+strlen(var)+6);
+			if (yystack.l_mark[-2].exp_type->code[0] != 0){
+				strcat(return_var,yystack.l_mark[-2].exp_type->code);
+				strcat(return_var,"\n");
+			}
+			if (yystack.l_mark[0].exp_type->code[0] != 0){
+				strcat(return_var,yystack.l_mark[0].exp_type->code);
+				strcat(return_var,"\n");
+			}
+			strcat(var,return_var);
+			return_exp->code = var;
+           	yyval.exp_type = return_exp;
+
+		}
 break;
 case 18:
-#line 73 "main.y"
-	{printf("GOTO_LABEL(ELSE): %d\n",label);}
+#line 286 "main.y"
+	{
+			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
+			return_exp->address = (char *)malloc(sizeof(char) * 20);
+			return_exp->address = gen_temp_var();
+			var = (char *)malloc(sizeof(char) * 20);
+			strcat(var,return_exp->address);
+			strcat(var,"=");
+			strcat(var,yystack.l_mark[-2].exp_type->address);
+			strcat(var,"/");
+			strcat(var,yystack.l_mark[0].exp_type->address);
+			strcat(var,"\n");
+			int x = strlen(var);
+			char *return_var = (char *)malloc(strlen(yystack.l_mark[-2].exp_type->code)+strlen(yystack.l_mark[0].exp_type->code)+strlen(var)+6);
+			if (yystack.l_mark[-2].exp_type->code[0] != 0){
+				strcat(return_var,yystack.l_mark[-2].exp_type->code);
+				strcat(return_var,"\n");
+			}
+			if (yystack.l_mark[0].exp_type->code[0] != 0){
+				strcat(return_var,yystack.l_mark[0].exp_type->code);
+				strcat(return_var,"\n");
+			}
+			strcat(var,return_var);
+			return_exp->code = var;
+           	yyval.exp_type = return_exp;
+
+		}
+break;
+case 19:
+#line 312 "main.y"
+	{
+			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
+			return_exp->address = (char *)malloc(sizeof(char) * 20);
+			return_exp->address = gen_temp_var();
+			var = (char *)malloc(sizeof(char) * 20);
+			strcat(var,return_exp->address);
+			strcat(var,"=");
+			strcat(var,yystack.l_mark[-2].exp_type->address);
+			strcat(var,"%");
+			strcat(var,yystack.l_mark[0].exp_type->address);
+			strcat(var,"\n");
+			int x = strlen(var);
+			char *return_var = (char *)malloc(strlen(yystack.l_mark[-2].exp_type->code)+strlen(yystack.l_mark[0].exp_type->code)+strlen(var)+6);
+			if (yystack.l_mark[-2].exp_type->code[0] != 0){
+				strcat(return_var,yystack.l_mark[-2].exp_type->code);
+				strcat(return_var,"\n");
+			}
+			if (yystack.l_mark[0].exp_type->code[0] != 0){
+				strcat(return_var,yystack.l_mark[0].exp_type->code);
+				strcat(return_var,"\n");
+			}
+			strcat(var,return_var);
+			return_exp->code = var;
+           	yyval.exp_type = return_exp;
+
+		}
 break;
 case 20:
-#line 76 "main.y"
+#line 338 "main.y"
 	{
-			strcpy(yystack.l_mark[-3].A.i_name,yystack.l_mark[-1].A.i_name);
-			strcpy(yyval.A.i_name,yystack.l_mark[-1].A.i_name);
+			yyval.exp_type = yystack.l_mark[-1].exp_type;
+
 		}
 break;
 case 21:
-#line 82 "main.y"
-	{yyval.A = yystack.l_mark[0].A;}
+#line 342 "main.y"
+	{
+			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
+			return_exp->address = (char *)malloc(sizeof(char) * 20);
+			return_exp->address = yystack.l_mark[0].c_val;
+			return_exp->code = (char *)malloc(sizeof(char) * 2);
+			return_exp->code[0] = 0;
+			yyval.exp_type = return_exp;
+		}
 break;
 case 22:
-#line 83 "main.y"
+#line 350 "main.y"
 	{
-			reset_temp();
-			strcpy(yyval.A.i_name,gencode(yystack.l_mark[-2].A.i_name,'+',yystack.l_mark[0].A.i_name));
+			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
+			return_exp->address = (char *)malloc(sizeof(char) * 20);
+			char *num = (char *)malloc(sizeof(char) * 20);
+			snprintf(num,20,"%d",yystack.l_mark[0].i_val);
+			return_exp->address = num;
+			return_exp->code = (char *)malloc(sizeof(char) * 2);
+			return_exp->code[0] = 0;
+			yyval.exp_type = return_exp;
 		}
 break;
 case 23:
-#line 87 "main.y"
+#line 362 "main.y"
 	{
-			reset_temp();
-			strcpy(yyval.A.i_name,gencode(yystack.l_mark[-2].A.i_name,'-',yystack.l_mark[0].A.i_name));
+			char *temp_var = (char *)malloc(strlen(yystack.l_mark[-2].exp_type->code) + strlen(yystack.l_mark[0].exp_type->code) + 40);
+			if(yystack.l_mark[-2].exp_type->code[0] != 0){
+				strcat(temp_var,yystack.l_mark[-2].exp_type->code);
+				strcat(temp_var,"\n");
+			}
+			if(yystack.l_mark[0].exp_type->code[0] != 0){
+				strcat(temp_var,yystack.l_mark[0].exp_type->code);
+				strcat(temp_var,"\n");
+			}
+			char *return_var = (char *)malloc(sizeof(char) * 40);
+			strcat(return_var,"if (");
+			strcat(return_var,yystack.l_mark[-2].exp_type->address);
+			strcat(return_var,yystack.l_mark[-1].c_val);
+			strcat(return_var,yystack.l_mark[0].exp_type->address);
+			strcat(return_var,") goto TRUE \n goto FALSE");
+			strcat(temp_var,return_var);
+			yyval.c_val = temp_var;
 		}
 break;
-case 24:
-#line 91 "main.y"
-	{
-			reset_temp();
-			strcpy(yyval.A.i_name,gencode(yystack.l_mark[-2].A.i_name,'*',yystack.l_mark[0].A.i_name));
-		}
-break;
-case 25:
-#line 95 "main.y"
-	{
-			reset_temp();
-			strcpy(yyval.A.i_name,gencode(yystack.l_mark[-2].A.i_name,'/',yystack.l_mark[0].A.i_name));
-		}
-break;
-case 26:
-#line 99 "main.y"
-	{
-			reset_temp();
-			strcpy(yyval.A.i_name,gencode(yystack.l_mark[-2].A.i_name,'%',yystack.l_mark[0].A.i_name));
-		}
-break;
-case 27:
-#line 103 "main.y"
-	{yyval.A = yystack.l_mark[-1].A;}
-break;
-case 28:
-#line 104 "main.y"
-	{yyval.A = yystack.l_mark[0].A;}
-break;
-case 37:
-#line 118 "main.y"
-	{strcpy(yyval.A.i_name,yystack.l_mark[0].A.i_name);}
-break;
-case 38:
-#line 119 "main.y"
-	{strcpy(yyval.A.i_name,yystack.l_mark[0].A.i_name);}
-break;
-#line 642 "y.tab.c"
+#line 879 "y.tab.c"
     }
     yystack.s_mark -= yym;
     yystate = *yystack.s_mark;

@@ -16,35 +16,26 @@ digit [0-9]
 ")" {return RPAREN_TOK;}
 ";" {return SEMICOLON_TOK;}
 "=" {return EQUAL_TOK;}
-"," {return COMMA_TOK;}
-"int" {return INTEGER_TOK;}
-"float" {return FLOATING_TOK;}
-"double" {return DOUBLE_TOK;}
-"char" {return CHAR_TOK;}
-"main" {return MAIN_TOK;}
 "if" {return IF_TOK;}
 "else" {return ELSE_TOK;}
+"while" {return WHILE_TOK;}
 "{" {return LCURLY_TOK;}
 "}" {return RCURLY_TOK;}
-">=" {return GREATER_THAN_EQUAL_TOK;}
-">" {return GREATER_TOK;}
-"<=" {return LESS_THAN_EQUAL_TOK;}
-"<" {return LESS_TOK;}
+">=" {yylval.c_val = strdup(yytext);return RELATIONAL_TOK;}
+">" {yylval.c_val = strdup(yytext);return RELATIONAL_TOK;}
+"<=" {yylval.c_val = strdup(yytext);return RELATIONAL_TOK;}
+"<" {yylval.c_val = strdup(yytext);return RELATIONAL_TOK;}
+"int" {return INTEGER_TOK;}
 [\t" "]
 [\n] {yylineno++;}
 {letter}({letter}|{digit})* { 
 	char *temp = strdup(yytext);
-	yylval.A.i_name = (char*)malloc(sizeof(char)*yyleng);
-	strncpy(yylval.A.i_name,temp,yyleng);
+	yylval.c_val = (char*)malloc(sizeof(char)*yyleng);
+	strncpy(yylval.c_val,temp,yyleng);
 	temp = NULL;
 	return ID_TOK;}
 {digit}+ {
-	char *temp = strdup(yytext);
-	yylval.A.i_name = (char*)malloc(sizeof(char)*yyleng);
-	yylval.A.i_val = (char*)malloc(sizeof(char)*yyleng);
-	strncpy(yylval.A.i_name,temp,yyleng);
-	strncpy(yylval.A.i_val,temp,yyleng);
-	temp = NULL;
+	yylval.i_val = atoi(yytext);
 	return INT_CONST_TOK;}
 {digit}+({letter}|{digit})* {;}
 %%

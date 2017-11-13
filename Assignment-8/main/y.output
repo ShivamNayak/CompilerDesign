@@ -2,845 +2,542 @@
 
    1  programe : function
 
-   2  function : data_type MAIN_TOK LPAREN_TOK func_args RPAREN_TOK statement_block function_declr
+   2  function : function actual_statement
+   3           |
 
-   3  function_declr : data_type ID_TOK LPAREN_TOK func_args RPAREN_TOK statement_block function_declr
-   4                 |
+   4  actual_statement : WHILE_TOK LPAREN_TOK boolean_val RPAREN_TOK statement_block
+   5                   | IF_TOK LPAREN_TOK boolean_val RPAREN_TOK statement_block
+   6                   | IF_TOK LPAREN_TOK boolean_val RPAREN_TOK statement_block ELSE_TOK statement_block
+   7                   | expression SEMICOLON_TOK
+   8                   | declaration SEMICOLON_TOK
+   9                   | declaration EQUAL_TOK expression SEMICOLON_TOK
 
-   5  func_args : func_args COMMA_TOK data_type ID_TOK
-   6            | data_type ID_TOK
+  10  statement_block : LCURLY_TOK statement RCURLY_TOK
 
-   7  data_type : INTEGER_TOK
-   8            | FLOATING_TOK
-   9            | DOUBLE_TOK
-  10            | CHAR_TOK
+  11  statement : statement actual_statement
+  12            |
 
-  11  statement_block : LCURLY_TOK statement nested_blocks RCURLY_TOK
+  13  declaration : INTEGER_TOK identifier
 
-  12  nested_blocks : statement_block statement nested_blocks
-  13                |
+  14  identifier : ID_TOK
 
-  14  statement : statement actual_statement
-  15            |
+  15  expression : expression ADDITION_TOK expression
+  16             | expression MINUS_TOK expression
+  17             | expression MULTIPLICATION_TOK expression
+  18             | expression DIVISION_TOK expression
+  19             | expression MODULO_TOK expression
+  20             | LPAREN_TOK expression RPAREN_TOK
+  21             | identifier
+  22             | INT_CONST_TOK
 
-  16  actual_statement : assignment_expression
-
-  17  $$1 :
-
-  18  $$2 :
-
-  19  actual_statement : IF_TOK LPAREN_TOK relational_expression RPAREN_TOK $$1 statement_block ELSE_TOK $$2 statement_block
-
-  20  assignment_expression : ID_TOK EQUAL_TOK arith_expression SEMICOLON_TOK
-
-  21  arith_expression : operand
-  22                   | arith_expression ADDITION_TOK arith_expression
-  23                   | arith_expression MINUS_TOK arith_expression
-  24                   | arith_expression MULTIPLICATION_TOK arith_expression
-  25                   | arith_expression DIVISION_TOK arith_expression
-  26                   | arith_expression MODULO_TOK arith_expression
-  27                   | LPAREN_TOK arith_expression RPAREN_TOK
-  28                   | MINUS_TOK arith_expression
-
-  29  relational_expression : operand
-  30                        | operand LESS_THAN_EQUAL_TOK operand
-  31                        | operand LESS_TOK operand
-  32                        | operand GREATER_THAN_EQUAL_TOK operand
-  33                        | operand GREATER_TOK operand
-  34                        | operand EQUAL_COMPARE_TOK operand
-  35                        | operand NOT_EQUAL_TOK operand
-  36                        | arith_expression LESS_THAN_EQUAL_TOK operand
-
-  37  operand : ID_TOK
-  38          | INT_CONST_TOK
+  23  boolean_val : expression RELATIONAL_TOK expression
 
 state 0
 	$accept : . programe $end  (0)
+	function : .  (3)
 
-	INTEGER_TOK  shift 1
-	FLOATING_TOK  shift 2
-	DOUBLE_TOK  shift 3
-	CHAR_TOK  shift 4
-	.  error
+	.  reduce 3
 
-	programe  goto 5
-	data_type  goto 6
-	function  goto 7
+	programe  goto 1
+	function  goto 2
 
 
 state 1
-	data_type : INTEGER_TOK .  (7)
-
-	.  reduce 7
-
-
-state 2
-	data_type : FLOATING_TOK .  (8)
-
-	.  reduce 8
-
-
-state 3
-	data_type : DOUBLE_TOK .  (9)
-
-	.  reduce 9
-
-
-state 4
-	data_type : CHAR_TOK .  (10)
-
-	.  reduce 10
-
-
-state 5
 	$accept : programe . $end  (0)
 
 	$end  accept
 
 
-state 6
-	function : data_type . MAIN_TOK LPAREN_TOK func_args RPAREN_TOK statement_block function_declr  (2)
-
-	MAIN_TOK  shift 8
-	.  error
-
-
-state 7
+state 2
 	programe : function .  (1)
+	function : function . actual_statement  (2)
 
-	.  reduce 1
+	INT_CONST_TOK  shift 3
+	ID_TOK  shift 4
+	WHILE_TOK  shift 5
+	LPAREN_TOK  shift 6
+	IF_TOK  shift 7
+	INTEGER_TOK  shift 8
+	$end  reduce 1
 
+	declaration  goto 9
+	identifier  goto 10
+	expression  goto 11
+	actual_statement  goto 12
 
-state 8
-	function : data_type MAIN_TOK . LPAREN_TOK func_args RPAREN_TOK statement_block function_declr  (2)
 
-	LPAREN_TOK  shift 9
-	.  error
+state 3
+	expression : INT_CONST_TOK .  (22)
 
+	.  reduce 22
 
-state 9
-	function : data_type MAIN_TOK LPAREN_TOK . func_args RPAREN_TOK statement_block function_declr  (2)
 
-	INTEGER_TOK  shift 1
-	FLOATING_TOK  shift 2
-	DOUBLE_TOK  shift 3
-	CHAR_TOK  shift 4
-	.  error
-
-	data_type  goto 10
-	func_args  goto 11
-
-
-state 10
-	func_args : data_type . ID_TOK  (6)
-
-	ID_TOK  shift 12
-	.  error
-
-
-state 11
-	function : data_type MAIN_TOK LPAREN_TOK func_args . RPAREN_TOK statement_block function_declr  (2)
-	func_args : func_args . COMMA_TOK data_type ID_TOK  (5)
-
-	RPAREN_TOK  shift 13
-	COMMA_TOK  shift 14
-	.  error
-
-
-state 12
-	func_args : data_type ID_TOK .  (6)
-
-	.  reduce 6
-
-
-state 13
-	function : data_type MAIN_TOK LPAREN_TOK func_args RPAREN_TOK . statement_block function_declr  (2)
-
-	LCURLY_TOK  shift 15
-	.  error
-
-	statement_block  goto 16
-
-
-state 14
-	func_args : func_args COMMA_TOK . data_type ID_TOK  (5)
-
-	INTEGER_TOK  shift 1
-	FLOATING_TOK  shift 2
-	DOUBLE_TOK  shift 3
-	CHAR_TOK  shift 4
-	.  error
-
-	data_type  goto 17
-
-
-state 15
-	statement_block : LCURLY_TOK . statement nested_blocks RCURLY_TOK  (11)
-	statement : .  (15)
-
-	.  reduce 15
-
-	statement  goto 18
-
-
-state 16
-	function : data_type MAIN_TOK LPAREN_TOK func_args RPAREN_TOK statement_block . function_declr  (2)
-	function_declr : .  (4)
-
-	INTEGER_TOK  shift 1
-	FLOATING_TOK  shift 2
-	DOUBLE_TOK  shift 3
-	CHAR_TOK  shift 4
-	$end  reduce 4
-
-	data_type  goto 19
-	function_declr  goto 20
-
-
-state 17
-	func_args : func_args COMMA_TOK data_type . ID_TOK  (5)
-
-	ID_TOK  shift 21
-	.  error
-
-
-state 18
-	statement_block : LCURLY_TOK statement . nested_blocks RCURLY_TOK  (11)
-	statement : statement . actual_statement  (14)
-	nested_blocks : .  (13)
-
-	ID_TOK  shift 22
-	LCURLY_TOK  shift 15
-	IF_TOK  shift 23
-	RCURLY_TOK  reduce 13
-
-	assignment_expression  goto 24
-	statement_block  goto 25
-	nested_blocks  goto 26
-	actual_statement  goto 27
-
-
-state 19
-	function_declr : data_type . ID_TOK LPAREN_TOK func_args RPAREN_TOK statement_block function_declr  (3)
-
-	ID_TOK  shift 28
-	.  error
-
-
-state 20
-	function : data_type MAIN_TOK LPAREN_TOK func_args RPAREN_TOK statement_block function_declr .  (2)
-
-	.  reduce 2
-
-
-state 21
-	func_args : func_args COMMA_TOK data_type ID_TOK .  (5)
-
-	.  reduce 5
-
-
-state 22
-	assignment_expression : ID_TOK . EQUAL_TOK arith_expression SEMICOLON_TOK  (20)
-
-	EQUAL_TOK  shift 29
-	.  error
-
-
-state 23
-	actual_statement : IF_TOK . LPAREN_TOK relational_expression RPAREN_TOK $$1 statement_block ELSE_TOK $$2 statement_block  (19)
-
-	LPAREN_TOK  shift 30
-	.  error
-
-
-state 24
-	actual_statement : assignment_expression .  (16)
-
-	.  reduce 16
-
-
-state 25
-	nested_blocks : statement_block . statement nested_blocks  (12)
-	statement : .  (15)
-
-	.  reduce 15
-
-	statement  goto 31
-
-
-state 26
-	statement_block : LCURLY_TOK statement nested_blocks . RCURLY_TOK  (11)
-
-	RCURLY_TOK  shift 32
-	.  error
-
-
-state 27
-	statement : statement actual_statement .  (14)
+state 4
+	identifier : ID_TOK .  (14)
 
 	.  reduce 14
 
 
-state 28
-	function_declr : data_type ID_TOK . LPAREN_TOK func_args RPAREN_TOK statement_block function_declr  (3)
+state 5
+	actual_statement : WHILE_TOK . LPAREN_TOK boolean_val RPAREN_TOK statement_block  (4)
 
-	LPAREN_TOK  shift 33
+	LPAREN_TOK  shift 13
 	.  error
 
 
-state 29
-	assignment_expression : ID_TOK EQUAL_TOK . arith_expression SEMICOLON_TOK  (20)
+state 6
+	expression : LPAREN_TOK . expression RPAREN_TOK  (20)
 
-	ID_TOK  shift 34
-	INT_CONST_TOK  shift 35
-	LPAREN_TOK  shift 36
-	MINUS_TOK  shift 37
+	INT_CONST_TOK  shift 3
+	ID_TOK  shift 4
+	LPAREN_TOK  shift 6
 	.  error
 
-	arith_expression  goto 38
-	operand  goto 39
+	identifier  goto 10
+	expression  goto 14
 
 
-state 30
-	actual_statement : IF_TOK LPAREN_TOK . relational_expression RPAREN_TOK $$1 statement_block ELSE_TOK $$2 statement_block  (19)
+state 7
+	actual_statement : IF_TOK . LPAREN_TOK boolean_val RPAREN_TOK statement_block  (5)
+	actual_statement : IF_TOK . LPAREN_TOK boolean_val RPAREN_TOK statement_block ELSE_TOK statement_block  (6)
 
-	ID_TOK  shift 34
-	INT_CONST_TOK  shift 35
-	LPAREN_TOK  shift 36
-	MINUS_TOK  shift 37
-	.  error
-
-	arith_expression  goto 40
-	operand  goto 41
-	relational_expression  goto 42
-
-
-state 31
-	nested_blocks : statement_block statement . nested_blocks  (12)
-	statement : statement . actual_statement  (14)
-	nested_blocks : .  (13)
-
-	ID_TOK  shift 22
-	LCURLY_TOK  shift 15
-	IF_TOK  shift 23
-	RCURLY_TOK  reduce 13
-
-	assignment_expression  goto 24
-	statement_block  goto 25
-	nested_blocks  goto 43
-	actual_statement  goto 27
-
-
-state 32
-	statement_block : LCURLY_TOK statement nested_blocks RCURLY_TOK .  (11)
-
-	.  reduce 11
-
-
-state 33
-	function_declr : data_type ID_TOK LPAREN_TOK . func_args RPAREN_TOK statement_block function_declr  (3)
-
-	INTEGER_TOK  shift 1
-	FLOATING_TOK  shift 2
-	DOUBLE_TOK  shift 3
-	CHAR_TOK  shift 4
-	.  error
-
-	data_type  goto 10
-	func_args  goto 44
-
-
-state 34
-	operand : ID_TOK .  (37)
-
-	.  reduce 37
-
-
-state 35
-	operand : INT_CONST_TOK .  (38)
-
-	.  reduce 38
-
-
-state 36
-	arith_expression : LPAREN_TOK . arith_expression RPAREN_TOK  (27)
-
-	ID_TOK  shift 34
-	INT_CONST_TOK  shift 35
-	LPAREN_TOK  shift 36
-	MINUS_TOK  shift 37
-	.  error
-
-	arith_expression  goto 45
-	operand  goto 39
-
-
-state 37
-	arith_expression : MINUS_TOK . arith_expression  (28)
-
-	ID_TOK  shift 34
-	INT_CONST_TOK  shift 35
-	LPAREN_TOK  shift 36
-	MINUS_TOK  shift 37
-	.  error
-
-	arith_expression  goto 46
-	operand  goto 39
-
-
-state 38
-	assignment_expression : ID_TOK EQUAL_TOK arith_expression . SEMICOLON_TOK  (20)
-	arith_expression : arith_expression . ADDITION_TOK arith_expression  (22)
-	arith_expression : arith_expression . MINUS_TOK arith_expression  (23)
-	arith_expression : arith_expression . MULTIPLICATION_TOK arith_expression  (24)
-	arith_expression : arith_expression . DIVISION_TOK arith_expression  (25)
-	arith_expression : arith_expression . MODULO_TOK arith_expression  (26)
-
-	SEMICOLON_TOK  shift 47
-	ADDITION_TOK  shift 48
-	MINUS_TOK  shift 49
-	MULTIPLICATION_TOK  shift 50
-	DIVISION_TOK  shift 51
-	MODULO_TOK  shift 52
+	LPAREN_TOK  shift 15
 	.  error
 
 
-state 39
-	arith_expression : operand .  (21)
+state 8
+	declaration : INTEGER_TOK . identifier  (13)
+
+	ID_TOK  shift 4
+	.  error
+
+	identifier  goto 16
+
+
+state 9
+	actual_statement : declaration . SEMICOLON_TOK  (8)
+	actual_statement : declaration . EQUAL_TOK expression SEMICOLON_TOK  (9)
+
+	EQUAL_TOK  shift 17
+	SEMICOLON_TOK  shift 18
+	.  error
+
+
+state 10
+	expression : identifier .  (21)
 
 	.  reduce 21
 
 
-state 40
-	arith_expression : arith_expression . ADDITION_TOK arith_expression  (22)
-	arith_expression : arith_expression . MINUS_TOK arith_expression  (23)
-	arith_expression : arith_expression . MULTIPLICATION_TOK arith_expression  (24)
-	arith_expression : arith_expression . DIVISION_TOK arith_expression  (25)
-	arith_expression : arith_expression . MODULO_TOK arith_expression  (26)
-	relational_expression : arith_expression . LESS_THAN_EQUAL_TOK operand  (36)
+state 11
+	actual_statement : expression . SEMICOLON_TOK  (7)
+	expression : expression . ADDITION_TOK expression  (15)
+	expression : expression . MINUS_TOK expression  (16)
+	expression : expression . MULTIPLICATION_TOK expression  (17)
+	expression : expression . DIVISION_TOK expression  (18)
+	expression : expression . MODULO_TOK expression  (19)
 
-	ADDITION_TOK  shift 48
-	MINUS_TOK  shift 49
-	MULTIPLICATION_TOK  shift 50
-	DIVISION_TOK  shift 51
-	MODULO_TOK  shift 52
-	LESS_THAN_EQUAL_TOK  shift 53
+	SEMICOLON_TOK  shift 19
+	ADDITION_TOK  shift 20
+	MINUS_TOK  shift 21
+	MULTIPLICATION_TOK  shift 22
+	DIVISION_TOK  shift 23
+	MODULO_TOK  shift 24
 	.  error
 
 
-41: shift/reduce conflict (shift 55, reduce 21) on LESS_THAN_EQUAL_TOK
-state 41
-	arith_expression : operand .  (21)
-	relational_expression : operand .  (29)
-	relational_expression : operand . LESS_THAN_EQUAL_TOK operand  (30)
-	relational_expression : operand . LESS_TOK operand  (31)
-	relational_expression : operand . GREATER_THAN_EQUAL_TOK operand  (32)
-	relational_expression : operand . GREATER_TOK operand  (33)
-	relational_expression : operand . EQUAL_COMPARE_TOK operand  (34)
-	relational_expression : operand . NOT_EQUAL_TOK operand  (35)
+state 12
+	function : function actual_statement .  (2)
 
-	LESS_TOK  shift 54
-	LESS_THAN_EQUAL_TOK  shift 55
-	GREATER_TOK  shift 56
-	GREATER_THAN_EQUAL_TOK  shift 57
-	EQUAL_COMPARE_TOK  shift 58
-	NOT_EQUAL_TOK  shift 59
-	RPAREN_TOK  reduce 29
-	ADDITION_TOK  reduce 21
-	MINUS_TOK  reduce 21
-	MULTIPLICATION_TOK  reduce 21
-	DIVISION_TOK  reduce 21
-	MODULO_TOK  reduce 21
+	.  reduce 2
 
 
-state 42
-	actual_statement : IF_TOK LPAREN_TOK relational_expression . RPAREN_TOK $$1 statement_block ELSE_TOK $$2 statement_block  (19)
+state 13
+	actual_statement : WHILE_TOK LPAREN_TOK . boolean_val RPAREN_TOK statement_block  (4)
 
-	RPAREN_TOK  shift 60
+	INT_CONST_TOK  shift 3
+	ID_TOK  shift 4
+	LPAREN_TOK  shift 6
+	.  error
+
+	boolean_val  goto 25
+	identifier  goto 10
+	expression  goto 26
+
+
+state 14
+	expression : expression . ADDITION_TOK expression  (15)
+	expression : expression . MINUS_TOK expression  (16)
+	expression : expression . MULTIPLICATION_TOK expression  (17)
+	expression : expression . DIVISION_TOK expression  (18)
+	expression : expression . MODULO_TOK expression  (19)
+	expression : LPAREN_TOK expression . RPAREN_TOK  (20)
+
+	RPAREN_TOK  shift 27
+	ADDITION_TOK  shift 20
+	MINUS_TOK  shift 21
+	MULTIPLICATION_TOK  shift 22
+	DIVISION_TOK  shift 23
+	MODULO_TOK  shift 24
 	.  error
 
 
-state 43
-	nested_blocks : statement_block statement nested_blocks .  (12)
+state 15
+	actual_statement : IF_TOK LPAREN_TOK . boolean_val RPAREN_TOK statement_block  (5)
+	actual_statement : IF_TOK LPAREN_TOK . boolean_val RPAREN_TOK statement_block ELSE_TOK statement_block  (6)
 
-	.  reduce 12
+	INT_CONST_TOK  shift 3
+	ID_TOK  shift 4
+	LPAREN_TOK  shift 6
+	.  error
+
+	boolean_val  goto 28
+	identifier  goto 10
+	expression  goto 26
 
 
-state 44
-	function_declr : data_type ID_TOK LPAREN_TOK func_args . RPAREN_TOK statement_block function_declr  (3)
-	func_args : func_args . COMMA_TOK data_type ID_TOK  (5)
+state 16
+	declaration : INTEGER_TOK identifier .  (13)
 
-	RPAREN_TOK  shift 61
-	COMMA_TOK  shift 14
+	.  reduce 13
+
+
+state 17
+	actual_statement : declaration EQUAL_TOK . expression SEMICOLON_TOK  (9)
+
+	INT_CONST_TOK  shift 3
+	ID_TOK  shift 4
+	LPAREN_TOK  shift 6
+	.  error
+
+	identifier  goto 10
+	expression  goto 29
+
+
+state 18
+	actual_statement : declaration SEMICOLON_TOK .  (8)
+
+	.  reduce 8
+
+
+state 19
+	actual_statement : expression SEMICOLON_TOK .  (7)
+
+	.  reduce 7
+
+
+state 20
+	expression : expression ADDITION_TOK . expression  (15)
+
+	INT_CONST_TOK  shift 3
+	ID_TOK  shift 4
+	LPAREN_TOK  shift 6
+	.  error
+
+	identifier  goto 10
+	expression  goto 30
+
+
+state 21
+	expression : expression MINUS_TOK . expression  (16)
+
+	INT_CONST_TOK  shift 3
+	ID_TOK  shift 4
+	LPAREN_TOK  shift 6
+	.  error
+
+	identifier  goto 10
+	expression  goto 31
+
+
+state 22
+	expression : expression MULTIPLICATION_TOK . expression  (17)
+
+	INT_CONST_TOK  shift 3
+	ID_TOK  shift 4
+	LPAREN_TOK  shift 6
+	.  error
+
+	identifier  goto 10
+	expression  goto 32
+
+
+state 23
+	expression : expression DIVISION_TOK . expression  (18)
+
+	INT_CONST_TOK  shift 3
+	ID_TOK  shift 4
+	LPAREN_TOK  shift 6
+	.  error
+
+	identifier  goto 10
+	expression  goto 33
+
+
+state 24
+	expression : expression MODULO_TOK . expression  (19)
+
+	INT_CONST_TOK  shift 3
+	ID_TOK  shift 4
+	LPAREN_TOK  shift 6
+	.  error
+
+	identifier  goto 10
+	expression  goto 34
+
+
+state 25
+	actual_statement : WHILE_TOK LPAREN_TOK boolean_val . RPAREN_TOK statement_block  (4)
+
+	RPAREN_TOK  shift 35
 	.  error
 
 
-state 45
-	arith_expression : arith_expression . ADDITION_TOK arith_expression  (22)
-	arith_expression : arith_expression . MINUS_TOK arith_expression  (23)
-	arith_expression : arith_expression . MULTIPLICATION_TOK arith_expression  (24)
-	arith_expression : arith_expression . DIVISION_TOK arith_expression  (25)
-	arith_expression : arith_expression . MODULO_TOK arith_expression  (26)
-	arith_expression : LPAREN_TOK arith_expression . RPAREN_TOK  (27)
+state 26
+	expression : expression . ADDITION_TOK expression  (15)
+	expression : expression . MINUS_TOK expression  (16)
+	expression : expression . MULTIPLICATION_TOK expression  (17)
+	expression : expression . DIVISION_TOK expression  (18)
+	expression : expression . MODULO_TOK expression  (19)
+	boolean_val : expression . RELATIONAL_TOK expression  (23)
 
-	RPAREN_TOK  shift 62
-	ADDITION_TOK  shift 48
-	MINUS_TOK  shift 49
-	MULTIPLICATION_TOK  shift 50
-	DIVISION_TOK  shift 51
-	MODULO_TOK  shift 52
+	RELATIONAL_TOK  shift 36
+	ADDITION_TOK  shift 20
+	MINUS_TOK  shift 21
+	MULTIPLICATION_TOK  shift 22
+	DIVISION_TOK  shift 23
+	MODULO_TOK  shift 24
 	.  error
 
 
-state 46
-	arith_expression : arith_expression . ADDITION_TOK arith_expression  (22)
-	arith_expression : arith_expression . MINUS_TOK arith_expression  (23)
-	arith_expression : arith_expression . MULTIPLICATION_TOK arith_expression  (24)
-	arith_expression : arith_expression . DIVISION_TOK arith_expression  (25)
-	arith_expression : arith_expression . MODULO_TOK arith_expression  (26)
-	arith_expression : MINUS_TOK arith_expression .  (28)
-
-	.  reduce 28
-
-
-state 47
-	assignment_expression : ID_TOK EQUAL_TOK arith_expression SEMICOLON_TOK .  (20)
+state 27
+	expression : LPAREN_TOK expression RPAREN_TOK .  (20)
 
 	.  reduce 20
 
 
-state 48
-	arith_expression : arith_expression ADDITION_TOK . arith_expression  (22)
+state 28
+	actual_statement : IF_TOK LPAREN_TOK boolean_val . RPAREN_TOK statement_block  (5)
+	actual_statement : IF_TOK LPAREN_TOK boolean_val . RPAREN_TOK statement_block ELSE_TOK statement_block  (6)
 
-	ID_TOK  shift 34
-	INT_CONST_TOK  shift 35
-	LPAREN_TOK  shift 36
-	MINUS_TOK  shift 37
+	RPAREN_TOK  shift 37
 	.  error
 
-	arith_expression  goto 63
-	operand  goto 39
 
+state 29
+	actual_statement : declaration EQUAL_TOK expression . SEMICOLON_TOK  (9)
+	expression : expression . ADDITION_TOK expression  (15)
+	expression : expression . MINUS_TOK expression  (16)
+	expression : expression . MULTIPLICATION_TOK expression  (17)
+	expression : expression . DIVISION_TOK expression  (18)
+	expression : expression . MODULO_TOK expression  (19)
 
-state 49
-	arith_expression : arith_expression MINUS_TOK . arith_expression  (23)
-
-	ID_TOK  shift 34
-	INT_CONST_TOK  shift 35
-	LPAREN_TOK  shift 36
-	MINUS_TOK  shift 37
+	SEMICOLON_TOK  shift 38
+	ADDITION_TOK  shift 20
+	MINUS_TOK  shift 21
+	MULTIPLICATION_TOK  shift 22
+	DIVISION_TOK  shift 23
+	MODULO_TOK  shift 24
 	.  error
 
-	arith_expression  goto 64
-	operand  goto 39
+
+state 30
+	expression : expression . ADDITION_TOK expression  (15)
+	expression : expression ADDITION_TOK expression .  (15)
+	expression : expression . MINUS_TOK expression  (16)
+	expression : expression . MULTIPLICATION_TOK expression  (17)
+	expression : expression . DIVISION_TOK expression  (18)
+	expression : expression . MODULO_TOK expression  (19)
+
+	MULTIPLICATION_TOK  shift 22
+	DIVISION_TOK  shift 23
+	MODULO_TOK  shift 24
+	RPAREN_TOK  reduce 15
+	SEMICOLON_TOK  reduce 15
+	RELATIONAL_TOK  reduce 15
+	ADDITION_TOK  reduce 15
+	MINUS_TOK  reduce 15
 
 
-state 50
-	arith_expression : arith_expression MULTIPLICATION_TOK . arith_expression  (24)
+state 31
+	expression : expression . ADDITION_TOK expression  (15)
+	expression : expression . MINUS_TOK expression  (16)
+	expression : expression MINUS_TOK expression .  (16)
+	expression : expression . MULTIPLICATION_TOK expression  (17)
+	expression : expression . DIVISION_TOK expression  (18)
+	expression : expression . MODULO_TOK expression  (19)
 
-	ID_TOK  shift 34
-	INT_CONST_TOK  shift 35
-	LPAREN_TOK  shift 36
-	MINUS_TOK  shift 37
-	.  error
-
-	arith_expression  goto 65
-	operand  goto 39
-
-
-state 51
-	arith_expression : arith_expression DIVISION_TOK . arith_expression  (25)
-
-	ID_TOK  shift 34
-	INT_CONST_TOK  shift 35
-	LPAREN_TOK  shift 36
-	MINUS_TOK  shift 37
-	.  error
-
-	arith_expression  goto 66
-	operand  goto 39
+	MULTIPLICATION_TOK  shift 22
+	DIVISION_TOK  shift 23
+	MODULO_TOK  shift 24
+	RPAREN_TOK  reduce 16
+	SEMICOLON_TOK  reduce 16
+	RELATIONAL_TOK  reduce 16
+	ADDITION_TOK  reduce 16
+	MINUS_TOK  reduce 16
 
 
-state 52
-	arith_expression : arith_expression MODULO_TOK . arith_expression  (26)
-
-	ID_TOK  shift 34
-	INT_CONST_TOK  shift 35
-	LPAREN_TOK  shift 36
-	MINUS_TOK  shift 37
-	.  error
-
-	arith_expression  goto 67
-	operand  goto 39
-
-
-state 53
-	relational_expression : arith_expression LESS_THAN_EQUAL_TOK . operand  (36)
-
-	ID_TOK  shift 34
-	INT_CONST_TOK  shift 35
-	.  error
-
-	operand  goto 68
-
-
-state 54
-	relational_expression : operand LESS_TOK . operand  (31)
-
-	ID_TOK  shift 34
-	INT_CONST_TOK  shift 35
-	.  error
-
-	operand  goto 69
-
-
-state 55
-	relational_expression : operand LESS_THAN_EQUAL_TOK . operand  (30)
-
-	ID_TOK  shift 34
-	INT_CONST_TOK  shift 35
-	.  error
-
-	operand  goto 70
-
-
-state 56
-	relational_expression : operand GREATER_TOK . operand  (33)
-
-	ID_TOK  shift 34
-	INT_CONST_TOK  shift 35
-	.  error
-
-	operand  goto 71
-
-
-state 57
-	relational_expression : operand GREATER_THAN_EQUAL_TOK . operand  (32)
-
-	ID_TOK  shift 34
-	INT_CONST_TOK  shift 35
-	.  error
-
-	operand  goto 72
-
-
-state 58
-	relational_expression : operand EQUAL_COMPARE_TOK . operand  (34)
-
-	ID_TOK  shift 34
-	INT_CONST_TOK  shift 35
-	.  error
-
-	operand  goto 73
-
-
-state 59
-	relational_expression : operand NOT_EQUAL_TOK . operand  (35)
-
-	ID_TOK  shift 34
-	INT_CONST_TOK  shift 35
-	.  error
-
-	operand  goto 74
-
-
-state 60
-	actual_statement : IF_TOK LPAREN_TOK relational_expression RPAREN_TOK . $$1 statement_block ELSE_TOK $$2 statement_block  (19)
-	$$1 : .  (17)
+state 32
+	expression : expression . ADDITION_TOK expression  (15)
+	expression : expression . MINUS_TOK expression  (16)
+	expression : expression . MULTIPLICATION_TOK expression  (17)
+	expression : expression MULTIPLICATION_TOK expression .  (17)
+	expression : expression . DIVISION_TOK expression  (18)
+	expression : expression . MODULO_TOK expression  (19)
 
 	.  reduce 17
 
-	$$1  goto 75
 
-
-state 61
-	function_declr : data_type ID_TOK LPAREN_TOK func_args RPAREN_TOK . statement_block function_declr  (3)
-
-	LCURLY_TOK  shift 15
-	.  error
-
-	statement_block  goto 76
-
-
-state 62
-	arith_expression : LPAREN_TOK arith_expression RPAREN_TOK .  (27)
-
-	.  reduce 27
-
-
-state 63
-	arith_expression : arith_expression . ADDITION_TOK arith_expression  (22)
-	arith_expression : arith_expression ADDITION_TOK arith_expression .  (22)
-	arith_expression : arith_expression . MINUS_TOK arith_expression  (23)
-	arith_expression : arith_expression . MULTIPLICATION_TOK arith_expression  (24)
-	arith_expression : arith_expression . DIVISION_TOK arith_expression  (25)
-	arith_expression : arith_expression . MODULO_TOK arith_expression  (26)
-
-	MULTIPLICATION_TOK  shift 50
-	DIVISION_TOK  shift 51
-	MODULO_TOK  shift 52
-	SEMICOLON_TOK  reduce 22
-	RPAREN_TOK  reduce 22
-	ADDITION_TOK  reduce 22
-	MINUS_TOK  reduce 22
-	LESS_THAN_EQUAL_TOK  reduce 22
-
-
-state 64
-	arith_expression : arith_expression . ADDITION_TOK arith_expression  (22)
-	arith_expression : arith_expression . MINUS_TOK arith_expression  (23)
-	arith_expression : arith_expression MINUS_TOK arith_expression .  (23)
-	arith_expression : arith_expression . MULTIPLICATION_TOK arith_expression  (24)
-	arith_expression : arith_expression . DIVISION_TOK arith_expression  (25)
-	arith_expression : arith_expression . MODULO_TOK arith_expression  (26)
-
-	MULTIPLICATION_TOK  shift 50
-	DIVISION_TOK  shift 51
-	MODULO_TOK  shift 52
-	SEMICOLON_TOK  reduce 23
-	RPAREN_TOK  reduce 23
-	ADDITION_TOK  reduce 23
-	MINUS_TOK  reduce 23
-	LESS_THAN_EQUAL_TOK  reduce 23
-
-
-state 65
-	arith_expression : arith_expression . ADDITION_TOK arith_expression  (22)
-	arith_expression : arith_expression . MINUS_TOK arith_expression  (23)
-	arith_expression : arith_expression . MULTIPLICATION_TOK arith_expression  (24)
-	arith_expression : arith_expression MULTIPLICATION_TOK arith_expression .  (24)
-	arith_expression : arith_expression . DIVISION_TOK arith_expression  (25)
-	arith_expression : arith_expression . MODULO_TOK arith_expression  (26)
-
-	.  reduce 24
-
-
-state 66
-	arith_expression : arith_expression . ADDITION_TOK arith_expression  (22)
-	arith_expression : arith_expression . MINUS_TOK arith_expression  (23)
-	arith_expression : arith_expression . MULTIPLICATION_TOK arith_expression  (24)
-	arith_expression : arith_expression . DIVISION_TOK arith_expression  (25)
-	arith_expression : arith_expression DIVISION_TOK arith_expression .  (25)
-	arith_expression : arith_expression . MODULO_TOK arith_expression  (26)
-
-	.  reduce 25
-
-
-state 67
-	arith_expression : arith_expression . ADDITION_TOK arith_expression  (22)
-	arith_expression : arith_expression . MINUS_TOK arith_expression  (23)
-	arith_expression : arith_expression . MULTIPLICATION_TOK arith_expression  (24)
-	arith_expression : arith_expression . DIVISION_TOK arith_expression  (25)
-	arith_expression : arith_expression . MODULO_TOK arith_expression  (26)
-	arith_expression : arith_expression MODULO_TOK arith_expression .  (26)
-
-	.  reduce 26
-
-
-state 68
-	relational_expression : arith_expression LESS_THAN_EQUAL_TOK operand .  (36)
-
-	.  reduce 36
-
-
-state 69
-	relational_expression : operand LESS_TOK operand .  (31)
-
-	.  reduce 31
-
-
-state 70
-	relational_expression : operand LESS_THAN_EQUAL_TOK operand .  (30)
-
-	.  reduce 30
-
-
-state 71
-	relational_expression : operand GREATER_TOK operand .  (33)
-
-	.  reduce 33
-
-
-state 72
-	relational_expression : operand GREATER_THAN_EQUAL_TOK operand .  (32)
-
-	.  reduce 32
-
-
-state 73
-	relational_expression : operand EQUAL_COMPARE_TOK operand .  (34)
-
-	.  reduce 34
-
-
-state 74
-	relational_expression : operand NOT_EQUAL_TOK operand .  (35)
-
-	.  reduce 35
-
-
-state 75
-	actual_statement : IF_TOK LPAREN_TOK relational_expression RPAREN_TOK $$1 . statement_block ELSE_TOK $$2 statement_block  (19)
-
-	LCURLY_TOK  shift 15
-	.  error
-
-	statement_block  goto 77
-
-
-state 76
-	function_declr : data_type ID_TOK LPAREN_TOK func_args RPAREN_TOK statement_block . function_declr  (3)
-	function_declr : .  (4)
-
-	INTEGER_TOK  shift 1
-	FLOATING_TOK  shift 2
-	DOUBLE_TOK  shift 3
-	CHAR_TOK  shift 4
-	$end  reduce 4
-
-	data_type  goto 19
-	function_declr  goto 78
-
-
-state 77
-	actual_statement : IF_TOK LPAREN_TOK relational_expression RPAREN_TOK $$1 statement_block . ELSE_TOK $$2 statement_block  (19)
-
-	ELSE_TOK  shift 79
-	.  error
-
-
-state 78
-	function_declr : data_type ID_TOK LPAREN_TOK func_args RPAREN_TOK statement_block function_declr .  (3)
-
-	.  reduce 3
-
-
-state 79
-	actual_statement : IF_TOK LPAREN_TOK relational_expression RPAREN_TOK $$1 statement_block ELSE_TOK . $$2 statement_block  (19)
-	$$2 : .  (18)
+state 33
+	expression : expression . ADDITION_TOK expression  (15)
+	expression : expression . MINUS_TOK expression  (16)
+	expression : expression . MULTIPLICATION_TOK expression  (17)
+	expression : expression . DIVISION_TOK expression  (18)
+	expression : expression DIVISION_TOK expression .  (18)
+	expression : expression . MODULO_TOK expression  (19)
 
 	.  reduce 18
 
-	$$2  goto 80
 
-
-state 80
-	actual_statement : IF_TOK LPAREN_TOK relational_expression RPAREN_TOK $$1 statement_block ELSE_TOK $$2 . statement_block  (19)
-
-	LCURLY_TOK  shift 15
-	.  error
-
-	statement_block  goto 81
-
-
-state 81
-	actual_statement : IF_TOK LPAREN_TOK relational_expression RPAREN_TOK $$1 statement_block ELSE_TOK $$2 statement_block .  (19)
+state 34
+	expression : expression . ADDITION_TOK expression  (15)
+	expression : expression . MINUS_TOK expression  (16)
+	expression : expression . MULTIPLICATION_TOK expression  (17)
+	expression : expression . DIVISION_TOK expression  (18)
+	expression : expression . MODULO_TOK expression  (19)
+	expression : expression MODULO_TOK expression .  (19)
 
 	.  reduce 19
 
 
-State 41 contains 1 shift/reduce conflict.
+state 35
+	actual_statement : WHILE_TOK LPAREN_TOK boolean_val RPAREN_TOK . statement_block  (4)
+
+	LCURLY_TOK  shift 39
+	.  error
+
+	statement_block  goto 40
 
 
-31 terminals, 16 nonterminals
-39 grammar rules, 82 states
+state 36
+	boolean_val : expression RELATIONAL_TOK . expression  (23)
+
+	INT_CONST_TOK  shift 3
+	ID_TOK  shift 4
+	LPAREN_TOK  shift 6
+	.  error
+
+	identifier  goto 10
+	expression  goto 41
+
+
+state 37
+	actual_statement : IF_TOK LPAREN_TOK boolean_val RPAREN_TOK . statement_block  (5)
+	actual_statement : IF_TOK LPAREN_TOK boolean_val RPAREN_TOK . statement_block ELSE_TOK statement_block  (6)
+
+	LCURLY_TOK  shift 39
+	.  error
+
+	statement_block  goto 42
+
+
+state 38
+	actual_statement : declaration EQUAL_TOK expression SEMICOLON_TOK .  (9)
+
+	.  reduce 9
+
+
+state 39
+	statement_block : LCURLY_TOK . statement RCURLY_TOK  (10)
+	statement : .  (12)
+
+	.  reduce 12
+
+	statement  goto 43
+
+
+state 40
+	actual_statement : WHILE_TOK LPAREN_TOK boolean_val RPAREN_TOK statement_block .  (4)
+
+	.  reduce 4
+
+
+state 41
+	expression : expression . ADDITION_TOK expression  (15)
+	expression : expression . MINUS_TOK expression  (16)
+	expression : expression . MULTIPLICATION_TOK expression  (17)
+	expression : expression . DIVISION_TOK expression  (18)
+	expression : expression . MODULO_TOK expression  (19)
+	boolean_val : expression RELATIONAL_TOK expression .  (23)
+
+	ADDITION_TOK  shift 20
+	MINUS_TOK  shift 21
+	MULTIPLICATION_TOK  shift 22
+	DIVISION_TOK  shift 23
+	MODULO_TOK  shift 24
+	RPAREN_TOK  reduce 23
+
+
+state 42
+	actual_statement : IF_TOK LPAREN_TOK boolean_val RPAREN_TOK statement_block .  (5)
+	actual_statement : IF_TOK LPAREN_TOK boolean_val RPAREN_TOK statement_block . ELSE_TOK statement_block  (6)
+
+	ELSE_TOK  shift 44
+	$end  reduce 5
+	INT_CONST_TOK  reduce 5
+	ID_TOK  reduce 5
+	WHILE_TOK  reduce 5
+	LPAREN_TOK  reduce 5
+	RCURLY_TOK  reduce 5
+	IF_TOK  reduce 5
+	INTEGER_TOK  reduce 5
+
+
+state 43
+	statement_block : LCURLY_TOK statement . RCURLY_TOK  (10)
+	statement : statement . actual_statement  (11)
+
+	INT_CONST_TOK  shift 3
+	ID_TOK  shift 4
+	WHILE_TOK  shift 5
+	LPAREN_TOK  shift 6
+	RCURLY_TOK  shift 45
+	IF_TOK  shift 7
+	INTEGER_TOK  shift 8
+	.  error
+
+	declaration  goto 9
+	identifier  goto 10
+	expression  goto 11
+	actual_statement  goto 46
+
+
+state 44
+	actual_statement : IF_TOK LPAREN_TOK boolean_val RPAREN_TOK statement_block ELSE_TOK . statement_block  (6)
+
+	LCURLY_TOK  shift 39
+	.  error
+
+	statement_block  goto 47
+
+
+state 45
+	statement_block : LCURLY_TOK statement RCURLY_TOK .  (10)
+
+	.  reduce 10
+
+
+state 46
+	statement : statement actual_statement .  (11)
+
+	.  reduce 11
+
+
+state 47
+	actual_statement : IF_TOK LPAREN_TOK boolean_val RPAREN_TOK statement_block ELSE_TOK statement_block .  (6)
+
+	.  reduce 6
+
+
+23 terminals, 10 nonterminals
+24 grammar rules, 48 states

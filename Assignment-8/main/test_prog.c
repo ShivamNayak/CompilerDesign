@@ -1,16 +1,11 @@
-int main(int argc)
-{
-	a = a*b*c+d*f;
-	if(a+b*c <= 10){
-		x = a+b*c;
-		if(a > b){
-			y = y + 1;
+while(2 > 4){
+	while( a > b){
+		int a;
+		if( a > b){
+			int a = a + 2;
 		}
 		else{
-			y = y - 1;
+			int b = b + 2;
 		}
-	}
-	else{
-		y = y - z/l;
 	}
 }

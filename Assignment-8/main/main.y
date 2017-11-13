@@ -29,6 +29,10 @@
 		strcat(temp,t);
 		label_var++;
 		return temp;
+	}
+	void deallocate_mem(void){
+		free(var);
+		free(return_exp);
 	}	
 %}
 
@@ -54,11 +58,14 @@
 
 %%
 	programe:
-		function {printf("Successfully parsed\n");}
+		function {
+			printf("Successfully parsed\n");
+			deallocate_mem();
+		}
 		;
 
 	function:
-		function actual_statement {printf("\t\t THREE ADDRESS CODE : \n %s\n",$2->code);}
+		function actual_statement {printf("\t\t THREE ADDRESS CODE : \n%s\n",$2->code);}
 		| 
 		;
 	actual_statement:
@@ -84,7 +91,7 @@
 				strncpy(pos+strlen(begin_label1),"     ",(5 - strlen(begin_label1)));
 				pos = strstr(stat,"NEXT");
 			}
-			char *var = (char *)malloc(strlen(bool)+strlen(stat)+20);
+			char *var = (char *)malloc(strlen(bool) + strlen(stat) + 13 + 2 * strlen(begin_label1) + strlen(begin_label2));
 			strcat(var,begin_label1);
 			strcat(var," : ");
 			strcat(var,bool);
@@ -117,7 +124,7 @@
 				strncpy(pos,"NEXT ",5);
 				pos = strstr(bool,"FALSE");
 			}
-			char *var = (char *)malloc(strlen(bool)+strlen(stat)+20);
+			char *var = (char *)malloc(strlen(bool)+strlen(stat) + 4 + strlen(begin_label1));
 			strcat(var,bool);
 			strcat(var,"\n");
 			strcat(var,begin_label1);
@@ -144,9 +151,9 @@
 			while(pos!=NULL){
 				strncpy (pos,begin_label2,strlen(begin_label2));
 				strncpy (pos+strlen(begin_label2),"     ",(5-strlen(begin_label2)));
-				pos = strstr (bool,"FAIL");
+				pos = strstr (bool,"FALSE");
 			}
-			char *var = (char *)malloc(strlen(bool)+strlen($5)+strlen($7)+20);
+			char *var = (char *)malloc(strlen(bool)+strlen($5)+strlen($7) + 18 + strlen(begin_label1) + strlen(begin_label2));
 			strcat(var,bool);
 			strcat(var,"\n");
 			strcat(var,begin_label1);
@@ -197,10 +204,8 @@
 		;
 
 	statement:
-		actual_statement { $$ = $1->code;}
+		actual_statement { $$ = $1->code; }
 		| statement actual_statement {
-			printf("\nCurrent Statement: -> %s \n",$1);
-			printf("\nPrevious Statement: -> %s \n",$2->code);
 			char *ret = (char *)malloc(strlen($1) + strlen($2->code) + 4);
 			strcat(ret,$1);
 			strcat(ret,"\n");
@@ -236,8 +241,8 @@
 				strcat(return_var,$3->code);
 				strcat(return_var,"\n");
 			}
-			strcat(var,return_var);
-			return_exp->code = var;
+			strcat(return_var,var);
+			return_exp->code = return_var;
            	$$ = return_exp;           
 		}
 		| expression MINUS_TOK expression{
@@ -261,8 +266,8 @@
 				strcat(return_var,$3->code);
 				strcat(return_var,"\n");
 			}
-			strcat(var,return_var);
-			return_exp->code = var;
+			strcat(return_var,var);
+			return_exp->code = return_var;
            	$$ = return_exp;
 
 		}
@@ -287,8 +292,8 @@
 				strcat(return_var,$3->code);
 				strcat(return_var,"\n");
 			}
-			strcat(var,return_var);
-			return_exp->code = var;
+			strcat(return_var,var);
+			return_exp->code = return_var;
            	$$ = return_exp;
 
 		}
@@ -313,8 +318,8 @@
 				strcat(return_var,$3->code);
 				strcat(return_var,"\n");
 			}
-			strcat(var,return_var);
-			return_exp->code = var;
+			strcat(return_var,var);
+			return_exp->code = return_var;
            	$$ = return_exp;
 
 		}
@@ -339,8 +344,8 @@
 				strcat(return_var,$3->code);
 				strcat(return_var,"\n");
 			}
-			strcat(var,return_var);
-			return_exp->code = var;
+			strcat(return_var,var);
+			return_exp->code = return_var;
            	$$ = return_exp;
 
 		}

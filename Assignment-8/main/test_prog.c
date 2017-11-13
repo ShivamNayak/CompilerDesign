@@ -1,5 +1,4 @@
-while(2 > 4){
-	int a = a + 2;
+while(a > 10){
 	while(a > 10){
 		int a = a + a * 5;
 	}
@@ -15,4 +14,4 @@ while(2 > 4){
 			int a = 2;
 		}
 	}
-}
+}	

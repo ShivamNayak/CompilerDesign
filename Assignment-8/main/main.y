@@ -74,21 +74,18 @@
 			begin_label1 = gen_label_var();
 			begin_label2 = gen_label_var();
 			char *pos = strstr(bool,"TRUE");
-			while(pos != NULL){
+			if(pos != NULL){
 				strncpy(pos,begin_label2,strlen(begin_label2));
-				strncpy(pos+strlen(begin_label2),"     ",(5 - strlen(begin_label2)));
-				pos = strstr(bool,"TRUE");
+				strncpy(pos+strlen(begin_label2),"    ",(4 - strlen(begin_label2)));
 			}
 			pos = strstr(bool,"FALSE");
-			while (pos != NULL){
+			if (pos != NULL){
 				strncpy(pos,"NEXT ",5);
-				pos = strstr(bool,"FALSE");
 			}
 			pos = strstr(stat,"NEXT");
-			while (pos != NULL){
+			if (pos != NULL){
 				strncpy(pos,begin_label1,strlen(begin_label1));
 				strncpy(pos+strlen(begin_label1),"     ",(5 - strlen(begin_label1)));
-				pos = strstr(stat,"NEXT");
 			}
 			char *var = (char *)malloc(strlen(bool) + strlen(stat) + 13 + 2 * strlen(begin_label1) + strlen(begin_label2));
 			strcat(var,begin_label1);
@@ -113,15 +110,13 @@
 			stat = $5;
 			begin_label1 = gen_label_var();
 			char *pos = strstr(bool,"TRUE");
-			while (pos != NULL){
+			if (pos != NULL){
 				strncpy(pos,begin_label1,strlen(begin_label1));
-				strncpy(pos+strlen(begin_label1),"     ",(5 - strlen(begin_label1)));
-				pos = strstr(bool,"TRUE");
+				strncpy(pos+strlen(begin_label1),"    ",(4 - strlen(begin_label1)));
 			}
 			pos = strstr(bool,"FALSE");
-			while (pos != NULL){
+			if (pos != NULL){
 				strncpy(pos,"NEXT ",5);
-				pos = strstr(bool,"FALSE");
 			}
 			char *var = (char *)malloc(strlen(bool)+strlen(stat) + 4 + strlen(begin_label1));
 			strcat(var,bool);
@@ -140,17 +135,15 @@
 			bool = $3;
 			begin_label1 = gen_label_var();
 			char *pos = strstr (bool,"TRUE");		
-			while(pos!=NULL){
+			if(pos!=NULL){
 				strncpy (pos,begin_label1,strlen(begin_label1));
-				strncpy (pos+strlen(begin_label1),"     ",(5-strlen(begin_label1)));
-				pos = strstr (bool,"TRUE");
+				strncpy (pos+strlen(begin_label1),"    ",(4-strlen(begin_label1)));
 			}
 			begin_label2 = gen_label_var();
 			pos = strstr (bool,"FALSE");
-			while(pos!=NULL){
+			if(pos!=NULL){
 				strncpy (pos,begin_label2,strlen(begin_label2));
 				strncpy (pos+strlen(begin_label2),"     ",(5-strlen(begin_label2)));
-				pos = strstr (bool,"FALSE");
 			}
 			char *var = (char *)malloc(strlen(bool)+strlen($5)+strlen($7) + 18 + strlen(begin_label1) + strlen(begin_label2));
 			strcat(var,bool);

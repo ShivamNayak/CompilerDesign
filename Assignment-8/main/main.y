@@ -10,7 +10,7 @@
 	};
 	int temporary_var = 1;
 	int label_var = 1;
-	char *bool,*stat,*var,*begin_label1,*begin_label2;
+	char *bool,*stat,*begin_label1,*begin_label2;
 	struct expression_type *return_exp;
 	char* gen_var(void){
 		char *temp = (char*)malloc(sizeof(char) * 20);
@@ -31,7 +31,6 @@
 		return temp;
 	}
 	void deallocate_mem(void){
-		free(var);
 		free(return_exp);
 	}	
 %}
@@ -224,7 +223,7 @@
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
 			return_exp->address = gen_var();
-			var = (char *)malloc(sizeof(char) * 20);
+			char *var = (char *)malloc(sizeof(char) * 20);
 			strcat(var,return_exp->address);
 			strcat(var,"=");
 			strcat(var,$1->address);
@@ -249,7 +248,7 @@
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
 			return_exp->address = gen_var();
-			var = (char *)malloc(sizeof(char) * 20);
+			char *var = (char *)malloc(sizeof(char) * 20);
 			strcat(var,return_exp->address);
 			strcat(var,"=");
 			strcat(var,$1->address);
@@ -275,7 +274,7 @@
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
 			return_exp->address = gen_var();
-			var = (char *)malloc(sizeof(char) * 20);
+			char *var = (char *)malloc(sizeof(char) * 20);
 			strcat(var,return_exp->address);
 			strcat(var,"=");
 			strcat(var,$1->address);
@@ -301,7 +300,7 @@
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
 			return_exp->address = gen_var();
-			var = (char *)malloc(sizeof(char) * 20);
+			char *var = (char *)malloc(sizeof(char) * 20);
 			strcat(var,return_exp->address);
 			strcat(var,"=");
 			strcat(var,$1->address);
@@ -327,7 +326,7 @@
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
 			return_exp->address = gen_var();
-			var = (char *)malloc(sizeof(char) * 20);
+			char *var = (char *)malloc(sizeof(char) * 20);
 			strcat(var,return_exp->address);
 			strcat(var,"=");
 			strcat(var,$1->address);

@@ -29,7 +29,7 @@
 	};
 	int temporary_var = 1;
 	int label_var = 1;
-	char *bool,*stat,*var,*begin_label1,*begin_label2;
+	char *bool,*stat,*begin_label1,*begin_label2;
 	struct expression_type *return_exp;
 	char* gen_var(void){
 		char *temp = (char*)malloc(sizeof(char) * 20);
@@ -50,10 +50,9 @@
 		return temp;
 	}
 	void deallocate_mem(void){
-		free(var);
 		free(return_exp);
 	}	
-#line 39 "main.y"
+#line 38 "main.y"
 #ifdef YYSTYPE
 #undef  YYSTYPE_IS_DECLARED
 #define YYSTYPE_IS_DECLARED 1
@@ -66,7 +65,7 @@ typedef union{
 	struct expression_type *exp_type;
 } YYSTYPE;
 #endif /* !YYSTYPE_IS_DECLARED */
-#line 70 "y.tab.c"
+#line 69 "y.tab.c"
 
 /* compatibility with bison */
 #ifdef YYPARSE_PARAM
@@ -302,7 +301,7 @@ typedef struct {
 } YYSTACKDATA;
 /* variables for the parser stack */
 static YYSTACKDATA yystack;
-#line 397 "main.y"
+#line 396 "main.y"
 int main(int argc,const char *argv[]){
 	yyin = fopen(argv[1],"r");
 	yyparse();
@@ -310,7 +309,7 @@ int main(int argc,const char *argv[]){
 void *yyerror(char *s){
 	printf("%s\n",s);
 }
-#line 314 "y.tab.c"
+#line 313 "y.tab.c"
 
 #if YYDEBUG
 #include <stdio.h>		/* needed for printf */
@@ -513,18 +512,18 @@ yyreduce:
     switch (yyn)
     {
 case 1:
-#line 61 "main.y"
+#line 60 "main.y"
 	{
 			printf("Successfully parsed\n");
 			deallocate_mem();
 		}
 break;
 case 2:
-#line 68 "main.y"
+#line 67 "main.y"
 	{printf("\t\t THREE ADDRESS CODE : \n%s\n",yystack.l_mark[0].exp_type->code);}
 break;
 case 4:
-#line 72 "main.y"
+#line 71 "main.y"
 	{
 			bool = yystack.l_mark[-2].c_val;
 			stat = yystack.l_mark[0].c_val;
@@ -567,7 +566,7 @@ case 4:
 		}
 break;
 case 5:
-#line 112 "main.y"
+#line 111 "main.y"
 	{
 			bool = yystack.l_mark[-2].c_val;
 			stat = yystack.l_mark[0].c_val;
@@ -598,7 +597,7 @@ case 5:
 		}
 break;
 case 6:
-#line 140 "main.y"
+#line 139 "main.y"
 	{
 			bool = yystack.l_mark[-4].c_val;
 			begin_label1 = gen_label_var();
@@ -636,11 +635,11 @@ case 6:
 		}
 break;
 case 7:
-#line 175 "main.y"
+#line 174 "main.y"
 	{ yyval.exp_type = yystack.l_mark[-1].exp_type;}
 break;
 case 8:
-#line 176 "main.y"
+#line 175 "main.y"
 	{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(20);
@@ -651,7 +650,7 @@ case 8:
 		}
 break;
 case 9:
-#line 184 "main.y"
+#line 183 "main.y"
 	{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(20);
@@ -671,15 +670,15 @@ case 9:
 		}
 break;
 case 10:
-#line 203 "main.y"
+#line 202 "main.y"
 	{ yyval.c_val = yystack.l_mark[-1].c_val;}
 break;
 case 11:
-#line 207 "main.y"
+#line 206 "main.y"
 	{ yyval.c_val = yystack.l_mark[0].exp_type->code; }
 break;
 case 12:
-#line 208 "main.y"
+#line 207 "main.y"
 	{
 			char *ret = (char *)malloc(strlen(yystack.l_mark[-1].c_val) + strlen(yystack.l_mark[0].exp_type->code) + 4);
 			strcat(ret,yystack.l_mark[-1].c_val);
@@ -689,20 +688,20 @@ case 12:
 		}
 break;
 case 13:
-#line 217 "main.y"
+#line 216 "main.y"
 	{ yyval.c_val = yystack.l_mark[0].c_val;}
 break;
 case 14:
-#line 220 "main.y"
+#line 219 "main.y"
 	{ yyval.c_val = yystack.l_mark[0].c_val;}
 break;
 case 15:
-#line 223 "main.y"
+#line 222 "main.y"
 	{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
 			return_exp->address = gen_var();
-			var = (char *)malloc(sizeof(char) * 20);
+			char *var = (char *)malloc(sizeof(char) * 20);
 			strcat(var,return_exp->address);
 			strcat(var,"=");
 			strcat(var,yystack.l_mark[-2].exp_type->address);
@@ -725,12 +724,12 @@ case 15:
 		}
 break;
 case 16:
-#line 248 "main.y"
+#line 247 "main.y"
 	{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
 			return_exp->address = gen_var();
-			var = (char *)malloc(sizeof(char) * 20);
+			char *var = (char *)malloc(sizeof(char) * 20);
 			strcat(var,return_exp->address);
 			strcat(var,"=");
 			strcat(var,yystack.l_mark[-2].exp_type->address);
@@ -754,12 +753,12 @@ case 16:
 		}
 break;
 case 17:
-#line 274 "main.y"
+#line 273 "main.y"
 	{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
 			return_exp->address = gen_var();
-			var = (char *)malloc(sizeof(char) * 20);
+			char *var = (char *)malloc(sizeof(char) * 20);
 			strcat(var,return_exp->address);
 			strcat(var,"=");
 			strcat(var,yystack.l_mark[-2].exp_type->address);
@@ -783,12 +782,12 @@ case 17:
 		}
 break;
 case 18:
-#line 300 "main.y"
+#line 299 "main.y"
 	{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
 			return_exp->address = gen_var();
-			var = (char *)malloc(sizeof(char) * 20);
+			char *var = (char *)malloc(sizeof(char) * 20);
 			strcat(var,return_exp->address);
 			strcat(var,"=");
 			strcat(var,yystack.l_mark[-2].exp_type->address);
@@ -812,12 +811,12 @@ case 18:
 		}
 break;
 case 19:
-#line 326 "main.y"
+#line 325 "main.y"
 	{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
 			return_exp->address = gen_var();
-			var = (char *)malloc(sizeof(char) * 20);
+			char *var = (char *)malloc(sizeof(char) * 20);
 			strcat(var,return_exp->address);
 			strcat(var,"=");
 			strcat(var,yystack.l_mark[-2].exp_type->address);
@@ -841,14 +840,14 @@ case 19:
 		}
 break;
 case 20:
-#line 352 "main.y"
+#line 351 "main.y"
 	{
 			yyval.exp_type = yystack.l_mark[-1].exp_type;
 
 		}
 break;
 case 21:
-#line 356 "main.y"
+#line 355 "main.y"
 	{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
@@ -859,7 +858,7 @@ case 21:
 		}
 break;
 case 22:
-#line 364 "main.y"
+#line 363 "main.y"
 	{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
@@ -872,7 +871,7 @@ case 22:
 		}
 break;
 case 23:
-#line 376 "main.y"
+#line 375 "main.y"
 	{
 			char *var = (char *)malloc(strlen(yystack.l_mark[-2].exp_type->code) + strlen(yystack.l_mark[0].exp_type->code) + 40);
 			if(yystack.l_mark[-2].exp_type->code[0] != 0){
@@ -893,7 +892,7 @@ case 23:
 			yyval.c_val = var;
 		}
 break;
-#line 897 "y.tab.c"
+#line 896 "y.tab.c"
     }
     yystack.s_mark -= yym;
     yystate = *yystack.s_mark;

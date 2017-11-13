@@ -31,7 +31,7 @@
 	int label_var = 1;
 	char *bool,*stat,*var,*begin_label1,*begin_label2;
 	struct expression_type *return_exp;
-	char* gen_temp_var(void){
+	char* gen_var(void){
 		char *temp = (char*)malloc(sizeof(char) * 20);
 		char *t = (char *)malloc(10);
 		temp[0] = 't';
@@ -125,45 +125,45 @@ static const YYINT yylhs[] = {                           -1,
 };
 static const YYINT yylen[] = {                            2,
     1,    2,    0,    5,    5,    7,    2,    2,    4,    3,
-    2,    0,    2,    1,    3,    3,    3,    3,    3,    3,
+    1,    2,    2,    1,    3,    3,    3,    3,    3,    3,
     1,    1,    3,
 };
 static const YYINT yydefred[] = {                         3,
     0,    0,   22,   14,    0,    0,    0,    0,    0,   21,
     0,    2,    0,    0,    0,   13,    0,    8,    7,    0,
     0,    0,    0,    0,    0,    0,   20,    0,    0,    0,
-    0,   17,   18,   19,    0,    0,    0,    9,   12,    4,
-    0,    0,    0,    0,   10,   11,    6,
+    0,   17,   18,   19,    0,    0,    0,    9,    0,    4,
+    0,    0,    0,   11,    0,   10,   12,    6,
 };
 static const YYINT yydgoto[] = {                          1,
    43,   40,   25,    9,   10,   11,   12,    2,
 };
 static const YYINT yysindex[] = {                         0,
-    0, -207,    0,    0, -259, -168, -233, -234, -255,    0,
+    0, -207,    0,    0, -232, -168, -226, -252, -255,    0,
  -213,    0, -168, -254, -168,    0, -168,    0,    0, -168,
- -168, -168, -168, -168, -236, -194,    0, -227, -203, -271,
- -271,    0,    0,    0, -221, -168, -221,    0,    0,    0,
- -189, -230, -217, -221,    0,    0,    0,
+ -168, -168, -168, -168, -236, -194,    0, -220, -203, -272,
+ -272,    0,    0,    0, -218, -168, -218,    0, -207,    0,
+ -189, -202, -217,    0, -218,    0,    0,    0,
 };
 static const YYINT yyrindex[] = {                         0,
-    0,   45,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,   46,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0, -237,
  -235,    0,    0,    0,    0,    0,    0,    0,    0,    0,
- -216,    1,    0,    0,    0,    0,    0,
+ -210,    1,    0,    0,    0,    0,    0,    0,
 };
 static const YYINT yygindex[] = {                         0,
-    0,  -34,   37,    0,   48,   -6,   14,    0,
+    0,  -35,   41,    0,   58,   -6,  -15,    0,
 };
 #define YYTABLESIZE 267
 static const YYINT yytable[] = {                         14,
-    5,   13,   42,   22,   23,   24,   26,   27,   26,   47,
+    5,   42,   22,   23,   24,    4,   26,   27,   26,   48,
    29,   17,   18,   30,   31,   32,   33,   34,   20,   21,
-   22,   23,   24,    4,   15,   35,   16,   15,   44,   41,
-   15,   15,   16,   16,   37,   15,   15,   16,   16,    3,
-    4,   39,    5,    6,    1,   23,   45,    7,    8,    3,
-    4,   28,    5,    6,   19,   16,   46,    7,    8,   20,
-   21,   22,   23,   24,   38,    0,    0,    0,    0,   20,
+   22,   23,   24,   44,   15,   35,   16,   47,   13,   41,
+   15,   15,   16,   16,   15,   15,   15,   16,   16,    3,
+    4,   37,    5,    6,   39,    1,   46,    7,    8,    3,
+    4,   23,    5,    6,   19,   28,   45,    7,    8,   20,
+   21,   22,   23,   24,   38,   16,    0,    0,    0,   20,
    21,   22,   23,   24,   36,    0,    0,    0,   20,   21,
    22,   23,   24,   20,   21,   22,   23,   24,    3,    4,
     0,    0,    6,    0,    0,    0,    0,    0,    0,    0,
@@ -186,13 +186,13 @@ static const YYINT yytable[] = {                         14,
     5,    5,    0,    0,    5,    5,    5,
 };
 static const YYINT yycheck[] = {                          6,
-    0,  261,   37,  275,  276,  277,   13,  262,   15,   44,
+    0,   37,  275,  276,  277,  258,   13,  262,   15,   45,
    17,  267,  268,   20,   21,   22,   23,   24,  273,  274,
-  275,  276,  277,  258,  262,  262,  262,  261,  259,   36,
-  268,  269,  268,  269,  262,  273,  274,  273,  274,  257,
-  258,  263,  260,  261,    0,  262,  264,  265,  266,  257,
-  258,   15,  260,  261,  268,    8,   43,  265,  266,  273,
-  274,  275,  276,  277,  268,   -1,   -1,   -1,   -1,  273,
+  275,  276,  277,   39,  262,  262,  262,   43,  261,   36,
+  268,  269,  268,  269,  261,  273,  274,  273,  274,  257,
+  258,  262,  260,  261,  263,    0,  264,  265,  266,  257,
+  258,  262,  260,  261,  268,   15,  259,  265,  266,  273,
+  274,  275,  276,  277,  268,    8,   -1,   -1,   -1,  273,
   274,  275,  276,  277,  269,   -1,   -1,   -1,  273,  274,
   275,  276,  277,  273,  274,  275,  276,  277,  257,  258,
    -1,   -1,  261,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
@@ -248,8 +248,8 @@ static const char *const yyrule[] = {
 "actual_statement : declaration SEMICOLON_TOK",
 "actual_statement : declaration EQUAL_TOK expression SEMICOLON_TOK",
 "statement_block : LCURLY_TOK statement RCURLY_TOK",
+"statement : actual_statement",
 "statement : statement actual_statement",
-"statement :",
 "declaration : INTEGER_TOK identifier",
 "identifier : ID_TOK",
 "expression : expression ADDITION_TOK expression",
@@ -298,7 +298,7 @@ typedef struct {
 } YYSTACKDATA;
 /* variables for the parser stack */
 static YYSTACKDATA yystack;
-#line 383 "main.y"
+#line 392 "main.y"
 int main(int argc,const char *argv[]){
 	yyin = fopen(argv[1],"r");
 	yyparse();
@@ -514,7 +514,7 @@ case 1:
 break;
 case 2:
 #line 61 "main.y"
-	{printf("Actual: %s\n",yystack.l_mark[0].exp_type->code);}
+	{printf("\t\t THREE ADDRESS CODE : \n %s\n",yystack.l_mark[0].exp_type->code);}
 break;
 case 4:
 #line 65 "main.y"
@@ -540,22 +540,22 @@ case 4:
 				strncpy(pos+strlen(begin_label1),"     ",(5 - strlen(begin_label1)));
 				pos = strstr(stat,"NEXT");
 			}
-			char *temp_var = (char *)malloc(strlen(bool)+strlen(stat)+20);
-			strcat(temp_var,begin_label1);
-			strcat(temp_var," : ");
-			strcat(temp_var,bool);
-			strcat(temp_var,"\n");
-			strcat(temp_var,begin_label2);
-			strcat(temp_var," : ");
-			strcat(temp_var,stat);
-			strcat(temp_var,"\n");
-			strcat(temp_var,"goto ");
-			strcat(temp_var,begin_label1);
+			char *var = (char *)malloc(strlen(bool)+strlen(stat)+20);
+			strcat(var,begin_label1);
+			strcat(var," : ");
+			strcat(var,bool);
+			strcat(var,"\n");
+			strcat(var,begin_label2);
+			strcat(var," : ");
+			strcat(var,stat);
+			strcat(var,"\n");
+			strcat(var,"goto ");
+			strcat(var,begin_label1);
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(2);
 			return_exp->address[0] = 'X';
-			return_exp->code = (char *)malloc(sizeof(char) * strlen(temp_var));
-			strncpy(return_exp->code,temp_var,strlen(temp_var));
+			return_exp->code = (char *)malloc(sizeof(char) * strlen(var));
+			strncpy(return_exp->code,var,strlen(var));
 			yyval.exp_type = return_exp;
 		}
 break;
@@ -576,17 +576,17 @@ case 5:
 				strncpy(pos,"NEXT ",5);
 				pos = strstr(bool,"FALSE");
 			}
-			char *temp_var = (char *)malloc(strlen(bool)+strlen(stat)+20);
-			strcat(temp_var,bool);
-			strcat(temp_var,"\n");
-			strcat(temp_var,begin_label1);
-			strcat(temp_var," : ");
-			strcat(temp_var,stat);
+			char *var = (char *)malloc(strlen(bool)+strlen(stat)+20);
+			strcat(var,bool);
+			strcat(var,"\n");
+			strcat(var,begin_label1);
+			strcat(var," : ");
+			strcat(var,stat);
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(2);
 			return_exp->address[0] = 'X';
-			return_exp->code = (char *)malloc(sizeof(char) * strlen(temp_var));
-			strncpy(return_exp->code,temp_var,strlen(temp_var));
+			return_exp->code = (char *)malloc(sizeof(char) * strlen(var));
+			strncpy(return_exp->code,var,strlen(var));
 			yyval.exp_type = return_exp;
 		}
 break;
@@ -608,23 +608,23 @@ case 6:
 				strncpy (pos+strlen(begin_label2),"     ",(5-strlen(begin_label2)));
 				pos = strstr (bool,"FAIL");
 			}
-			char *temp_var = (char *)malloc(strlen(bool)+strlen(yystack.l_mark[-2].c_val)+strlen(yystack.l_mark[0].c_val)+20);
-			strcat(temp_var,bool);
-			strcat(temp_var,"\n");
-			strcat(temp_var,begin_label1);
-			strcat(temp_var," : ");
-			strcat(temp_var,yystack.l_mark[-2].c_val);
-			strcat(temp_var,"\n");
-			strcat(temp_var,"goto NEXT");
-			strcat(temp_var,"\n");
-			strcat(temp_var,begin_label2);
-			strcat(temp_var," : ");
-			strcat(temp_var,yystack.l_mark[0].c_val);
+			char *var = (char *)malloc(strlen(bool)+strlen(yystack.l_mark[-2].c_val)+strlen(yystack.l_mark[0].c_val)+20);
+			strcat(var,bool);
+			strcat(var,"\n");
+			strcat(var,begin_label1);
+			strcat(var," : ");
+			strcat(var,yystack.l_mark[-2].c_val);
+			strcat(var,"\n");
+			strcat(var,"goto NEXT");
+			strcat(var,"\n");
+			strcat(var,begin_label2);
+			strcat(var," : ");
+			strcat(var,yystack.l_mark[0].c_val);
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(2);
 			return_exp->address[0] = 'X';
-			return_exp->code = (char *)malloc(sizeof(char) * strlen(temp_var));
-			strncpy(return_exp->code,temp_var,strlen(temp_var));
+			return_exp->code = (char *)malloc(sizeof(char) * strlen(var));
+			strncpy(return_exp->code,var,strlen(var));
 			yyval.exp_type = return_exp;
 		}
 break;
@@ -638,52 +638,65 @@ case 8:
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(20);
 			return_exp->address = yystack.l_mark[-1].c_val;
-			return_exp->code = NULL;
+			return_exp->code = (char *)malloc(2);
+			return_exp->code[0] = 0;
 			yyval.exp_type = return_exp;
 		}
 break;
 case 9:
-#line 176 "main.y"
+#line 177 "main.y"
 	{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(20);
-			return_exp->address = gen_temp_var();
-			char *temp_var = (char *)malloc(20);
-			strcat(temp_var,yystack.l_mark[-3].c_val);
-			strcat(temp_var,"=");
-			strcat(temp_var,yystack.l_mark[-1].exp_type->address);
-			char *temp = (char *)malloc(strlen(yystack.l_mark[-3].c_val) + strlen(yystack.l_mark[-1].exp_type->code) + strlen(temp_var) + 2);
+			return_exp->address = gen_var();
+			char *var = (char *)malloc(20);
+			strcat(var,yystack.l_mark[-3].c_val);
+			strcat(var,"=");
+			strcat(var,yystack.l_mark[-1].exp_type->address);
+			char *temp = (char *)malloc(strlen(yystack.l_mark[-3].c_val) + strlen(yystack.l_mark[-1].exp_type->code) + strlen(var) + 2);
 			if (yystack.l_mark[-1].exp_type->code[0] != 0){
 				strcat(temp,yystack.l_mark[-1].exp_type->code);
 				strcat(temp,"\n");
 			}
-			strcat(temp,temp_var);
+			strcat(temp,var);
 			return_exp->code = temp;
 			yyval.exp_type = return_exp;
 		}
 break;
 case 10:
-#line 195 "main.y"
-	{ yyval.c_val = yystack.l_mark[-1].c_val; }
+#line 196 "main.y"
+	{ yyval.c_val = yystack.l_mark[-1].c_val;}
 break;
 case 11:
-#line 199 "main.y"
+#line 200 "main.y"
 	{ yyval.c_val = yystack.l_mark[0].exp_type->code;}
 break;
+case 12:
+#line 201 "main.y"
+	{
+			printf("\nCurrent Statement: -> %s \n",yystack.l_mark[-1].c_val);
+			printf("\nPrevious Statement: -> %s \n",yystack.l_mark[0].exp_type->code);
+			char *ret = (char *)malloc(strlen(yystack.l_mark[-1].c_val) + strlen(yystack.l_mark[0].exp_type->code) + 4);
+			strcat(ret,yystack.l_mark[-1].c_val);
+			strcat(ret,"\n");
+			strcat(ret,yystack.l_mark[0].exp_type->code);
+			yyval.c_val = ret;
+		}
+break;
 case 13:
-#line 203 "main.y"
+#line 212 "main.y"
 	{ yyval.c_val = yystack.l_mark[0].c_val;}
 break;
 case 14:
-#line 206 "main.y"
+#line 215 "main.y"
 	{ yyval.c_val = yystack.l_mark[0].c_val;}
 break;
 case 15:
-#line 209 "main.y"
+#line 218 "main.y"
 	{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
-			return_exp->address = gen_temp_var();
+			return_exp->address = gen_var();
 			var = (char *)malloc(sizeof(char) * 20);
 			strcat(var,return_exp->address);
 			strcat(var,"=");
@@ -707,11 +720,11 @@ case 15:
 		}
 break;
 case 16:
-#line 234 "main.y"
+#line 243 "main.y"
 	{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
-			return_exp->address = gen_temp_var();
+			return_exp->address = gen_var();
 			var = (char *)malloc(sizeof(char) * 20);
 			strcat(var,return_exp->address);
 			strcat(var,"=");
@@ -736,11 +749,11 @@ case 16:
 		}
 break;
 case 17:
-#line 260 "main.y"
+#line 269 "main.y"
 	{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
-			return_exp->address = gen_temp_var();
+			return_exp->address = gen_var();
 			var = (char *)malloc(sizeof(char) * 20);
 			strcat(var,return_exp->address);
 			strcat(var,"=");
@@ -765,11 +778,11 @@ case 17:
 		}
 break;
 case 18:
-#line 286 "main.y"
+#line 295 "main.y"
 	{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
-			return_exp->address = gen_temp_var();
+			return_exp->address = gen_var();
 			var = (char *)malloc(sizeof(char) * 20);
 			strcat(var,return_exp->address);
 			strcat(var,"=");
@@ -794,11 +807,11 @@ case 18:
 		}
 break;
 case 19:
-#line 312 "main.y"
+#line 321 "main.y"
 	{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
-			return_exp->address = gen_temp_var();
+			return_exp->address = gen_var();
 			var = (char *)malloc(sizeof(char) * 20);
 			strcat(var,return_exp->address);
 			strcat(var,"=");
@@ -823,14 +836,14 @@ case 19:
 		}
 break;
 case 20:
-#line 338 "main.y"
+#line 347 "main.y"
 	{
 			yyval.exp_type = yystack.l_mark[-1].exp_type;
 
 		}
 break;
 case 21:
-#line 342 "main.y"
+#line 351 "main.y"
 	{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
@@ -841,7 +854,7 @@ case 21:
 		}
 break;
 case 22:
-#line 350 "main.y"
+#line 359 "main.y"
 	{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
@@ -854,16 +867,16 @@ case 22:
 		}
 break;
 case 23:
-#line 362 "main.y"
+#line 371 "main.y"
 	{
-			char *temp_var = (char *)malloc(strlen(yystack.l_mark[-2].exp_type->code) + strlen(yystack.l_mark[0].exp_type->code) + 40);
+			char *var = (char *)malloc(strlen(yystack.l_mark[-2].exp_type->code) + strlen(yystack.l_mark[0].exp_type->code) + 40);
 			if(yystack.l_mark[-2].exp_type->code[0] != 0){
-				strcat(temp_var,yystack.l_mark[-2].exp_type->code);
-				strcat(temp_var,"\n");
+				strcat(var,yystack.l_mark[-2].exp_type->code);
+				strcat(var,"\n");
 			}
 			if(yystack.l_mark[0].exp_type->code[0] != 0){
-				strcat(temp_var,yystack.l_mark[0].exp_type->code);
-				strcat(temp_var,"\n");
+				strcat(var,yystack.l_mark[0].exp_type->code);
+				strcat(var,"\n");
 			}
 			char *return_var = (char *)malloc(sizeof(char) * 40);
 			strcat(return_var,"if (");
@@ -871,11 +884,11 @@ case 23:
 			strcat(return_var,yystack.l_mark[-1].c_val);
 			strcat(return_var,yystack.l_mark[0].exp_type->address);
 			strcat(return_var,") goto TRUE \n goto FALSE");
-			strcat(temp_var,return_var);
-			yyval.c_val = temp_var;
+			strcat(var,return_var);
+			yyval.c_val = var;
 		}
 break;
-#line 879 "y.tab.c"
+#line 892 "y.tab.c"
     }
     yystack.s_mark -= yym;
     yystate = *yystack.s_mark;

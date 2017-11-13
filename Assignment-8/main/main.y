@@ -12,7 +12,7 @@
 	int label_var = 1;
 	char *bool,*stat,*var,*begin_label1,*begin_label2;
 	struct expression_type *return_exp;
-	char* gen_temp_var(void){
+	char* gen_var(void){
 		char *temp = (char*)malloc(sizeof(char) * 20);
 		char *t = (char *)malloc(10);
 		temp[0] = 't';
@@ -58,7 +58,7 @@
 		;
 
 	function:
-		function actual_statement {printf("Actual: %s\n",$2->code);}
+		function actual_statement {printf("\t\t THREE ADDRESS CODE : \n %s\n",$2->code);}
 		| 
 		;
 	actual_statement:
@@ -84,22 +84,22 @@
 				strncpy(pos+strlen(begin_label1),"     ",(5 - strlen(begin_label1)));
 				pos = strstr(stat,"NEXT");
 			}
-			char *temp_var = (char *)malloc(strlen(bool)+strlen(stat)+20);
-			strcat(temp_var,begin_label1);
-			strcat(temp_var," : ");
-			strcat(temp_var,bool);
-			strcat(temp_var,"\n");
-			strcat(temp_var,begin_label2);
-			strcat(temp_var," : ");
-			strcat(temp_var,stat);
-			strcat(temp_var,"\n");
-			strcat(temp_var,"goto ");
-			strcat(temp_var,begin_label1);
+			char *var = (char *)malloc(strlen(bool)+strlen(stat)+20);
+			strcat(var,begin_label1);
+			strcat(var," : ");
+			strcat(var,bool);
+			strcat(var,"\n");
+			strcat(var,begin_label2);
+			strcat(var," : ");
+			strcat(var,stat);
+			strcat(var,"\n");
+			strcat(var,"goto ");
+			strcat(var,begin_label1);
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(2);
 			return_exp->address[0] = 'X';
-			return_exp->code = (char *)malloc(sizeof(char) * strlen(temp_var));
-			strncpy(return_exp->code,temp_var,strlen(temp_var));
+			return_exp->code = (char *)malloc(sizeof(char) * strlen(var));
+			strncpy(return_exp->code,var,strlen(var));
 			$$ = return_exp;
 		}
 		| IF_TOK LPAREN_TOK boolean_val RPAREN_TOK statement_block {
@@ -117,17 +117,17 @@
 				strncpy(pos,"NEXT ",5);
 				pos = strstr(bool,"FALSE");
 			}
-			char *temp_var = (char *)malloc(strlen(bool)+strlen(stat)+20);
-			strcat(temp_var,bool);
-			strcat(temp_var,"\n");
-			strcat(temp_var,begin_label1);
-			strcat(temp_var," : ");
-			strcat(temp_var,stat);
+			char *var = (char *)malloc(strlen(bool)+strlen(stat)+20);
+			strcat(var,bool);
+			strcat(var,"\n");
+			strcat(var,begin_label1);
+			strcat(var," : ");
+			strcat(var,stat);
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(2);
 			return_exp->address[0] = 'X';
-			return_exp->code = (char *)malloc(sizeof(char) * strlen(temp_var));
-			strncpy(return_exp->code,temp_var,strlen(temp_var));
+			return_exp->code = (char *)malloc(sizeof(char) * strlen(var));
+			strncpy(return_exp->code,var,strlen(var));
 			$$ = return_exp;
 		}
 		| IF_TOK LPAREN_TOK boolean_val RPAREN_TOK statement_block ELSE_TOK statement_block {
@@ -146,23 +146,23 @@
 				strncpy (pos+strlen(begin_label2),"     ",(5-strlen(begin_label2)));
 				pos = strstr (bool,"FAIL");
 			}
-			char *temp_var = (char *)malloc(strlen(bool)+strlen($5)+strlen($7)+20);
-			strcat(temp_var,bool);
-			strcat(temp_var,"\n");
-			strcat(temp_var,begin_label1);
-			strcat(temp_var," : ");
-			strcat(temp_var,$5);
-			strcat(temp_var,"\n");
-			strcat(temp_var,"goto NEXT");
-			strcat(temp_var,"\n");
-			strcat(temp_var,begin_label2);
-			strcat(temp_var," : ");
-			strcat(temp_var,$7);
+			char *var = (char *)malloc(strlen(bool)+strlen($5)+strlen($7)+20);
+			strcat(var,bool);
+			strcat(var,"\n");
+			strcat(var,begin_label1);
+			strcat(var," : ");
+			strcat(var,$5);
+			strcat(var,"\n");
+			strcat(var,"goto NEXT");
+			strcat(var,"\n");
+			strcat(var,begin_label2);
+			strcat(var," : ");
+			strcat(var,$7);
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(2);
 			return_exp->address[0] = 'X';
-			return_exp->code = (char *)malloc(sizeof(char) * strlen(temp_var));
-			strncpy(return_exp->code,temp_var,strlen(temp_var));
+			return_exp->code = (char *)malloc(sizeof(char) * strlen(var));
+			strncpy(return_exp->code,var,strlen(var));
 			$$ = return_exp;
 		}
 		| expression SEMICOLON_TOK { $$ = $1;}
@@ -170,34 +170,43 @@
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(20);
 			return_exp->address = $1;
-			return_exp->code = NULL;
+			return_exp->code = (char *)malloc(2);
+			return_exp->code[0] = 0;
 			$$ = return_exp;
 		}
 		| declaration EQUAL_TOK expression SEMICOLON_TOK {
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(20);
-			return_exp->address = gen_temp_var();
-			char *temp_var = (char *)malloc(20);
-			strcat(temp_var,$1);
-			strcat(temp_var,"=");
-			strcat(temp_var,$3->address);
-			char *temp = (char *)malloc(strlen($1) + strlen($3->code) + strlen(temp_var) + 2);
+			return_exp->address = gen_var();
+			char *var = (char *)malloc(20);
+			strcat(var,$1);
+			strcat(var,"=");
+			strcat(var,$3->address);
+			char *temp = (char *)malloc(strlen($1) + strlen($3->code) + strlen(var) + 2);
 			if ($3->code[0] != 0){
 				strcat(temp,$3->code);
 				strcat(temp,"\n");
 			}
-			strcat(temp,temp_var);
+			strcat(temp,var);
 			return_exp->code = temp;
 			$$ = return_exp;
 		}
 		;
 	statement_block:
-		LCURLY_TOK statement RCURLY_TOK { $$ = $2; }
+		LCURLY_TOK statement RCURLY_TOK { $$ = $2;}
 		;
 
 	statement:
-		statement actual_statement { $$ = $2->code;}
-		|
+		actual_statement { $$ = $1->code;}
+		| statement actual_statement {
+			printf("\nCurrent Statement: -> %s \n",$1);
+			printf("\nPrevious Statement: -> %s \n",$2->code);
+			char *ret = (char *)malloc(strlen($1) + strlen($2->code) + 4);
+			strcat(ret,$1);
+			strcat(ret,"\n");
+			strcat(ret,$2->code);
+			$$ = ret;
+		}
 		;
 	declaration:
 		INTEGER_TOK identifier { $$ = $2;} 
@@ -209,7 +218,7 @@
 		expression ADDITION_TOK expression{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
-			return_exp->address = gen_temp_var();
+			return_exp->address = gen_var();
 			var = (char *)malloc(sizeof(char) * 20);
 			strcat(var,return_exp->address);
 			strcat(var,"=");
@@ -234,7 +243,7 @@
 		| expression MINUS_TOK expression{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
-			return_exp->address = gen_temp_var();
+			return_exp->address = gen_var();
 			var = (char *)malloc(sizeof(char) * 20);
 			strcat(var,return_exp->address);
 			strcat(var,"=");
@@ -260,7 +269,7 @@
 		| expression MULTIPLICATION_TOK expression{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
-			return_exp->address = gen_temp_var();
+			return_exp->address = gen_var();
 			var = (char *)malloc(sizeof(char) * 20);
 			strcat(var,return_exp->address);
 			strcat(var,"=");
@@ -286,7 +295,7 @@
 		| expression DIVISION_TOK expression{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
-			return_exp->address = gen_temp_var();
+			return_exp->address = gen_var();
 			var = (char *)malloc(sizeof(char) * 20);
 			strcat(var,return_exp->address);
 			strcat(var,"=");
@@ -312,7 +321,7 @@
 		| expression MODULO_TOK expression{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
-			return_exp->address = gen_temp_var();
+			return_exp->address = gen_var();
 			var = (char *)malloc(sizeof(char) * 20);
 			strcat(var,return_exp->address);
 			strcat(var,"=");
@@ -360,14 +369,14 @@
 		;
 	boolean_val:
 		expression RELATIONAL_TOK expression {
-			char *temp_var = (char *)malloc(strlen($1->code) + strlen($3->code) + 40);
+			char *var = (char *)malloc(strlen($1->code) + strlen($3->code) + 40);
 			if($1->code[0] != 0){
-				strcat(temp_var,$1->code);
-				strcat(temp_var,"\n");
+				strcat(var,$1->code);
+				strcat(var,"\n");
 			}
 			if($3->code[0] != 0){
-				strcat(temp_var,$3->code);
-				strcat(temp_var,"\n");
+				strcat(var,$3->code);
+				strcat(var,"\n");
 			}
 			char *return_var = (char *)malloc(sizeof(char) * 40);
 			strcat(return_var,"if (");
@@ -375,8 +384,8 @@
 			strcat(return_var,$2);
 			strcat(return_var,$3->address);
 			strcat(return_var,") goto TRUE \n goto FALSE");
-			strcat(temp_var,return_var);
-			$$ = temp_var;
+			strcat(var,return_var);
+			$$ = var;
 		}
 		;
 %%

@@ -14,8 +14,8 @@
 
   10  statement_block : LCURLY_TOK statement RCURLY_TOK
 
-  11  statement : statement actual_statement
-  12            |
+  11  statement : actual_statement
+  12            | statement actual_statement
 
   13  declaration : INTEGER_TOK identifier
 
@@ -449,11 +449,20 @@ state 38
 
 state 39
 	statement_block : LCURLY_TOK . statement RCURLY_TOK  (10)
-	statement : .  (12)
 
-	.  reduce 12
+	INT_CONST_TOK  shift 3
+	ID_TOK  shift 4
+	WHILE_TOK  shift 5
+	LPAREN_TOK  shift 6
+	IF_TOK  shift 7
+	INTEGER_TOK  shift 8
+	.  error
 
 	statement  goto 43
+	declaration  goto 9
+	identifier  goto 10
+	expression  goto 11
+	actual_statement  goto 44
 
 
 state 40
@@ -482,7 +491,7 @@ state 42
 	actual_statement : IF_TOK LPAREN_TOK boolean_val RPAREN_TOK statement_block .  (5)
 	actual_statement : IF_TOK LPAREN_TOK boolean_val RPAREN_TOK statement_block . ELSE_TOK statement_block  (6)
 
-	ELSE_TOK  shift 44
+	ELSE_TOK  shift 45
 	$end  reduce 5
 	INT_CONST_TOK  reduce 5
 	ID_TOK  reduce 5
@@ -495,13 +504,13 @@ state 42
 
 state 43
 	statement_block : LCURLY_TOK statement . RCURLY_TOK  (10)
-	statement : statement . actual_statement  (11)
+	statement : statement . actual_statement  (12)
 
 	INT_CONST_TOK  shift 3
 	ID_TOK  shift 4
 	WHILE_TOK  shift 5
 	LPAREN_TOK  shift 6
-	RCURLY_TOK  shift 45
+	RCURLY_TOK  shift 46
 	IF_TOK  shift 7
 	INTEGER_TOK  shift 8
 	.  error
@@ -509,35 +518,41 @@ state 43
 	declaration  goto 9
 	identifier  goto 10
 	expression  goto 11
-	actual_statement  goto 46
+	actual_statement  goto 47
 
 
 state 44
+	statement : actual_statement .  (11)
+
+	.  reduce 11
+
+
+state 45
 	actual_statement : IF_TOK LPAREN_TOK boolean_val RPAREN_TOK statement_block ELSE_TOK . statement_block  (6)
 
 	LCURLY_TOK  shift 39
 	.  error
 
-	statement_block  goto 47
+	statement_block  goto 48
 
 
-state 45
+state 46
 	statement_block : LCURLY_TOK statement RCURLY_TOK .  (10)
 
 	.  reduce 10
 
 
-state 46
-	statement : statement actual_statement .  (11)
-
-	.  reduce 11
-
-
 state 47
+	statement : statement actual_statement .  (12)
+
+	.  reduce 12
+
+
+state 48
 	actual_statement : IF_TOK LPAREN_TOK boolean_val RPAREN_TOK statement_block ELSE_TOK statement_block .  (6)
 
 	.  reduce 6
 
 
 23 terminals, 10 nonterminals
-24 grammar rules, 48 states
+24 grammar rules, 49 states

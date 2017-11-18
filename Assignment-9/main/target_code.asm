@@ -5,7 +5,7 @@
 			MVI C
 			CMP B
 			JC L6
-			JMP HLT
+			HLT
 		L6:
 			MVI B
 			ADD C
@@ -28,7 +28,7 @@
 		L1:
 			MVI C 10
 			JMP L3
-		L2
+		L2:
 			MVI B 20
 			JMP L3
 			JMP L5

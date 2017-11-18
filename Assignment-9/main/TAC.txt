@@ -12,6 +12,6 @@ if (a>b) goto L1
 goto L2   
 L1: b=10
 goto L3
-L2 : a=20   
+L2: a=20   
 goto L3
 goto L5

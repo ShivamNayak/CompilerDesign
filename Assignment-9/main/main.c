@@ -75,6 +75,7 @@ int main(int argc, char const *argv[])
 				start = 0;
 			}
 			if(jmp_occurance){
+				fseek(out,-4,SEEK_CUR);
 				fprintf(out,"%s\n","HLT\0" );
 				jmp_occurance = 0;
 			}

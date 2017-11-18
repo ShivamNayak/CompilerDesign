@@ -74,7 +74,10 @@ int main(int argc, char const *argv[])
 				fprintf(out,"\t\t%s\n","MAIN: " );
 				start = 0;
 			}
-			fprintf(out,"\t\t\t%s\n",buffer );
+			if(jmp_occurance){
+				fprintf(out,"%s\n","HLT\0" );
+				jmp_occurance = 0;
+			}
 		}
 		else if(buffer[0] == 'L'){
 			if(start){
@@ -150,9 +153,13 @@ int main(int argc, char const *argv[])
 					fprintf(out,"%c\n",reg2);
 				}
 			}
+			free(lhs_op);
+			free(rhs_op);
 		}
 	}
 	display_reg();
+	free(lhs);
+	free(rhs);
 	return 0;
 }
 char lookup_insert(char *var){

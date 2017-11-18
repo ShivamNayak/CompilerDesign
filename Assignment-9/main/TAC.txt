@@ -1,6 +1,7 @@
 a=1
 b=2
-L5: if (a>b) goto L6   
+L5: if (a>b) goto L6
+goto NEXT 
 L6: t1=a+b
 x=t1
 L3: if (b>a) goto L4   
@@ -10,7 +11,7 @@ y=t3
 if (a>b) goto L1   
 goto L2   
 L1: b=10
-L2 : a=20
-goto L3   
+goto L3
+L2 : a=20   
 goto L3
 goto L5

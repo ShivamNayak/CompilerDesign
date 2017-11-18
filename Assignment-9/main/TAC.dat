@@ -1,11 +1,14 @@
 a=1
 b=2
-L3: if (a>b) goto L4   
-L4: t1=a+b
+L4: if (a>b) goto L5   
+L5: t1=a+b
 x=t1
-L1: if (b>a) goto L2   
- goto L3   
-L2: t3=a-b
+L2: if (b>a) goto L3   
+ goto L4   
+L3: t3=a-b
 y=t3
-goto L1
-goto L3
+if (a>b) goto L1   
+goto L2   
+L1: z=10
+goto L2
+goto L4

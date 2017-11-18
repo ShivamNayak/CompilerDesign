@@ -171,7 +171,7 @@ int search(char *var){
 		return variable[var[0]] != '\0';
 	}
 	if (strlen(var) > 1){
-		return variable[var[1]] != '\0';
+		return variable[var[1] - '0'] != '\0';
 	}
 }
 void display_reg(void){

@@ -108,17 +108,18 @@ extern int YYPARSE_DECL();
 #define RCURLY_TOK 264
 #define IF_TOK 265
 #define INTEGER_TOK 266
-#define EQUAL_TOK 267
-#define SEMICOLON_TOK 268
-#define RELATIONAL_TOK 269
-#define OR_TOK 270
-#define AND_TOK 271
-#define NOT_TOK 272
-#define ADDITION_TOK 273
-#define MINUS_TOK 274
-#define MULTIPLICATION_TOK 275
-#define DIVISION_TOK 276
-#define MODULO_TOK 277
+#define ELSEIF_TOK 267
+#define EQUAL_TOK 268
+#define SEMICOLON_TOK 269
+#define RELATIONAL_TOK 270
+#define OR_TOK 271
+#define AND_TOK 272
+#define NOT_TOK 273
+#define ADDITION_TOK 274
+#define MINUS_TOK 275
+#define MULTIPLICATION_TOK 276
+#define DIVISION_TOK 277
+#define MODULO_TOK 278
 #define YYERRCODE 256
 typedef short YYINT;
 static const YYINT yylhs[] = {                           -1,
@@ -142,34 +143,34 @@ static const YYINT yydgoto[] = {                          1,
    43,   40,   25,    9,   10,   11,   12,    2,
 };
 static const YYINT yysindex[] = {                         0,
-    0, -207,    0,    0, -232, -168, -226, -252, -255,    0,
- -213,    0, -168, -254, -168,    0, -168,    0,    0, -168,
- -168, -168, -168, -168, -236, -194,    0, -220, -203, -272,
- -272,    0,    0,    0, -218, -168, -218,    0, -207,    0,
- -189, -202, -217,    0, -218,    0,    0,    0,
+    0, -205,    0,    0, -255, -224, -223, -219, -256,    0,
+ -212,    0, -224, -254, -224,    0, -224,    0,    0, -224,
+ -224, -224, -224, -224, -218, -193,    0, -214, -202, -273,
+ -273,    0,    0,    0, -216, -224, -216,    0, -205,    0,
+ -188, -201, -215,    0, -216,    0,    0,    0,
 };
 static const YYINT yyrindex[] = {                         0,
-    0,   46,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,   54,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0, -237,
- -235,    0,    0,    0,    0,    0,    0,    0,    0,    0,
- -210,    1,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0, -243,
+ -234,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+ -203,    1,    0,    0,    0,    0,    0,    0,
 };
 static const YYINT yygindex[] = {                         0,
-    0,  -35,   41,    0,   58,   -6,  -15,    0,
+    0,  -35,   53,    0,   61,   -6,  -14,    0,
 };
 #define YYTABLESIZE 267
 static const YYINT yytable[] = {                         14,
-    5,   42,   22,   23,   24,    4,   26,   27,   26,   48,
-   29,   17,   18,   30,   31,   32,   33,   34,   20,   21,
-   22,   23,   24,   44,   15,   35,   16,   47,   13,   41,
-   15,   15,   16,   16,   15,   15,   15,   16,   16,    3,
-    4,   37,    5,    6,   39,    1,   46,    7,    8,    3,
-    4,   23,    5,    6,   19,   28,   45,    7,    8,   20,
-   21,   22,   23,   24,   38,   16,    0,    0,    0,   20,
-   21,   22,   23,   24,   36,    0,    0,    0,   20,   21,
-   22,   23,   24,   20,   21,   22,   23,   24,    3,    4,
-    0,    0,    6,    0,    0,    0,    0,    0,    0,    0,
+    5,   42,   22,   23,   24,   13,   26,   27,   26,   48,
+   29,   17,   18,   30,   31,   32,   33,   34,   15,   20,
+   21,   22,   23,   24,   44,   15,   15,   16,   47,   41,
+   15,   15,    3,    4,   16,   16,    6,   15,    4,   16,
+   16,    3,    4,   35,    5,    6,   39,   37,   46,    7,
+    8,    3,    4,    1,    5,    6,   19,   45,   23,    7,
+    8,   20,   21,   22,   23,   24,   38,   28,   16,    0,
+    0,   20,   21,   22,   23,   24,   36,    0,    0,    0,
+   20,   21,   22,   23,   24,   20,   21,   22,   23,   24,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
@@ -189,16 +190,16 @@ static const YYINT yytable[] = {                         14,
     5,    5,    0,    0,    5,    5,    5,
 };
 static const YYINT yycheck[] = {                          6,
-    0,   37,  275,  276,  277,  258,   13,  262,   15,   45,
-   17,  267,  268,   20,   21,   22,   23,   24,  273,  274,
-  275,  276,  277,   39,  262,  262,  262,   43,  261,   36,
-  268,  269,  268,  269,  261,  273,  274,  273,  274,  257,
-  258,  262,  260,  261,  263,    0,  264,  265,  266,  257,
-  258,  262,  260,  261,  268,   15,  259,  265,  266,  273,
-  274,  275,  276,  277,  268,    8,   -1,   -1,   -1,  273,
-  274,  275,  276,  277,  269,   -1,   -1,   -1,  273,  274,
-  275,  276,  277,  273,  274,  275,  276,  277,  257,  258,
-   -1,   -1,  261,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+    0,   37,  276,  277,  278,  261,   13,  262,   15,   45,
+   17,  268,  269,   20,   21,   22,   23,   24,  262,  274,
+  275,  276,  277,  278,   39,  269,  270,  262,   43,   36,
+  274,  275,  257,  258,  269,  270,  261,  261,  258,  274,
+  275,  257,  258,  262,  260,  261,  263,  262,  264,  265,
+  266,  257,  258,    0,  260,  261,  269,  259,  262,  265,
+  266,  274,  275,  276,  277,  278,  269,   15,    8,   -1,
+   -1,  274,  275,  276,  277,  278,  270,   -1,   -1,   -1,
+  274,  275,  276,  277,  278,  274,  275,  276,  277,  278,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
@@ -221,8 +222,8 @@ static const YYINT yycheck[] = {                          6,
 #ifndef YYDEBUG
 #define YYDEBUG 0
 #endif
-#define YYMAXTOKEN 277
-#define YYUNDFTOKEN 288
+#define YYMAXTOKEN 278
+#define YYUNDFTOKEN 289
 #define YYTRANSLATE(a) ((a) > YYMAXTOKEN ? YYUNDFTOKEN : (a))
 #if YYDEBUG
 static const char *const yyname[] = {
@@ -235,9 +236,10 @@ static const char *const yyname[] = {
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"INT_CONST_TOK","ID_TOK",
 "ELSE_TOK","WHILE_TOK","LPAREN_TOK","RPAREN_TOK","LCURLY_TOK","RCURLY_TOK",
-"IF_TOK","INTEGER_TOK","EQUAL_TOK","SEMICOLON_TOK","RELATIONAL_TOK","OR_TOK",
-"AND_TOK","NOT_TOK","ADDITION_TOK","MINUS_TOK","MULTIPLICATION_TOK",
-"DIVISION_TOK","MODULO_TOK",0,0,0,0,0,0,0,0,0,0,"illegal-symbol",
+"IF_TOK","INTEGER_TOK","ELSEIF_TOK","EQUAL_TOK","SEMICOLON_TOK",
+"RELATIONAL_TOK","OR_TOK","AND_TOK","NOT_TOK","ADDITION_TOK","MINUS_TOK",
+"MULTIPLICATION_TOK","DIVISION_TOK","MODULO_TOK",0,0,0,0,0,0,0,0,0,0,
+"illegal-symbol",
 };
 static const char *const yyrule[] = {
 "$accept : programe",
@@ -301,7 +303,7 @@ typedef struct {
 } YYSTACKDATA;
 /* variables for the parser stack */
 static YYSTACKDATA yystack;
-#line 389 "main.y"
+#line 390 "main.y"
 int main(int argc,const char *argv[]){
 	yyin = fopen(argv[1],"r");
 	yyparse();
@@ -309,7 +311,7 @@ int main(int argc,const char *argv[]){
 void *yyerror(char *s){
 	printf("%s\n",s);
 }
-#line 313 "y.tab.c"
+#line 315 "y.tab.c"
 
 #if YYDEBUG
 #include <stdio.h>		/* needed for printf */
@@ -523,7 +525,7 @@ case 2:
 	{printf("\t\t THREE ADDRESS CODE : \n%s\n",yystack.l_mark[0].exp_type->code);}
 break;
 case 4:
-#line 71 "main.y"
+#line 72 "main.y"
 	{
 			bool = yystack.l_mark[-2].c_val;
 			stat = yystack.l_mark[0].c_val;
@@ -563,7 +565,7 @@ case 4:
 		}
 break;
 case 5:
-#line 108 "main.y"
+#line 109 "main.y"
 	{
 			bool = yystack.l_mark[-2].c_val;
 			stat = yystack.l_mark[0].c_val;
@@ -592,7 +594,7 @@ case 5:
 		}
 break;
 case 6:
-#line 134 "main.y"
+#line 135 "main.y"
 	{
 			bool = yystack.l_mark[-4].c_val;
 			begin_label1 = gen_label_var();
@@ -628,11 +630,11 @@ case 6:
 		}
 break;
 case 7:
-#line 167 "main.y"
+#line 168 "main.y"
 	{ yyval.exp_type = yystack.l_mark[-1].exp_type;}
 break;
 case 8:
-#line 168 "main.y"
+#line 169 "main.y"
 	{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(20);
@@ -643,7 +645,7 @@ case 8:
 		}
 break;
 case 9:
-#line 176 "main.y"
+#line 177 "main.y"
 	{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(20);
@@ -663,15 +665,15 @@ case 9:
 		}
 break;
 case 10:
-#line 195 "main.y"
+#line 196 "main.y"
 	{ yyval.c_val = yystack.l_mark[-1].c_val;}
 break;
 case 11:
-#line 199 "main.y"
+#line 200 "main.y"
 	{ yyval.c_val = yystack.l_mark[0].exp_type->code; }
 break;
 case 12:
-#line 200 "main.y"
+#line 201 "main.y"
 	{
 			char *ret = (char *)malloc(strlen(yystack.l_mark[-1].c_val) + strlen(yystack.l_mark[0].exp_type->code) + 4);
 			strcat(ret,yystack.l_mark[-1].c_val);
@@ -681,15 +683,15 @@ case 12:
 		}
 break;
 case 13:
-#line 209 "main.y"
+#line 210 "main.y"
 	{ yyval.c_val = yystack.l_mark[0].c_val;}
 break;
 case 14:
-#line 212 "main.y"
+#line 213 "main.y"
 	{ yyval.c_val = yystack.l_mark[0].c_val;}
 break;
 case 15:
-#line 215 "main.y"
+#line 216 "main.y"
 	{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
@@ -717,7 +719,7 @@ case 15:
 		}
 break;
 case 16:
-#line 240 "main.y"
+#line 241 "main.y"
 	{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
@@ -746,7 +748,7 @@ case 16:
 		}
 break;
 case 17:
-#line 266 "main.y"
+#line 267 "main.y"
 	{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
@@ -775,7 +777,7 @@ case 17:
 		}
 break;
 case 18:
-#line 292 "main.y"
+#line 293 "main.y"
 	{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
@@ -804,7 +806,7 @@ case 18:
 		}
 break;
 case 19:
-#line 318 "main.y"
+#line 319 "main.y"
 	{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
@@ -833,14 +835,14 @@ case 19:
 		}
 break;
 case 20:
-#line 344 "main.y"
+#line 345 "main.y"
 	{
 			yyval.exp_type = yystack.l_mark[-1].exp_type;
 
 		}
 break;
 case 21:
-#line 348 "main.y"
+#line 349 "main.y"
 	{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
@@ -851,7 +853,7 @@ case 21:
 		}
 break;
 case 22:
-#line 356 "main.y"
+#line 357 "main.y"
 	{
 			return_exp = (struct expression_type *)malloc(sizeof(struct expression_type));
 			return_exp->address = (char *)malloc(sizeof(char) * 20);
@@ -864,7 +866,7 @@ case 22:
 		}
 break;
 case 23:
-#line 368 "main.y"
+#line 369 "main.y"
 	{
 			char *var = (char *)malloc(strlen(yystack.l_mark[-2].exp_type->code) + strlen(yystack.l_mark[0].exp_type->code) + 40);
 			if(yystack.l_mark[-2].exp_type->code[0] != 0){
@@ -885,7 +887,7 @@ case 23:
 			yyval.c_val = var;
 		}
 break;
-#line 889 "y.tab.c"
+#line 891 "y.tab.c"
     }
     yystack.s_mark -= yym;
     yystate = *yystack.s_mark;

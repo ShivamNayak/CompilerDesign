@@ -42,7 +42,7 @@
 }
 %start programe
 %token <i_val> INT_CONST_TOK
-%token <c_val> ID_TOK ELSE_TOK WHILE_TOK LPAREN_TOK RPAREN_TOK LCURLY_TOK RCURLY_TOK IF_TOK INTEGER_TOK 
+%token <c_val> ID_TOK ELSE_TOK WHILE_TOK LPAREN_TOK RPAREN_TOK LCURLY_TOK RCURLY_TOK IF_TOK INTEGER_TOK ELSEIF_TOK
 %token <c_val>  EQUAL_TOK SEMICOLON_TOK RELATIONAL_TOK
 %type <c_val> programe  statement statement_block boolean_val declaration identifier
 %type <exp_type> expression actual_statement
@@ -67,6 +67,7 @@
 		function actual_statement {printf("\t\t THREE ADDRESS CODE : \n%s\n",$2->code);}
 		| 
 		;
+
 	actual_statement:
 		WHILE_TOK LPAREN_TOK boolean_val RPAREN_TOK statement_block {
 			bool = $3;

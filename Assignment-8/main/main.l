@@ -19,6 +19,7 @@ digit [0-9]
 "if" {return IF_TOK;}
 "else" {return ELSE_TOK;}
 "while" {return WHILE_TOK;}
+"elseif" {return ELSEIF_TOK;}
 "{" {return LCURLY_TOK;}
 "}" {return RCURLY_TOK;}
 ">=" {yylval.c_val = strdup(yytext);return RELATIONAL_TOK;}

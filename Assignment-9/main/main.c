@@ -11,11 +11,14 @@ void display_reg(void);
 int main(int argc, char const *argv[])
 {
 	FILE *fp = fopen(argv[1],"r");
+	FILE *out = fopen(argv[2],"w");
 	char buffer[20];
 	int length = 0;
 	int byte = 0;
 	char *lhs,*rhs,reg1,reg2;
 	int if_occurance = 0;
+	int jmp_occurance = 0;
+	int start = 1;
 	while (fscanf(fp,"%s",buffer) != EOF){
 		if(strncmp(buffer,"if",2) == 0){
 			// load first var into acc and call CMP and call JC 
@@ -40,30 +43,57 @@ int main(int argc, char const *argv[])
 				*t3 = '\0';
 				strcpy(lhs,buffer+1);
 			}
-			printf("%s ","MVI\0" );
+			if(start){
+				fprintf(out,"\t\t%s\n","MAIN: " );
+				start = 0;
+			}
+			fprintf(out,"\t\t\t%s ","MVI\0" );
 			reg2 = lookup_insert(rhs);
-			printf("%c\n",reg2 );
-			printf("%s ","CMP" );
+			fprintf(out,"%c\n",reg2 );
+			fprintf(out,"\t\t\t%s ","CMP" );
 			reg1 = lookup_insert(lhs);
-			printf("%c\n",reg1 );
+			fprintf(out,"%c\n",reg1 );
 			if_occurance = 1;
 		}
 		else if(strncmp(buffer,"goto",4) == 0){
+			if(start){
+				fprintf(out,"\t\t%s\n","MAIN: " );
+				start = 0;
+			}
 			if (if_occurance){
-				printf("%s ","JC\0" );
+				fprintf(out,"\t\t\t%s ","JC\0" );
 				if_occurance = 0;
 			}
 			else{
-				printf("%s ","JMP\0" );
+				fprintf(out,"\t\t\t%s ","JMP\0" );
 			}
+			jmp_occurance = 1;
 		}
 		else if(strncmp(buffer,"NEXT",4) == 0){
-			printf("%s\n",buffer );
+			if(start){
+				fprintf(out,"\t\t%s\n","MAIN: " );
+				start = 0;
+			}
+			fprintf(out,"\t\t\t%s\n",buffer );
 		}
 		else if(buffer[0] == 'L'){
-			printf("%s\n",buffer );
+			if(start){
+				fprintf(out,"\t\t%s\n","MAIN: " );
+				start = 0;
+			}
+			if(jmp_occurance){
+				fprintf(out,"%s\n",buffer );
+				jmp_occurance = 0;
+			}
+			else{
+				fprintf(out,"\t\t%s\n",buffer );
+			}
 		}
 		else{
+			if(start){
+				fprintf(out,"\t\t%s\n","MAIN: " );
+				start = 0;
+			}
 			char *temp = NULL;
 			char *lhs_op = (char *)malloc(10);
 			char *rhs_op = (char *)malloc(10);
@@ -76,9 +106,9 @@ int main(int argc, char const *argv[])
 				reg1 = lookup_insert(lhs); //lookup_insert or insert
 				char temp_reg1,temp_reg2;
 				if (isdigit(rhs[0])){
-					printf("%s ","MVI\0" );
-					printf("%c ",reg1 );
-					printf("%s\n",rhs );
+					fprintf(out,"\t\t\t%s ","MVI\0" );
+					fprintf(out,"%c ",reg1 );
+					fprintf(out,"%s\n",rhs );
 				}
 				else if((temp = strstr(rhs,"+")) != NULL){
 					strcpy(rhs_op,temp+1);
@@ -87,12 +117,12 @@ int main(int argc, char const *argv[])
 					//printf("ADD-> LHS: %s RHS: %s\n",lhs_op,rhs_op );
 					temp_reg1 = lookup_insert(lhs_op);
 					temp_reg2 = lookup_insert(rhs_op);
-					printf("%s ","MVI\0" );
-					printf("%c\n",temp_reg1 );
-					printf("%s ","ADD\0" );
-					printf("%c\n",temp_reg2 );
-					printf("%s ","MOV\0" );
-					printf("%c %c\n",reg1,'A' ); 
+					fprintf(out,"\t\t\t%s ","MVI\0" );
+					fprintf(out,"%c\n",temp_reg1 );
+					fprintf(out,"\t\t\t%s ","ADD\0" );
+					fprintf(out,"%c\n",temp_reg2 );
+					fprintf(out,"\t\t\t%s ","MOV\0" );
+					fprintf(out,"%c %c\n",reg1,'A' ); 
 				}
 				else if((temp = strstr(rhs,"-")) != NULL){
 					strcpy(rhs_op,temp+1);
@@ -100,24 +130,24 @@ int main(int argc, char const *argv[])
 					strcpy(lhs_op,rhs);
 					temp_reg1 = lookup_insert(lhs_op);
 					temp_reg2 = lookup_insert(rhs_op); 
-					printf("%s ","MVI\0" );
-					printf("%c\n",temp_reg1 );
-					printf("%s ","SUB\0" );
-					printf("%c\n",temp_reg2 );
-					printf("%s ","MOV\0" );
-					printf("%c %c\n",reg1,'A' ); 	
+					fprintf(out,"\t\t\t%s ","MVI\0" );
+					fprintf(out,"%c\n",temp_reg1 );
+					fprintf(out,"\t\t\t%s ","SUB\0" );
+					fprintf(out,"%c\n",temp_reg2 );
+					fprintf(out,"\t\t\t%s ","MOV\0" );
+					fprintf(out,"%c %c\n",reg1,'A' ); 	
 				}
 				else{
 					if(!search(rhs)){
 						reg2 = lookup_insert(rhs);
-						printf("%s ","MOV\0" );
-						printf("%c ",reg2 );
-						printf("%s\n",rhs );
+						fprintf(out,"\t\t\t%s ","MOV\0" );
+						fprintf(out,"%c ",reg2 );
+						fprintf(out,"%s\n",rhs );
 					}
 					reg2 = lookup_insert(rhs);
-					printf("%s ","MOV\0" );
-					printf("%c ",reg1);
-					printf("%c\n",reg2);
+					fprintf(out,"\t\t\t%s ","MOV\0" );
+					fprintf(out,"%c ",reg1);
+					fprintf(out,"%c\n",reg2);
 				}
 			}
 		}
@@ -175,7 +205,7 @@ int search(char *var){
 	}
 }
 void display_reg(void){
-	printf("\t\t%s\n\n","Variable to Register mapping :)" );
+	printf("\n\t\t%s\n\n","Variable to Register mapping :)" );
 	for (int i = 0; i <= 96; ++i)
 	{
 		if (variable[i] != '\0'){

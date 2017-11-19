@@ -19,6 +19,7 @@ int main(int argc, char const *argv[])
 	int if_occurance = 0;
 	int jmp_occurance = 0;
 	int start = 1;
+	int jump = 1;
 	while (fscanf(fp,"%s",buffer) != EOF){
 		if(strncmp(buffer,"if",2) == 0){
 			// load first var into acc and call CMP and call JC 
@@ -47,6 +48,7 @@ int main(int argc, char const *argv[])
 				fprintf(out,"\t\t%s\n","MAIN: " );
 				start = 0;
 			}
+			jump = 1;
 			fprintf(out,"\t\t\t%s ","MOV\0" );
 			fprintf(out,"%c ",'A');
 			reg2 = lookup_insert(rhs);
@@ -64,11 +66,15 @@ int main(int argc, char const *argv[])
 			if (if_occurance){
 				fprintf(out,"\t\t\t%s ","JC\0" );
 				if_occurance = 0;
+				jmp_occurance = 1;
 			}
 			else{
-				fprintf(out,"\t\t\t%s ","JMP\0" );
+				if (jump < 2){
+					fprintf(out,"\t\t\t%s ","JMP\0");
+					jump++;
+					jmp_occurance = 1;
+				}
 			}
-			jmp_occurance = 1;
 		}
 		else if(strncmp(buffer,"NEXT",4) == 0){
 			if(start){
@@ -78,8 +84,13 @@ int main(int argc, char const *argv[])
 			if(jmp_occurance){
 				fseek(out,-4,SEEK_CUR);
 				fprintf(out,"%s\n","HLT\0" );
+				jump = 1;
 				jmp_occurance = 0;
 			}
+		}
+		else if(buffer[strlen(buffer) - 1] == ':'){
+			fprintf(out,"\t\t%s\n",buffer );
+			jump = 1;
 		}
 		else if(buffer[0] == 'L'){
 			if(start){
@@ -89,9 +100,6 @@ int main(int argc, char const *argv[])
 			if(jmp_occurance){
 				fprintf(out,"%s\n",buffer );
 				jmp_occurance = 0;
-			}
-			else{
-				fprintf(out,"\t\t%s\n",buffer );
 			}
 		}
 		else{
@@ -114,6 +122,7 @@ int main(int argc, char const *argv[])
 					fprintf(out,"\t\t\t%s ","MVI\0" );
 					fprintf(out,"%c ",reg1 );
 					fprintf(out,"%s\n",rhs );
+					jump = 1;
 				}
 				else if((temp = strstr(rhs,"+")) != NULL){
 					strcpy(rhs_op,temp+1);
@@ -138,6 +147,7 @@ int main(int argc, char const *argv[])
 					}
 					fprintf(out,"\t\t\t%s ","MOV\0" );
 					fprintf(out,"%c %c\n",reg1,'A' ); 
+					jump = 1;
 				}
 				else if((temp = strstr(rhs,"-")) != NULL){
 					strcpy(rhs_op,temp+1);
@@ -160,7 +170,8 @@ int main(int argc, char const *argv[])
 						fprintf(out,"%c\n",temp_reg1 );
 					}
 					fprintf(out,"\t\t\t%s ","MOV\0" );
-					fprintf(out,"%c %c\n",reg1,'A' ); 	
+					fprintf(out,"%c %c\n",reg1,'A' );
+					jump = 1; 	
 				}
 				else{
 					if(!search(rhs)){
@@ -173,6 +184,7 @@ int main(int argc, char const *argv[])
 					fprintf(out,"\t\t\t%s ","MOV\0" );
 					fprintf(out,"%c ",reg1);
 					fprintf(out,"%c\n",reg2);
+					jump = 1;
 				}
 			}
 			free(lhs_op);

@@ -12,6 +12,11 @@ if (a>b) goto L1
  goto L2   
 L1: b=10
 goto L5   
-L2 : a=20
+L2: a=20
+L3: if (a>b) goto L4   
+ goto NEXT 
+L4: t7=a+1
+a=t7
+goto L3
 goto L5
 goto L7

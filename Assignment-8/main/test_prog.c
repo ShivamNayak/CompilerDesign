@@ -8,5 +8,8 @@ while(a > b){
 		else{
 			int a = 20;
 		}
+		while (a > b){
+			int a = a + 1;
+		}
 	}
 }

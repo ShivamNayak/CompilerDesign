@@ -164,6 +164,9 @@ int main(int argc, char const *argv[])
 	return 0;
 }
 char lookup_insert(char *var){
+	if (isdigit(var[0])){
+		return var[0];
+	}
 	if (strlen(var) == 1){ //97 - 122
 		if (variable[var[0]] != '\0'){
 			return variable[var[0]];

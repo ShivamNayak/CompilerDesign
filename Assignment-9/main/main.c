@@ -47,7 +47,8 @@ int main(int argc, char const *argv[])
 				fprintf(out,"\t\t%s\n","MAIN: " );
 				start = 0;
 			}
-			fprintf(out,"\t\t\t%s ","MVI\0" );
+			fprintf(out,"\t\t\t%s ","MOV\0" );
+			fprintf(out,"%c ",'A');
 			reg2 = lookup_insert(rhs);
 			fprintf(out,"%c\n",reg2 );
 			fprintf(out,"\t\t\t%s ","CMP" );
@@ -121,10 +122,20 @@ int main(int argc, char const *argv[])
 					//printf("ADD-> LHS: %s RHS: %s\n",lhs_op,rhs_op );
 					temp_reg1 = lookup_insert(lhs_op);
 					temp_reg2 = lookup_insert(rhs_op);
-					fprintf(out,"\t\t\t%s ","MVI\0" );
-					fprintf(out,"%c\n",temp_reg1 );
-					fprintf(out,"\t\t\t%s ","ADD\0" );
-					fprintf(out,"%c\n",temp_reg2 );
+					if (!isdigit(temp_reg2)){
+						fprintf(out,"\t\t\t%s ","MOV\0" );
+						fprintf(out,"%c ",'A');
+						fprintf(out,"%c\n",temp_reg1 );
+						fprintf(out,"\t\t\t%s ","ADD\0" );
+						fprintf(out,"%c\n",temp_reg2 );
+					}
+					else{
+						fprintf(out,"\t\t\t%s ","MVI\0" );
+						fprintf(out,"%c ",'A');
+						fprintf(out,"%c\n",temp_reg2 );
+						fprintf(out,"\t\t\t%s ","ADD\0" );
+						fprintf(out,"%c\n",temp_reg1 );
+					}
 					fprintf(out,"\t\t\t%s ","MOV\0" );
 					fprintf(out,"%c %c\n",reg1,'A' ); 
 				}
@@ -134,10 +145,20 @@ int main(int argc, char const *argv[])
 					strcpy(lhs_op,rhs);
 					temp_reg1 = lookup_insert(lhs_op);
 					temp_reg2 = lookup_insert(rhs_op); 
-					fprintf(out,"\t\t\t%s ","MVI\0" );
-					fprintf(out,"%c\n",temp_reg1 );
-					fprintf(out,"\t\t\t%s ","SUB\0" );
-					fprintf(out,"%c\n",temp_reg2 );
+					if (!isdigit(temp_reg2)){
+						fprintf(out,"\t\t\t%s ","MOV\0" );
+						fprintf(out,"%c ",'A');
+						fprintf(out,"%c\n",temp_reg1 );
+						fprintf(out,"\t\t\t%s ","SUB\0" );
+						fprintf(out,"%c\n",temp_reg2 );
+					}
+					else{
+						fprintf(out,"\t\t\t%s ","MVI\0" );
+						fprintf(out,"%c ",'A');
+						fprintf(out,"%c\n",temp_reg2 );
+						fprintf(out,"\t\t\t%s ","SUB\0" );
+						fprintf(out,"%c\n",temp_reg1 );
+					}
 					fprintf(out,"\t\t\t%s ","MOV\0" );
 					fprintf(out,"%c %c\n",reg1,'A' ); 	
 				}

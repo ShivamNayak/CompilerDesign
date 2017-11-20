@@ -5,6 +5,7 @@
 char registers[7] = {'B','C','D','E','H','L','\0'};
 char variable[123];
 int var_count = 0;
+char *hex = NULL;//256 == 100
 char lookup_insert(char *var);
 int search(char *var);
 void display_reg(void);
@@ -12,6 +13,7 @@ int main(int argc, char const *argv[])
 {
 	FILE *fp = fopen(argv[1],"r");
 	FILE *out = fopen(argv[2],"w");
+	hex = (char *)malloc(sizeof(char) * 5); 
 	char buffer[20];
 	int length = 0;
 	int byte = 0;
@@ -52,7 +54,13 @@ int main(int argc, char const *argv[])
 			fprintf(out,"\t\t\t%s ","MOV\0" );
 			fprintf(out,"%c ",'A');
 			reg2 = lookup_insert(rhs);
-			fprintf(out,"%c\n",reg2 );
+			if (reg2 != '.'){
+				fprintf(out,"%c\n",reg2 );
+			}
+			else{
+				fprintf(out,"%s\n",hex);
+				*hex = '\0';
+			}
 			fprintf(out,"\t\t\t%s ","CMP" );
 			reg1 = lookup_insert(lhs);
 			fprintf(out,"%c\n",reg1 );
@@ -117,11 +125,13 @@ int main(int argc, char const *argv[])
 				*temp = '\0';
 				strcpy(lhs,buffer);
 				reg1 = lookup_insert(lhs); //lookup_insert or insert
+				reg2 = lookup_insert(rhs);
 				char temp_reg1,temp_reg2;
-				if (isdigit(rhs[0])){
+				if (reg2 == '.'){
 					fprintf(out,"\t\t\t%s ","MVI\0" );
 					fprintf(out,"%c ",reg1 );
-					fprintf(out,"%s\n",rhs );
+					fprintf(out,"0x%sH\n",hex);
+					*hex = '\0';
 					jump = 1;
 				}
 				else if((temp = strstr(rhs,"+")) != NULL){
@@ -136,12 +146,24 @@ int main(int argc, char const *argv[])
 						fprintf(out,"%c ",'A');
 						fprintf(out,"%c\n",temp_reg1 );
 						fprintf(out,"\t\t\t%s ","ADD\0" );
-						fprintf(out,"%c\n",temp_reg2 );
+						if (temp_reg2 != '.'){
+							fprintf(out,"%c\n",temp_reg2 );
+						}
+						else{
+							fprintf(out,"0x%sH\n",hex);
+							*hex = '\0';
+						}
 					}
 					else{
 						fprintf(out,"\t\t\t%s ","MVI\0" );
 						fprintf(out,"%c ",'A');
-						fprintf(out,"%c\n",temp_reg2 );
+						if (temp_reg2 != '.'){
+							fprintf(out,"%c\n",temp_reg2 );
+						}
+						else{
+							fprintf(out,"0x%sH\n",hex);
+							*hex = '\0';
+						}
 						fprintf(out,"\t\t\t%s ","ADD\0" );
 						fprintf(out,"%c\n",temp_reg1 );
 					}
@@ -160,12 +182,24 @@ int main(int argc, char const *argv[])
 						fprintf(out,"%c ",'A');
 						fprintf(out,"%c\n",temp_reg1 );
 						fprintf(out,"\t\t\t%s ","SUB\0" );
-						fprintf(out,"%c\n",temp_reg2 );
+						if (temp_reg2 != '.'){
+							fprintf(out,"%c\n",temp_reg2 );
+						}
+						else{
+							fprintf(out,"0x%sH\n",hex);
+							*hex = '\0';
+						}
 					}
 					else{
 						fprintf(out,"\t\t\t%s ","MVI\0" );
 						fprintf(out,"%c ",'A');
-						fprintf(out,"%c\n",temp_reg2 );
+						if (temp_reg2 != '.'){
+							fprintf(out,"%c\n",temp_reg2 );
+						}
+						else{
+							fprintf(out,"0x%sH\n",hex);
+							*hex = '\0';
+						}
 						fprintf(out,"\t\t\t%s ","SUB\0" );
 						fprintf(out,"%c\n",temp_reg1 );
 					}
@@ -177,13 +211,25 @@ int main(int argc, char const *argv[])
 					if(!search(rhs)){
 						reg2 = lookup_insert(rhs);
 						fprintf(out,"\t\t\t%s ","MOV\0" );
-						fprintf(out,"%c ",reg2 );
+						if (reg2 != '.'){
+							fprintf(out,"%c\n",reg2 );
+						}
+						else{
+							fprintf(out,"0x%sH\n",hex);
+							*hex = '\0';
+						}
 						fprintf(out,"%s\n",rhs );
 					}
 					reg2 = lookup_insert(rhs);
 					fprintf(out,"\t\t\t%s ","MOV\0" );
 					fprintf(out,"%c ",reg1);
-					fprintf(out,"%c\n",reg2);
+					if (temp_reg2 != '.'){
+						fprintf(out,"%c\n",reg2 );
+					}
+					else{
+						fprintf(out,"0x%sH\n",hex);
+						*hex = '\0';
+					}
 					jump = 1;
 				}
 			}
@@ -198,7 +244,8 @@ int main(int argc, char const *argv[])
 }
 char lookup_insert(char *var){
 	if (isdigit(var[0])){
-		return var[0];
+		snprintf(hex,4,"%x",atoi(var));
+		return '.';
 	}
 	if (strlen(var) == 1){ //97 - 122
 		if (variable[var[0]] != '\0'){

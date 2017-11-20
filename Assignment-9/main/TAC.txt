@@ -1,4 +1,4 @@
-a=1
+a=256
 b=2
 L7: if (a>b) goto L8   
  goto NEXT 
